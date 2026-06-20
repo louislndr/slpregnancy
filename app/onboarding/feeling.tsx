@@ -2,42 +2,51 @@ import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import PillButton from '@/components/PillButton';
 import ProgressDots from '@/components/ProgressDots';
 import { colors } from '@/theme/colors';
-import { spacing } from '@/theme/spacing';
+import { spacing, radius } from '@/theme/spacing';
 import { useOnboardingStore, EmotionalState } from '@/store/onboardingStore';
 
-const STATES: { id: EmotionalState; icon: string; label: string }[] = [
-  { id: 'struggling', icon: '🌧', label: "I'm Struggling" },
-  { id: 'doing-okay', icon: '🌤', label: 'Doing Okay' },
-  { id: 'feeling-good', icon: '☀️', label: 'Feeling Good' },
-  { id: 'preparing-tomorrow', icon: '🌙', label: 'Preparing For Tomorrow' },
-  { id: 'moment-for-myself', icon: '🌸', label: 'I Just Want A Moment For Myself' },
+type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
+
+const STATES: { id: EmotionalState; icon: IoniconsName; label: string }[] = [
+  { id: 'struggling', icon: 'rainy-outline', label: "I'm Struggling" },
+  { id: 'doing-okay', icon: 'partly-sunny-outline', label: 'Doing Okay' },
+  { id: 'feeling-good', icon: 'sunny-outline', label: 'Feeling Good' },
+  { id: 'preparing-tomorrow', icon: 'moon-outline', label: 'Preparing For Tomorrow' },
+  { id: 'moment-for-myself', icon: 'flower-outline', label: 'I Just Want A Moment For Myself' },
 ];
 
 export default function FeelingScreen() {
   const { profile, setEmotionalState } = useOnboardingStore();
 
   return (
-    <LinearGradient colors={[colors.azure, '#EEF4F8', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
+    <LinearGradient colors={['#FFFFFF', '#F5F9FC', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
         <View style={styles.container}>
           <View style={{ flex: 1 }}>
             <Text style={styles.title}>How are you{'\n'}feeling today?</Text>
             <Text style={styles.subtitle}>There are no wrong answers here.</Text>
             <View style={styles.options}>
-              {STATES.map((s) => (
-                <TouchableOpacity
-                  key={s.id}
-                  style={[styles.option, profile.emotionalState === s.id && styles.optionSelected]}
-                  onPress={() => setEmotionalState(s.id)}
-                  activeOpacity={0.8}
-                >
-                  <Text style={styles.icon}>{s.icon}</Text>
-                  <Text style={[styles.label, profile.emotionalState === s.id && styles.labelSelected]}>{s.label}</Text>
-                </TouchableOpacity>
-              ))}
+              {STATES.map((s) => {
+                const active = profile.emotionalState === s.id;
+                return (
+                  <TouchableOpacity
+                    key={s.id}
+                    style={[styles.option, active && styles.optionSelected]}
+                    onPress={() => setEmotionalState(s.id)}
+                    activeOpacity={0.8}
+                  >
+                    <View style={[styles.iconWrap, active && styles.iconWrapActive]}>
+                      <Ionicons name={s.icon} size={20} color={active ? colors.white : colors.primary} />
+                    </View>
+                    <Text style={[styles.label, active && styles.labelSelected]}>{s.label}</Text>
+                    {active && <Ionicons name="checkmark-circle" size={20} color={colors.primary} />}
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           </View>
           <PillButton label="Continue" onPress={() => router.push('/onboarding/needs')} disabled={!profile.emotionalState} />
@@ -54,11 +63,19 @@ const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.xl, paddingBottom: spacing.lg },
   title: { fontFamily: 'Raleway_700Bold', fontSize: 28, color: colors.coldViolet, lineHeight: 36, marginBottom: spacing.sm },
   subtitle: { fontFamily: 'Montserrat_400Regular', fontSize: 15, color: colors.textSecondary, marginBottom: spacing.xl },
-  options: { gap: 10 },
-  option: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.white, borderRadius: 14, padding: spacing.md, gap: spacing.md, borderWidth: 1.5, borderColor: 'transparent' },
-  optionSelected: { borderColor: colors.primary, backgroundColor: '#EEF6FA' },
-  icon: { fontSize: 22, width: 32, textAlign: 'center' },
+  options: { gap: 12 },
+  option: {
+    flexDirection: 'row', alignItems: 'center', backgroundColor: colors.white,
+    borderRadius: radius.md, padding: spacing.md, gap: spacing.md,
+    borderWidth: 1.5, borderColor: colors.border,
+  },
+  optionSelected: { borderColor: colors.primary, backgroundColor: '#F0F7FA' },
+  iconWrap: {
+    width: 40, height: 40, borderRadius: 20,
+    backgroundColor: colors.azure, alignItems: 'center', justifyContent: 'center',
+  },
+  iconWrapActive: { backgroundColor: colors.primary },
   label: { fontFamily: 'Montserrat_400Regular', fontSize: 15, color: colors.textPrimary, flex: 1 },
-  labelSelected: { fontFamily: 'Montserrat_600SemiBold', color: colors.primary },
+  labelSelected: { fontFamily: 'Montserrat_600SemiBold', color: colors.coldViolet },
   dots: { alignItems: 'center', marginTop: spacing.lg },
 });

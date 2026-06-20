@@ -13,12 +13,14 @@ import { protocols } from '@/data/protocols';
 import Eyebrow from '@/components/Eyebrow';
 import Card from '@/components/Card';
 
-const SUPPORT_NOW = [
-  { key: 'panic', icon: '🫁', label: 'Panic\nReset', protocolId: 'panic-reset' },
-  { key: 'waiting-room', icon: '⏳', label: 'Waiting\nRoom', protocolId: 'waiting-room-calm' },
-  { key: 'before-ultrasound', icon: '🔍', label: 'Before\nUltrasound', protocolId: 'before-ultrasound' },
-  { key: 'waiting-results', icon: '📋', label: 'Waiting\nResults', protocolId: 'waiting-for-results' },
-  { key: 'sleep', icon: '🌙', label: 'Sleep\nReset', protocolId: 'sleep-reset' },
+type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
+
+const SUPPORT_NOW: { key: string; icon: IoniconsName; label: string; protocolId: string }[] = [
+  { key: 'panic', icon: 'pulse-outline', label: 'Panic\nReset', protocolId: 'panic-reset' },
+  { key: 'waiting-room', icon: 'time-outline', label: 'Waiting\nRoom', protocolId: 'waiting-room-calm' },
+  { key: 'before-ultrasound', icon: 'scan-outline', label: 'Before\nUltrasound', protocolId: 'before-ultrasound' },
+  { key: 'waiting-results', icon: 'document-text-outline', label: 'Waiting\nResults', protocolId: 'waiting-for-results' },
+  { key: 'sleep', icon: 'moon-outline', label: 'Sleep\nReset', protocolId: 'sleep-reset' },
 ];
 
 export default function HomeScreen() {
@@ -110,7 +112,7 @@ export default function HomeScreen() {
               onPress={() => router.push(`/session/${item.protocolId}`)}
               activeOpacity={0.8}
             >
-              <Text style={styles.supportIcon}>{item.icon}</Text>
+              <Ionicons name={item.icon} size={22} color={colors.primary} style={{ marginBottom: 4 }} />
               <Text style={styles.supportLabel}>{item.label}</Text>
             </TouchableOpacity>
           ))}
@@ -223,7 +225,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.azure, borderRadius: radius.md,
     padding: spacing.md, alignItems: 'center', minWidth: 80,
   },
-  supportIcon: { fontSize: 24, marginBottom: 4 },
+  supportIcon: { marginBottom: 4 },
   supportLabel: { fontFamily: 'Montserrat_500Medium', fontSize: 12, color: colors.coldViolet, textAlign: 'center' },
   programCard: { marginBottom: spacing.lg },
   programTitle: { fontFamily: 'Raleway_700Bold', fontSize: 18, color: colors.coldViolet, marginBottom: 4 },

@@ -8,13 +8,15 @@ import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import { protocols } from '@/data/protocols';
 
-const SUPPORT_ITEMS = [
-  { key: 'panic', icon: '🫁', label: 'Panic Reset', subtitle: 'Immediate calm', color: '#EEF6FA', protocolId: 'panic-reset' },
-  { key: 'waiting-room', icon: '⏳', label: 'Waiting Room Calm', subtitle: 'Eyes-open session', color: '#F0EEF8', protocolId: 'waiting-room-calm' },
-  { key: 'before-ultrasound', icon: '🔍', label: 'Before Ultrasound', subtitle: 'Prepare your mind', color: '#FFF3EC', protocolId: 'before-ultrasound' },
-  { key: 'before-transfer', icon: '🌱', label: 'Before Embryo Transfer', subtitle: 'Hold hope', color: '#EEF6FA', protocolId: 'before-embryo-transfer' },
-  { key: 'waiting-results', icon: '📋', label: 'Waiting for Results', subtitle: 'Release control', color: '#F0EEF8', protocolId: 'waiting-for-results' },
-  { key: 'sleep', icon: '🌙', label: 'Sleep Reset', subtitle: 'Drift into rest', color: '#FFF3EC', protocolId: 'sleep-reset' },
+type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
+
+const SUPPORT_ITEMS: { key: string; icon: IoniconsName; label: string; subtitle: string; color: string; protocolId: string }[] = [
+  { key: 'panic', icon: 'pulse-outline', label: 'Panic Reset', subtitle: 'Immediate calm', color: '#EEF6FA', protocolId: 'panic-reset' },
+  { key: 'waiting-room', icon: 'time-outline', label: 'Waiting Room Calm', subtitle: 'Eyes-open session', color: '#F0EEF8', protocolId: 'waiting-room-calm' },
+  { key: 'before-ultrasound', icon: 'scan-outline', label: 'Before Ultrasound', subtitle: 'Prepare your mind', color: '#FFF3EC', protocolId: 'before-ultrasound' },
+  { key: 'before-transfer', icon: 'leaf-outline', label: 'Before Embryo Transfer', subtitle: 'Hold hope', color: '#EEF6FA', protocolId: 'before-embryo-transfer' },
+  { key: 'waiting-results', icon: 'document-text-outline', label: 'Waiting for Results', subtitle: 'Release control', color: '#F0EEF8', protocolId: 'waiting-for-results' },
+  { key: 'sleep', icon: 'moon-outline', label: 'Sleep Reset', subtitle: 'Drift into rest', color: '#FFF3EC', protocolId: 'sleep-reset' },
 ];
 
 export default function SupportScreen() {
@@ -36,7 +38,9 @@ export default function SupportScreen() {
                 onPress={() => router.push(`/session/${item.protocolId}`)}
                 activeOpacity={0.85}
               >
-                <Text style={styles.cardIcon}>{item.icon}</Text>
+                <View style={styles.cardIconWrap}>
+                <Ionicons name={item.icon} size={24} color={colors.primary} />
+              </View>
                 <Text style={styles.cardLabel}>{item.label}</Text>
                 <Text style={styles.cardSub}>{item.subtitle}</Text>
                 {protocol && (
@@ -74,7 +78,7 @@ const styles = StyleSheet.create({
     width: '47%', borderRadius: radius.md, padding: spacing.md,
     ...shadow.card,
   },
-  cardIcon: { fontSize: 32, marginBottom: spacing.sm },
+  cardIconWrap: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.sm },
   cardLabel: { fontFamily: 'Raleway_700Bold', fontSize: 14, color: colors.coldViolet, marginBottom: 2 },
   cardSub: { fontFamily: 'Montserrat_400Regular', fontSize: 12, color: colors.textSecondary, marginBottom: spacing.sm },
   cardMeta: { flexDirection: 'row', alignItems: 'center', gap: 4 },

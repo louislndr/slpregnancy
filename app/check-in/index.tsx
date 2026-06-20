@@ -13,40 +13,41 @@ import { useOnboardingStore } from '@/store/onboardingStore';
 import { RecommendationEngine } from '@/services/RecommendationEngine';
 import { Protocol } from '@/data/protocols';
 
+type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 type Step = 0 | 1 | 2 | 3 | 4 | 5;
 
-const FEELINGS = [
-  { id: 'struggling', icon: '🌧', label: "I'm Struggling" },
-  { id: 'doing-okay', icon: '🌤', label: 'Doing Okay' },
-  { id: 'feeling-good', icon: '☀️', label: 'Feeling Good' },
-  { id: 'preparing-tomorrow', icon: '🌙', label: 'Preparing For Tomorrow' },
-  { id: 'moment-for-myself', icon: '🌸', label: 'I Just Want A Moment For Myself' },
+const FEELINGS: { id: string; icon: IoniconsName; label: string }[] = [
+  { id: 'struggling', icon: 'rainy-outline', label: "I'm Struggling" },
+  { id: 'doing-okay', icon: 'partly-sunny-outline', label: 'Doing Okay' },
+  { id: 'feeling-good', icon: 'sunny-outline', label: 'Feeling Good' },
+  { id: 'preparing-tomorrow', icon: 'moon-outline', label: 'Preparing For Tomorrow' },
+  { id: 'moment-for-myself', icon: 'flower-outline', label: 'I Just Want A Moment For Myself' },
 ];
 
-const NEEDS = [
-  { id: 'calm', icon: '🌊', label: 'Calm' },
-  { id: 'confidence', icon: '💪', label: 'Confidence' },
-  { id: 'reassurance', icon: '🤗', label: 'Reassurance' },
-  { id: 'rest', icon: '😴', label: 'Rest' },
-  { id: 'connection', icon: '💞', label: 'Connection' },
+const NEEDS: { id: string; icon: IoniconsName; label: string }[] = [
+  { id: 'calm', icon: 'water-outline', label: 'Calm' },
+  { id: 'confidence', icon: 'shield-outline', label: 'Confidence' },
+  { id: 'reassurance', icon: 'hand-left-outline', label: 'Reassurance' },
+  { id: 'rest', icon: 'bed-outline', label: 'Rest' },
+  { id: 'connection', icon: 'people-outline', label: 'Connection' },
 ];
 
-const TIMES = [
-  { id: 5, label: '5 min', desc: 'Quick reset' },
-  { id: 10, label: '10 min', desc: 'Short session' },
-  { id: 15, label: '15 min', desc: 'Full session' },
-  { id: 20, label: '20+ min', desc: 'Deep practice' },
+const TIMES: { id: number; icon: IoniconsName; label: string; desc: string }[] = [
+  { id: 5, icon: 'flash-outline', label: '5 min', desc: 'Quick reset' },
+  { id: 10, icon: 'time-outline', label: '10 min', desc: 'Short session' },
+  { id: 15, icon: 'hourglass-outline', label: '15 min', desc: 'Full session' },
+  { id: 20, icon: 'infinite-outline', label: '20+ min', desc: 'Deep practice' },
 ];
 
-const POSITIONS = [
-  { id: 'sitting', icon: '🪑', label: 'Sitting' },
-  { id: 'standing', icon: '🧍', label: 'Standing' },
-  { id: 'lying', icon: '🛏', label: 'Lying Down' },
+const POSITIONS: { id: string; icon: IoniconsName; label: string }[] = [
+  { id: 'sitting', icon: 'body-outline', label: 'Sitting' },
+  { id: 'standing', icon: 'walk-outline', label: 'Standing' },
+  { id: 'lying', icon: 'bed-outline', label: 'Lying Down' },
 ];
 
-const GUIDANCE = [
-  { id: 'audio-only', icon: '🎧', label: 'Audio Only', desc: 'Voice guidance only' },
-  { id: 'audio-visual', icon: '🎬', label: 'Audio + Visual', desc: 'Voice + breathing animations' },
+const GUIDANCE: { id: string; icon: IoniconsName; label: string; desc: string }[] = [
+  { id: 'audio-only', icon: 'headset-outline', label: 'Audio Only', desc: 'Voice guidance only' },
+  { id: 'audio-visual', icon: 'eye-outline', label: 'Audio + Visual', desc: 'Voice + breathing animations' },
 ];
 
 function OptionRow({
@@ -54,31 +55,34 @@ function OptionRow({
   selected,
   onSelect,
 }: {
-  options: { id: string | number; icon: string; label: string; desc?: string }[];
+  options: { id: string | number; icon: IoniconsName; label: string; desc?: string }[];
   selected: string | number | null;
   onSelect: (id: string | number) => void;
 }) {
   return (
     <View style={styles.options}>
-      {options.map((o) => (
-        <TouchableOpacity
-          key={String(o.id)}
-          style={[styles.option, selected === o.id && styles.optionSelected]}
-          onPress={() => onSelect(o.id)}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.optionIcon}>{o.icon}</Text>
-          <View style={{ flex: 1 }}>
-            <Text style={[styles.optionLabel, selected === o.id && styles.optionLabelSelected]}>
-              {o.label}
-            </Text>
-            {o.desc && <Text style={styles.optionDesc}>{o.desc}</Text>}
-          </View>
-          {selected === o.id && (
-            <View style={styles.check}><Text style={styles.checkText}>✓</Text></View>
-          )}
-        </TouchableOpacity>
-      ))}
+      {options.map((o) => {
+        const active = selected === o.id;
+        return (
+          <TouchableOpacity
+            key={String(o.id)}
+            style={[styles.option, active && styles.optionSelected]}
+            onPress={() => onSelect(o.id)}
+            activeOpacity={0.8}
+          >
+            <View style={[styles.iconWrap, active && styles.iconWrapActive]}>
+              <Ionicons name={o.icon as IoniconsName} size={20} color={active ? colors.white : colors.primary} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.optionLabel, active && styles.optionLabelSelected]}>
+                {o.label}
+              </Text>
+              {o.desc && <Text style={styles.optionDesc}>{o.desc}</Text>}
+            </View>
+            {active && <Ionicons name="checkmark-circle" size={20} color={colors.primary} />}
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 }
@@ -285,15 +289,17 @@ const styles = StyleSheet.create({
   option: {
     flexDirection: 'row', alignItems: 'center', backgroundColor: colors.white,
     borderRadius: 14, padding: spacing.md, gap: spacing.md,
-    borderWidth: 1.5, borderColor: 'transparent',
+    borderWidth: 1.5, borderColor: colors.border,
   },
-  optionSelected: { borderColor: colors.primary, backgroundColor: '#EEF6FA' },
-  optionIcon: { fontSize: 22, width: 32, textAlign: 'center' },
+  optionSelected: { borderColor: colors.primary, backgroundColor: '#F0F7FA' },
+  iconWrap: {
+    width: 40, height: 40, borderRadius: 20,
+    backgroundColor: colors.azure, alignItems: 'center', justifyContent: 'center',
+  },
+  iconWrapActive: { backgroundColor: colors.primary },
   optionLabel: { fontFamily: 'Montserrat_400Regular', fontSize: 15, color: colors.textPrimary },
-  optionLabelSelected: { fontFamily: 'Montserrat_600SemiBold', color: colors.primary },
+  optionLabelSelected: { fontFamily: 'Montserrat_600SemiBold', color: colors.coldViolet },
   optionDesc: { fontFamily: 'Montserrat_400Regular', fontSize: 12, color: colors.textMuted, marginTop: 2 },
-  check: { width: 22, height: 22, borderRadius: 11, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' },
-  checkText: { color: colors.white, fontSize: 12 },
   footer: { paddingHorizontal: spacing.lg, paddingBottom: spacing.lg },
   dots: { alignItems: 'center', marginTop: spacing.md },
 
