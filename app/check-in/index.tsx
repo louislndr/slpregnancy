@@ -1,22 +1,327 @@
-import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView,
+} from 'react-native';
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '@/theme/colors';
-import { spacing } from '@/theme/spacing';
+import { spacing, radius, shadow } from '@/theme/spacing';
+import ProgressDots from '@/components/ProgressDots';
+import PillButton from '@/components/PillButton';
+import { useOnboardingStore } from '@/store/onboardingStore';
+import { RecommendationEngine } from '@/services/RecommendationEngine';
+import { Protocol } from '@/data/protocols';
+
+type Step = 0 | 1 | 2 | 3 | 4 | 5;
+
+const FEELINGS = [
+  { id: 'struggling', icon: '🌧', label: "I'm Struggling" },
+  { id: 'doing-okay', icon: '🌤', label: 'Doing Okay' },
+  { id: 'feeling-good', icon: '☀️', label: 'Feeling Good' },
+  { id: 'preparing-tomorrow', icon: '🌙', label: 'Preparing For Tomorrow' },
+  { id: 'moment-for-myself', icon: '🌸', label: 'I Just Want A Moment For Myself' },
+];
+
+const NEEDS = [
+  { id: 'calm', icon: '🌊', label: 'Calm' },
+  { id: 'confidence', icon: '💪', label: 'Confidence' },
+  { id: 'reassurance', icon: '🤗', label: 'Reassurance' },
+  { id: 'rest', icon: '😴', label: 'Rest' },
+  { id: 'connection', icon: '💞', label: 'Connection' },
+];
+
+const TIMES = [
+  { id: 5, label: '5 min', desc: 'Quick reset' },
+  { id: 10, label: '10 min', desc: 'Short session' },
+  { id: 15, label: '15 min', desc: 'Full session' },
+  { id: 20, label: '20+ min', desc: 'Deep practice' },
+];
+
+const POSITIONS = [
+  { id: 'sitting', icon: '🪑', label: 'Sitting' },
+  { id: 'standing', icon: '🧍', label: 'Standing' },
+  { id: 'lying', icon: '🛏', label: 'Lying Down' },
+];
+
+const GUIDANCE = [
+  { id: 'audio-only', icon: '🎧', label: 'Audio Only', desc: 'Voice guidance only' },
+  { id: 'audio-visual', icon: '🎬', label: 'Audio + Visual', desc: 'Voice + breathing animations' },
+];
+
+function OptionRow({
+  options,
+  selected,
+  onSelect,
+}: {
+  options: { id: string | number; icon: string; label: string; desc?: string }[];
+  selected: string | number | null;
+  onSelect: (id: string | number) => void;
+}) {
+  return (
+    <View style={styles.options}>
+      {options.map((o) => (
+        <TouchableOpacity
+          key={String(o.id)}
+          style={[styles.option, selected === o.id && styles.optionSelected]}
+          onPress={() => onSelect(o.id)}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.optionIcon}>{o.icon}</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.optionLabel, selected === o.id && styles.optionLabelSelected]}>
+              {o.label}
+            </Text>
+            {o.desc && <Text style={styles.optionDesc}>{o.desc}</Text>}
+          </View>
+          {selected === o.id && (
+            <View style={styles.check}><Text style={styles.checkText}>✓</Text></View>
+          )}
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+}
+
+function ResultCard({ protocol, isPrimary }: { protocol: Protocol; isPrimary: boolean }) {
+  return (
+    <TouchableOpacity
+      style={[styles.resultCard, isPrimary && styles.resultCardPrimary]}
+      onPress={() => router.replace(`/session/${protocol.id}`)}
+      activeOpacity={0.85}
+    >
+      {isPrimary && (
+        <View style={styles.primaryBadge}>
+          <Text style={styles.primaryBadgeText}>✦ Recommended for you</Text>
+        </View>
+      )}
+      <Text style={styles.resultTitle}>{protocol.title}</Text>
+      <Text style={styles.resultMeta}>🎧 {protocol.duration} min · {protocol.contentType}</Text>
+      <Text style={styles.resultDesc} numberOfLines={2}>{protocol.description}</Text>
+      <View style={styles.resultCta}>
+        <Text style={styles.resultCtaText}>{isPrimary ? 'Start Session →' : 'Try this instead →'}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+}
 
 export default function CheckInScreen() {
+  const profile = useOnboardingStore((s) => s.profile);
+  const [step, setStep] = useState<Step>(0);
+  const [feeling, setFeeling] = useState<string | null>(null);
+  const [need, setNeed] = useState<string | null>(null);
+  const [time, setTime] = useState<number | null>(null);
+  const [position, setPosition] = useState<string | null>(null);
+  const [guidance, setGuidance] = useState<string | null>(null);
+  const [result, setResult] = useState<ReturnType<typeof RecommendationEngine.recommend> | null>(null);
+
+  const goBack = () => {
+    if (step === 0) { router.back(); return; }
+    setStep((s) => (s - 1) as Step);
+  };
+
+  const goNext = () => {
+    if (step === 4) {
+      const rec = RecommendationEngine.recommend({
+        journey: profile.journey ?? 'pregnancy',
+        emotionalState: feeling ?? 'doing-okay',
+        need: need ?? 'calm',
+        availableTime: time ?? 10,
+        position: position ?? 'sitting',
+        guidanceMode: guidance ?? 'audio-visual',
+      });
+      setResult(rec);
+      setStep(5);
+    } else {
+      setStep((s) => (s + 1) as Step);
+    }
+  };
+
+  const canNext = () => {
+    if (step === 0) return !!feeling;
+    if (step === 1) return !!need;
+    if (step === 2) return !!time;
+    if (step === 3) return !!position;
+    if (step === 4) return !!guidance;
+    return false;
+  };
+
+  const STEPS = [
+    { title: 'How are you\nfeeling today?', sub: 'There are no wrong answers here.' },
+    { title: 'What do you\nneed most today?', sub: 'We\'ll find the right support for you.' },
+    { title: 'How much time\ndo you have?', sub: 'Even 5 minutes makes a difference.' },
+    { title: 'What\'s your\ncurrent position?', sub: 'We\'ll tailor the session for you.' },
+    { title: 'How would you\nlike to be guided?', sub: 'You can always change this later.' },
+  ];
+
+  if (step === 5 && result) {
+    return (
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn}>
+            <Ionicons name="close" size={24} color={colors.coldViolet} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Your Session</Text>
+          <View style={{ width: 36 }} />
+        </View>
+        <ScrollView contentContainerStyle={styles.resultContainer}>
+          <Text style={styles.resultHeading}>Here's what we recommend</Text>
+          <Text style={styles.resultSub}>Based on how you're feeling right now</Text>
+
+          <ResultCard protocol={result.primary} isPrimary />
+
+          {result.alternatives.length > 0 && (
+            <>
+              <Text style={styles.altHeading}>Or try one of these</Text>
+              {result.alternatives.map((alt) => (
+                <ResultCard key={alt.id} protocol={alt} isPrimary={false} />
+              ))}
+            </>
+          )}
+
+          {result.suggestedProgram && (
+            <TouchableOpacity
+              style={styles.programSuggestion}
+              onPress={() => router.replace('/(tabs)/programs')}
+              activeOpacity={0.85}
+            >
+              <Ionicons name="layers-outline" size={20} color={colors.primary} />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.programSuggestionTitle}>Start a Program</Text>
+                <Text style={styles.programSuggestionSub}>{result.suggestedProgram.title}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={colors.primary} />
+            </TouchableOpacity>
+          )}
+
+          <View style={{ height: spacing.xl }} />
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  const current = STEPS[step];
+
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Daily Check-In</Text>
-        <Text style={styles.sub}>Coming soon — full 5-step check-in flow.</Text>
-      </View>
-    </SafeAreaView>
+    <LinearGradient colors={[colors.azure, '#EEF4F8', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={goBack} style={styles.headerBtn}>
+            <Ionicons name={step === 0 ? 'close' : 'chevron-back'} size={24} color={colors.coldViolet} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Daily Check-In</Text>
+          <View style={{ width: 36 }} />
+        </View>
+
+        <ScrollView contentContainerStyle={styles.content}>
+          <Text style={styles.title}>{current.title}</Text>
+          <Text style={styles.sub}>{current.sub}</Text>
+
+          {step === 0 && (
+            <OptionRow
+              options={FEELINGS}
+              selected={feeling}
+              onSelect={(id) => setFeeling(String(id))}
+            />
+          )}
+          {step === 1 && (
+            <OptionRow
+              options={NEEDS}
+              selected={need}
+              onSelect={(id) => setNeed(String(id))}
+            />
+          )}
+          {step === 2 && (
+            <OptionRow
+              options={TIMES}
+              selected={time}
+              onSelect={(id) => setTime(Number(id))}
+            />
+          )}
+          {step === 3 && (
+            <OptionRow
+              options={POSITIONS}
+              selected={position}
+              onSelect={(id) => setPosition(String(id))}
+            />
+          )}
+          {step === 4 && (
+            <OptionRow
+              options={GUIDANCE}
+              selected={guidance}
+              onSelect={(id) => setGuidance(String(id))}
+            />
+          )}
+        </ScrollView>
+
+        <View style={styles.footer}>
+          <PillButton
+            label={step === 4 ? 'Find My Session' : 'Continue'}
+            onPress={goNext}
+            disabled={!canNext()}
+          />
+          <View style={styles.dots}>
+            <ProgressDots total={5} current={step} />
+          </View>
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.white },
-  container: { flex: 1, padding: spacing.lg, justifyContent: 'center', alignItems: 'center' },
-  title: { fontFamily: 'Raleway_700Bold', fontSize: 24, color: colors.coldViolet, marginBottom: spacing.sm },
-  sub: { fontFamily: 'Montserrat_400Regular', fontSize: 15, color: colors.textSecondary, textAlign: 'center' },
+  gradient: { flex: 1 },
+  safe: { flex: 1 },
+  header: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: spacing.lg, paddingVertical: spacing.md,
+  },
+  headerBtn: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
+  headerTitle: { fontFamily: 'Raleway_700Bold', fontSize: 16, color: colors.coldViolet },
+  content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.lg },
+  title: { fontFamily: 'Raleway_700Bold', fontSize: 28, color: colors.coldViolet, lineHeight: 36, marginBottom: spacing.sm },
+  sub: { fontFamily: 'Montserrat_400Regular', fontSize: 15, color: colors.textSecondary, marginBottom: spacing.xl },
+  options: { gap: 10 },
+  option: {
+    flexDirection: 'row', alignItems: 'center', backgroundColor: colors.white,
+    borderRadius: 14, padding: spacing.md, gap: spacing.md,
+    borderWidth: 1.5, borderColor: 'transparent',
+  },
+  optionSelected: { borderColor: colors.primary, backgroundColor: '#EEF6FA' },
+  optionIcon: { fontSize: 22, width: 32, textAlign: 'center' },
+  optionLabel: { fontFamily: 'Montserrat_400Regular', fontSize: 15, color: colors.textPrimary },
+  optionLabelSelected: { fontFamily: 'Montserrat_600SemiBold', color: colors.primary },
+  optionDesc: { fontFamily: 'Montserrat_400Regular', fontSize: 12, color: colors.textMuted, marginTop: 2 },
+  check: { width: 22, height: 22, borderRadius: 11, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' },
+  checkText: { color: colors.white, fontSize: 12 },
+  footer: { paddingHorizontal: spacing.lg, paddingBottom: spacing.lg },
+  dots: { alignItems: 'center', marginTop: spacing.md },
+
+  // Result screen
+  resultContainer: { paddingHorizontal: spacing.lg, paddingTop: spacing.md },
+  resultHeading: { fontFamily: 'Raleway_700Bold', fontSize: 24, color: colors.coldViolet, marginBottom: 4 },
+  resultSub: { fontFamily: 'Montserrat_400Regular', fontSize: 14, color: colors.textSecondary, marginBottom: spacing.lg },
+  resultCard: {
+    backgroundColor: colors.white, borderRadius: radius.md,
+    padding: spacing.lg, marginBottom: spacing.md, ...shadow.card,
+  },
+  resultCardPrimary: { borderWidth: 2, borderColor: colors.primary },
+  primaryBadge: {
+    alignSelf: 'flex-start', backgroundColor: colors.azure,
+    borderRadius: 9999, paddingVertical: 4, paddingHorizontal: 12, marginBottom: spacing.sm,
+  },
+  primaryBadgeText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: colors.primary, letterSpacing: 0.3 },
+  resultTitle: { fontFamily: 'PlayfairDisplay_400Regular', fontSize: 20, color: colors.coldViolet, marginBottom: 4 },
+  resultMeta: { fontFamily: 'Montserrat_400Regular', fontSize: 12, color: colors.textMuted, marginBottom: spacing.sm },
+  resultDesc: { fontFamily: 'Montserrat_400Regular', fontSize: 14, color: colors.textSecondary, lineHeight: 20, marginBottom: spacing.md },
+  resultCta: {},
+  resultCtaText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: colors.primary },
+  altHeading: { fontFamily: 'Raleway_700Bold', fontSize: 16, color: colors.coldViolet, marginBottom: spacing.md },
+  programSuggestion: {
+    flexDirection: 'row', alignItems: 'center', gap: spacing.md,
+    backgroundColor: colors.sandLight, borderRadius: radius.md,
+    padding: spacing.md, marginTop: spacing.sm,
+  },
+  programSuggestionTitle: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: colors.coldViolet },
+  programSuggestionSub: { fontFamily: 'Montserrat_400Regular', fontSize: 12, color: colors.textSecondary },
 });
