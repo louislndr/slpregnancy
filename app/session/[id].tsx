@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
   intentionText: { fontFamily: 'PlayfairDisplay_400Regular_Italic', fontSize: 15, color: colors.coldViolet, lineHeight: 24 },
   transport: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.md, marginBottom: spacing.xl },
   transportBtn: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
-  skipText: { fontFamily: 'Montserrat_700Bold', fontSize: 13, color: colors.coldViolet } as any,
+  skipText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: colors.coldViolet },
   playBtn: { width: 68, height: 68, borderRadius: 34, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center', ...shadow.button },
   partsTitle: { fontFamily: 'Raleway_700Bold', fontSize: 15, color: colors.coldViolet, marginBottom: spacing.md },
   partsList: { gap: 14, marginBottom: spacing.lg },
