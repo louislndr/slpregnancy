@@ -8,6 +8,7 @@ import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import { programs, Program } from '@/data/programs';
 import { useSessionStore } from '@/store/sessionStore';
+import AppHeader from '@/components/AppHeader';
 
 function ProgramCard({ program }: { program: Program }) {
   const progress = useSessionStore((s) => s.getProgramProgress(program.id));
@@ -95,6 +96,7 @@ function ProgramCard({ program }: { program: Program }) {
 export default function ProgramsScreen() {
   return (
     <SafeAreaView style={styles.safe}>
+      <AppHeader />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Guided Programs</Text>
         <Text style={styles.headerSub}>Structured journeys for each stage</Text>
@@ -111,7 +113,7 @@ export default function ProgramsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.white },
-  header: { paddingHorizontal: spacing.lg, paddingTop: spacing.xl, paddingBottom: spacing.md },
+  header: { paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: spacing.md },
   headerTitle: { fontFamily: 'Raleway_700Bold', fontSize: 26, color: colors.coldViolet, marginBottom: 4 },
   headerSub: { fontFamily: 'Montserrat_400Regular', fontSize: 14, color: colors.textSecondary },
   content: { paddingHorizontal: spacing.lg, gap: spacing.lg },

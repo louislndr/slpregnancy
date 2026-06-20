@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import PillButton from '@/components/PillButton';
 import ProgressDots from '@/components/ProgressDots';
+import AppHeader from '@/components/AppHeader';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
 import { useOnboardingStore } from '@/store/onboardingStore';
@@ -45,6 +46,7 @@ export default function QuestionsScreen() {
   return (
     <LinearGradient colors={[colors.azure, '#EEF4F8', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
+        <AppHeader />
         <View style={styles.container}>
           <View style={{ flex: 1 }}>
             <Text style={styles.title}>A few questions{'\n'}to personalize</Text>

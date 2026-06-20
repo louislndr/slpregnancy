@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import PillButton from '@/components/PillButton';
 import ProgressDots from '@/components/ProgressDots';
+import AppHeader from '@/components/AppHeader';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import { useOnboardingStore } from '@/store/onboardingStore';
@@ -19,6 +20,7 @@ export default function FirstSessionScreen() {
   return (
     <LinearGradient colors={[colors.azure, '#EEF4F8', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
+        <AppHeader />
         <View style={styles.container}>
           <View style={{ flex: 1 }}>
             <Text style={styles.eyebrow}>YOUR FIRST RECOMMENDED SESSION</Text>
@@ -56,7 +58,7 @@ export default function FirstSessionScreen() {
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
   safe: { flex: 1 },
-  container: { flex: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.xl, paddingBottom: spacing.lg },
+  container: { flex: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: spacing.lg },
   eyebrow: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: colors.primary, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: spacing.md },
   title: { fontFamily: 'Raleway_700Bold', fontSize: 28, color: colors.coldViolet, lineHeight: 36, marginBottom: spacing.xl },
   sessionCard: {

@@ -5,12 +5,12 @@ import {
   StyleSheet,
   SafeAreaView,
   Dimensions,
-  Image,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Svg, Circle, Path, Ellipse, Line, Rect, G } from 'react-native-svg';
 import PillButton from '@/components/PillButton';
 import ProgressDots from '@/components/ProgressDots';
+import AppHeader from '@/components/AppHeader';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
 
@@ -100,12 +100,8 @@ function WelcomeIllustration() {
 export default function WelcomeScreen() {
   return (
     <SafeAreaView style={styles.safe}>
+      <AppHeader />
       <View style={styles.container}>
-
-        {/* Logo */}
-        <View style={styles.logoArea}>
-          <Image source={require('@/assets/logo.png')} style={styles.logo} resizeMode="contain" />
-        </View>
 
         {/* Illustration */}
         <View style={styles.illustrationArea}>
@@ -148,14 +144,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
     paddingBottom: spacing.lg,
-  },
-  logoArea: {
-    alignItems: 'center',
-    marginBottom: spacing.md,
-  },
-  logo: {
-    width: 200,
-    height: 60,
   },
   illustrationArea: {
     alignItems: 'center',

@@ -9,6 +9,7 @@ import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import { protocols, ContentType } from '@/data/protocols';
 import { useSessionStore } from '@/store/sessionStore';
+import AppHeader from '@/components/AppHeader';
 
 const CONTENT_TYPES: ContentType[] = ['REFLECT', 'MOVE', 'FULL SESSION', 'PREPARE'];
 const DURATIONS = [
@@ -46,6 +47,7 @@ export default function LibraryScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <AppHeader />
       <View style={styles.headerArea}>
         <Text style={styles.headerTitle}>Library</Text>
 
@@ -157,7 +159,7 @@ export default function LibraryScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.white },
-  headerArea: { paddingTop: spacing.xl, borderBottomWidth: 1, borderBottomColor: colors.border, paddingBottom: spacing.md },
+  headerArea: { paddingTop: spacing.md, borderBottomWidth: 1, borderBottomColor: colors.border, paddingBottom: spacing.md },
   headerTitle: { fontFamily: 'Raleway_700Bold', fontSize: 26, color: colors.coldViolet, paddingHorizontal: spacing.lg, marginBottom: spacing.md },
   searchBar: {
     flexDirection: 'row', alignItems: 'center', gap: spacing.sm,

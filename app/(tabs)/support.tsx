@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import { protocols } from '@/data/protocols';
+import AppHeader from '@/components/AppHeader';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -22,6 +23,7 @@ const SUPPORT_ITEMS: { key: string; icon: IoniconsName; label: string; subtitle:
 export default function SupportScreen() {
   return (
     <SafeAreaView style={styles.safe}>
+      <AppHeader />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Support Now</Text>
         <Text style={styles.headerSub}>Immediate support, no check-in needed</Text>
@@ -69,7 +71,7 @@ export default function SupportScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.white },
-  header: { paddingHorizontal: spacing.lg, paddingTop: spacing.xl, paddingBottom: spacing.md },
+  header: { paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: spacing.md },
   headerTitle: { fontFamily: 'Raleway_700Bold', fontSize: 26, color: colors.coldViolet, marginBottom: 4 },
   headerSub: { fontFamily: 'Montserrat_400Regular', fontSize: 14, color: colors.textSecondary },
   content: { paddingHorizontal: spacing.lg },

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  View, Text, ScrollView, StyleSheet, SafeAreaView, TouchableOpacity, Image,
+  View, Text, ScrollView, StyleSheet, SafeAreaView, TouchableOpacity,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,6 +12,7 @@ import { programs } from '@/data/programs';
 import { protocols } from '@/data/protocols';
 import Eyebrow from '@/components/Eyebrow';
 import Card from '@/components/Card';
+import AppHeader from '@/components/AppHeader';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -47,18 +48,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-          <Ionicons name="menu" size={24} color={colors.coldViolet} />
-        </TouchableOpacity>
-        <View style={styles.headerCenter}>
-          <Image source={require('@/assets/logo.png')} style={styles.headerLogo} resizeMode="contain" />
-        </View>
-        <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-          <Ionicons name="notifications-outline" size={24} color={colors.coldViolet} />
-        </TouchableOpacity>
-      </View>
+      <AppHeader rightIcon="notifications-outline" />
 
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
@@ -192,13 +182,6 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.white },
-  header: {
-    flexDirection: 'row', alignItems: 'center',
-    paddingHorizontal: spacing.lg, paddingVertical: spacing.md,
-    borderBottomWidth: 1, borderBottomColor: colors.border,
-  },
-  headerCenter: { flex: 1, alignItems: 'center' },
-  headerLogo: { width: 140, height: 40 },
   scroll: { flex: 1 },
   scrollContent: { paddingHorizontal: spacing.lg, paddingTop: spacing.lg, gap: spacing.sm },
   greeting: { fontFamily: 'Raleway_700Bold', fontSize: 22, color: colors.coldViolet },

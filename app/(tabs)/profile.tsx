@@ -4,12 +4,14 @@ import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { router } from 'expo-router';
+import AppHeader from '@/components/AppHeader';
 
 export default function ProfileScreen() {
   const { profile, resetOnboarding } = useOnboardingStore();
 
   return (
     <SafeAreaView style={styles.safe}>
+      <AppHeader />
       <View style={styles.container}>
         <Text style={styles.title}>Profile</Text>
         <Text style={styles.sub}>Journey: {profile.journey ?? 'Not set'}</Text>

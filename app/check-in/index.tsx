@@ -9,6 +9,7 @@ import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import ProgressDots from '@/components/ProgressDots';
 import PillButton from '@/components/PillButton';
+import AppHeader from '@/components/AppHeader';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { RecommendationEngine } from '@/services/RecommendationEngine';
 import { Protocol } from '@/data/protocols';
@@ -161,13 +162,7 @@ export default function CheckInScreen() {
   if (step === 5 && result) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn}>
-            <Ionicons name="close" size={24} color={colors.coldViolet} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Your Session</Text>
-          <View style={{ width: 36 }} />
-        </View>
+        <AppHeader showBack />
         <ScrollView contentContainerStyle={styles.resultContainer}>
           <Text style={styles.resultHeading}>Here's what we recommend</Text>
           <Text style={styles.resultSub}>Based on how you're feeling right now</Text>
@@ -209,13 +204,7 @@ export default function CheckInScreen() {
   return (
     <LinearGradient colors={[colors.azure, '#EEF4F8', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={goBack} style={styles.headerBtn}>
-            <Ionicons name={step === 0 ? 'close' : 'chevron-back'} size={24} color={colors.coldViolet} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Daily Check-In</Text>
-          <View style={{ width: 36 }} />
-        </View>
+        <AppHeader showBack onBackPress={goBack} />
 
         <ScrollView contentContainerStyle={styles.content}>
           <Text style={styles.title}>{current.title}</Text>
@@ -276,12 +265,6 @@ export default function CheckInScreen() {
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
   safe: { flex: 1 },
-  header: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg, paddingVertical: spacing.md,
-  },
-  headerBtn: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
-  headerTitle: { fontFamily: 'Raleway_700Bold', fontSize: 16, color: colors.coldViolet },
   content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.lg },
   title: { fontFamily: 'Raleway_700Bold', fontSize: 28, color: colors.coldViolet, lineHeight: 36, marginBottom: spacing.sm },
   sub: { fontFamily: 'Montserrat_400Regular', fontSize: 15, color: colors.textSecondary, marginBottom: spacing.xl },

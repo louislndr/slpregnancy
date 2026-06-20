@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View, Text, StyleSheet, SafeAreaView, TouchableOpacity,
-  ScrollView, Dimensions, Animated, Image,
+  ScrollView, Dimensions, Animated,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import AppHeader from '@/components/AppHeader';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Circle, Path, Ellipse, Line, G, Rect } from 'react-native-svg';
 import { colors } from '@/theme/colors';
@@ -185,23 +186,7 @@ export default function SessionPlayerScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn}>
-          <Ionicons name="chevron-back" size={24} color={colors.coldViolet} />
-        </TouchableOpacity>
-        <View style={styles.headerCenter}>
-          <Image source={require('@/assets/logo.png')} style={styles.headerLogo} resizeMode="contain" />
-        </View>
-        <View style={styles.headerRight}>
-          <TouchableOpacity style={styles.headerBtn}>
-            <Ionicons name="heart-outline" size={22} color={colors.coldViolet} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.headerBtn}>
-            <Ionicons name="ellipsis-vertical" size={22} color={colors.coldViolet} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <AppHeader showBack rightIcon="ellipsis-vertical" rightIcon2="heart-outline" />
 
       {/* Mode toggle */}
       <View style={styles.modeToggle}>
@@ -380,13 +365,6 @@ export default function SessionPlayerScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.white },
-
-  // Header
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.border },
-  headerBtn: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
-  headerCenter: { flex: 1, alignItems: 'center' },
-  headerLogo: { width: 130, height: 38 },
-  headerRight: { flexDirection: 'row', alignItems: 'center' },
 
   // Mode toggle
   modeToggle: { flexDirection: 'row', margin: spacing.md, backgroundColor: colors.azure, borderRadius: 9999, padding: 3 },

@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Svg, Circle, Line } from 'react-native-svg';
 import PillButton from '@/components/PillButton';
 import ProgressDots from '@/components/ProgressDots';
+import AppHeader from '@/components/AppHeader';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 
@@ -35,6 +36,7 @@ export default function PermissionScreen() {
   return (
     <LinearGradient colors={[colors.azure, '#EEF4F8', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
+        <AppHeader />
         <View style={styles.container}>
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <DandelionIcon size={100} />
@@ -63,7 +65,7 @@ export default function PermissionScreen() {
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
   safe: { flex: 1 },
-  container: { flex: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.xl, paddingBottom: spacing.lg },
+  container: { flex: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: spacing.lg },
   card: {
     backgroundColor: colors.sandLight,
     borderRadius: radius.md,

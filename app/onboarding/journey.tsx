@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import PillButton from '@/components/PillButton';
 import ProgressDots from '@/components/ProgressDots';
+import AppHeader from '@/components/AppHeader';
 import { colors } from '@/theme/colors';
 import { spacing, radius } from '@/theme/spacing';
 import { useOnboardingStore, Journey } from '@/store/onboardingStore';
@@ -24,6 +25,7 @@ export default function JourneyScreen() {
   return (
     <LinearGradient colors={['#FFFFFF', '#F5F9FC', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
+        <AppHeader />
         <View style={styles.container}>
           <View style={{ flex: 1 }}>
             <Text style={styles.title}>Tell us about{'\n'}your journey</Text>
