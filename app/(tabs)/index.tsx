@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  View, Text, ScrollView, StyleSheet, SafeAreaView, TouchableOpacity,
+  View, Text, ScrollView, StyleSheet, SafeAreaView, TouchableOpacity, Image,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -53,8 +53,7 @@ export default function HomeScreen() {
           <Ionicons name="menu" size={24} color={colors.coldViolet} />
         </TouchableOpacity>
         <View style={styles.headerCenter}>
-          <Text style={styles.wordmark}>SL Pregnancy</Text>
-          <Text style={styles.byLine}>by SophroLounge</Text>
+          <Image source={require('@/assets/logo.png')} style={styles.headerLogo} resizeMode="contain" />
         </View>
         <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
           <Ionicons name="notifications-outline" size={24} color={colors.coldViolet} />
@@ -199,8 +198,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1, borderBottomColor: colors.border,
   },
   headerCenter: { flex: 1, alignItems: 'center' },
-  wordmark: { fontFamily: 'Raleway_700Bold', fontSize: 16, color: colors.primary, letterSpacing: 0.5 },
-  byLine: { fontFamily: 'Montserrat_400Regular', fontSize: 10, color: colors.textMuted },
+  headerLogo: { width: 140, height: 40 },
   scroll: { flex: 1 },
   scrollContent: { paddingHorizontal: spacing.lg, paddingTop: spacing.lg, gap: spacing.sm },
   greeting: { fontFamily: 'Raleway_700Bold', fontSize: 22, color: colors.coldViolet },

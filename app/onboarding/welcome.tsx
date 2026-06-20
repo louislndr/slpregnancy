@@ -5,6 +5,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Dimensions,
+  Image,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Svg, Circle, Path, Ellipse, Line, Rect, G } from 'react-native-svg';
@@ -101,10 +102,9 @@ export default function WelcomeScreen() {
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
 
-        {/* Wordmark */}
+        {/* Logo */}
         <View style={styles.logoArea}>
-          <Text style={styles.wordmark}>SL Pregnancy</Text>
-          <Text style={styles.byLine}>by SophroLounge</Text>
+          <Image source={require('@/assets/logo.png')} style={styles.logo} resizeMode="contain" />
         </View>
 
         {/* Illustration */}
@@ -151,20 +151,11 @@ const styles = StyleSheet.create({
   },
   logoArea: {
     alignItems: 'center',
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
   },
-  wordmark: {
-    fontFamily: 'Raleway_700Bold',
-    fontSize: 18,
-    color: colors.primary,
-    letterSpacing: 0.8,
-  },
-  byLine: {
-    fontFamily: 'Montserrat_400Regular',
-    fontSize: 11,
-    color: colors.textMuted,
-    letterSpacing: 0.3,
-    marginTop: 2,
+  logo: {
+    width: 200,
+    height: 60,
   },
   illustrationArea: {
     alignItems: 'center',

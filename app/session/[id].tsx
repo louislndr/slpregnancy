@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View, Text, StyleSheet, SafeAreaView, TouchableOpacity,
-  ScrollView, Dimensions, Animated,
+  ScrollView, Dimensions, Animated, Image,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -191,8 +191,7 @@ export default function SessionPlayerScreen() {
           <Ionicons name="chevron-back" size={24} color={colors.coldViolet} />
         </TouchableOpacity>
         <View style={styles.headerCenter}>
-          <Text style={styles.wordmark}>SL Pregnancy</Text>
-          <Text style={styles.byLine}>by SophroLounge</Text>
+          <Image source={require('@/assets/logo.png')} style={styles.headerLogo} resizeMode="contain" />
         </View>
         <View style={styles.headerRight}>
           <TouchableOpacity style={styles.headerBtn}>
@@ -386,8 +385,7 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.border },
   headerBtn: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
   headerCenter: { flex: 1, alignItems: 'center' },
-  wordmark: { fontFamily: 'Raleway_700Bold', fontSize: 15, color: colors.primary, letterSpacing: 0.5 },
-  byLine: { fontFamily: 'Montserrat_400Regular', fontSize: 10, color: colors.textMuted },
+  headerLogo: { width: 130, height: 38 },
   headerRight: { flexDirection: 'row', alignItems: 'center' },
 
   // Mode toggle
