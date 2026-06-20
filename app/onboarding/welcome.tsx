@@ -5,180 +5,171 @@ import {
   StyleSheet,
   SafeAreaView,
   Dimensions,
-  Image,
 } from 'react-native';
 import { router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Svg, Circle, Path, Ellipse, Line } from 'react-native-svg';
+import { Svg, Circle, Path, Ellipse, Line, Rect, G } from 'react-native-svg';
 import PillButton from '@/components/PillButton';
 import ProgressDots from '@/components/ProgressDots';
 import { colors } from '@/theme/colors';
-import { typography } from '@/theme/typography';
 import { spacing } from '@/theme/spacing';
 
-const { width, height } = Dimensions.get('window');
-
+const { width } = Dimensions.get('window');
 const TOTAL_STEPS = 9;
 
-// Inline dandelion + woman illustration using SVG
 function WelcomeIllustration() {
+  const w = width - spacing.lg * 2;
+  const h = 220;
   return (
-    <Svg width={width * 0.8} height={220} viewBox="0 0 320 220">
-      {/* Soft horizon / ground */}
-      <Ellipse cx="160" cy="200" rx="140" ry="18" fill={colors.sandLight} />
+    <Svg width={w} height={h} viewBox="0 0 340 220">
+      {/* Sky background */}
+      <Rect x="0" y="0" width="340" height="160" fill="#EEF6F9" rx="16" />
 
-      {/* Woman silhouette — seated, calm */}
-      {/* Body */}
-      <Ellipse cx="160" cy="170" rx="38" ry="26" fill={colors.lavender} />
+      {/* Mountains far */}
+      <Path d="M0 130 L60 70 L120 110 L180 55 L240 95 L300 60 L340 90 L340 160 L0 160Z" fill="#C8DDE6" />
+      {/* Mountains near */}
+      <Path d="M0 145 L80 90 L140 125 L200 80 L260 115 L320 85 L340 100 L340 160 L0 160Z" fill="#A8C8D4" />
+
+      {/* Ground / water */}
+      <Ellipse cx="170" cy="165" rx="160" ry="18" fill="#B8D8E4" opacity={0.5} />
+      <Rect x="0" y="155" width="340" height="65" fill="#D4EBF2" />
+      {/* Water reflection ripples */}
+      <Ellipse cx="120" cy="175" rx="40" ry="4" fill="#B8D4E0" opacity={0.4} />
+      <Ellipse cx="230" cy="182" rx="30" ry="3" fill="#B8D4E0" opacity={0.3} />
+
+      {/* Sitting mat / cushion */}
+      <Ellipse cx="170" cy="185" rx="55" ry="10" fill={colors.sandLight} />
+      <Ellipse cx="170" cy="183" rx="50" ry="8" fill={colors.peachSoft} opacity={0.7} />
+
+      {/* Woman body — sitting cross-legged */}
+      {/* Dress/skirt spread */}
+      <Ellipse cx="170" cy="175" rx="38" ry="14" fill="#A8C4DA" />
+      {/* Torso */}
+      <Path d="M152 175 Q155 145 170 140 Q185 145 188 175Z" fill="#C4DAEC" />
       {/* Head */}
-      <Circle cx="160" cy="130" r="22" fill={colors.peachSoft} />
-      {/* Hair */}
-      <Path
-        d="M140 122 Q148 104 160 108 Q172 104 180 122 Q174 114 160 116 Q146 114 140 122Z"
-        fill={colors.coldViolet}
-      />
-      {/* Bump / belly */}
-      <Ellipse cx="163" cy="176" rx="28" ry="20" fill={colors.peachSoft} />
-      {/* Arms crossed */}
-      <Path
-        d="M135 165 Q148 172 163 176 Q148 180 135 175Z"
-        fill={colors.lavender}
-        opacity={0.7}
-      />
+      <Circle cx="170" cy="128" r="20" fill="#F4C4A0" />
+      {/* Hair bun */}
+      <Path d="M152 122 Q155 105 170 108 Q185 105 188 122 Q182 112 170 114 Q158 112 152 122Z" fill="#8B6355" />
+      <Circle cx="170" cy="107" r="7" fill="#8B6355" />
+      {/* Baby bump */}
+      <Ellipse cx="172" cy="162" rx="22" ry="16" fill="#D4E8F4" opacity={0.9} />
+      {/* Arms resting */}
+      <Path d="M152 155 Q145 165 148 172 Q155 168 158 162Z" fill="#C4DAEC" />
+      <Path d="M188 155 Q195 165 192 172 Q185 168 182 162Z" fill="#C4DAEC" />
+      {/* Hands on belly */}
+      <Ellipse cx="158" cy="168" rx="8" ry="5" fill="#F4C4A0" />
+      <Ellipse cx="182" cy="168" rx="8" ry="5" fill="#F4C4A0" />
 
-      {/* Dandelion stem */}
-      <Line x1="260" y1="200" x2="260" y2="100" stroke={colors.primary} strokeWidth="1.5" />
-      {/* Dandelion seeds radiating */}
-      {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle, i) => {
+      {/* Plants left */}
+      <Path d="M30 160 Q25 130 35 120 Q40 130 38 160Z" fill="#7BA89C" opacity={0.7} />
+      <Path d="M22 160 Q15 140 28 128 Q30 138 27 160Z" fill="#8DB8AC" opacity={0.6} />
+      <Circle cx="34" cy="118" r="8" fill="#6A9A8C" opacity={0.5} />
+
+      {/* Plants right */}
+      <Path d="M310 160 Q315 130 305 120 Q300 130 302 160Z" fill="#7BA89C" opacity={0.7} />
+      <Path d="M318 160 Q325 140 312 128 Q310 138 313 160Z" fill="#8DB8AC" opacity={0.6} />
+      <Circle cx="306" cy="118" r="8" fill="#6A9A8C" opacity={0.5} />
+
+      {/* Dandelion top right */}
+      <Line x1="295" y1="75" x2="295" y2="30" stroke={colors.primary} strokeWidth="1.2" />
+      {[0, 36, 72, 108, 144, 180, 216, 252, 288, 324].map((angle, i) => {
         const rad = (angle * Math.PI) / 180;
-        const len = 22;
-        const x2 = 260 + Math.cos(rad) * len;
-        const y2 = 100 + Math.sin(rad) * len;
+        const len = 16;
+        const x2 = 295 + Math.cos(rad) * len;
+        const y2 = 30 + Math.sin(rad) * len;
         return (
-          <React.Fragment key={i}>
-            <Line
-              x1="260"
-              y1="100"
-              x2={x2}
-              y2={y2}
-              stroke={colors.primary}
-              strokeWidth="0.8"
-              opacity={0.6}
-            />
-            <Circle cx={x2} cy={y2} r="2.5" fill={colors.primary} opacity={0.5} />
-          </React.Fragment>
+          <G key={i}>
+            <Line x1="295" y1="30" x2={x2} y2={y2} stroke={colors.primary} strokeWidth="0.7" opacity={0.55} />
+            <Circle cx={x2} cy={y2} r="2" fill={colors.primary} opacity={0.45} />
+          </G>
         );
       })}
-      {/* Center circle */}
-      <Circle cx="260" cy="100" r="5" fill={colors.primary} opacity={0.8} />
+      <Circle cx="295" cy="30" r="4" fill={colors.primary} opacity={0.8} />
 
-      {/* Floating seed 1 */}
-      <Line x1="80" y1="60" x2="84" y2="80" stroke={colors.primary} strokeWidth="0.8" opacity={0.4} />
-      <Circle cx="84" cy="80" r="2" fill={colors.primary} opacity={0.3} />
-
-      {/* Floating seed 2 */}
-      <Line x1="100" y1="40" x2="105" y2="58" stroke={colors.primary} strokeWidth="0.8" opacity={0.4} />
-      <Circle cx="105" cy="58" r="2" fill={colors.primary} opacity={0.3} />
-
-      {/* Floating seed 3 */}
-      <Line x1="220" y1="50" x2="217" y2="70" stroke={colors.primary} strokeWidth="0.8" opacity={0.35} />
-      <Circle cx="217" cy="70" r="2" fill={colors.primary} opacity={0.3} />
-
-      {/* Soft ground flowers */}
-      <Circle cx="115" cy="195" r="4" fill={colors.accent} opacity={0.5} />
-      <Circle cx="205" cy="197" r="3" fill={colors.lavender} opacity={0.6} />
-      <Circle cx="135" cy="198" r="2.5" fill={colors.peachSoft} opacity={0.7} />
+      {/* Floating seeds */}
+      {[{x:60,y:25},{x:80,y:45},{x:50,y:55},{x:260,y:20},{x:240,y:42}].map((s, i) => (
+        <G key={i}>
+          <Line x1={s.x} y1={s.y} x2={s.x+2} y2={s.y+12} stroke={colors.primary} strokeWidth="0.7" opacity={0.35} />
+          <Circle cx={s.x+2} cy={s.y+12} r="1.8" fill={colors.primary} opacity={0.3} />
+        </G>
+      ))}
     </Svg>
   );
 }
 
 export default function WelcomeScreen() {
   return (
-    <LinearGradient
-      colors={[colors.azure, '#EEF4F8', colors.sandLight]}
-      locations={[0, 0.5, 1]}
-      style={styles.gradient}
-    >
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.container}>
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.container}>
 
-          {/* Logo / wordmark */}
-          <View style={styles.logoArea}>
-            <Text style={styles.wordmark}>SL Pregnancy</Text>
-            <Text style={styles.byLine}>by SophroLounge</Text>
-          </View>
-
-          {/* Illustration */}
-          <View style={styles.illustrationArea}>
-            <WelcomeIllustration />
-          </View>
-
-          {/* Text */}
-          <View style={styles.textArea}>
-            <Text style={styles.title}>Welcome to{'\n'}SL Pregnancy</Text>
-            <Text style={styles.subtitle}>
-              A safe space for every step{'\n'}of your journey.
-            </Text>
-          </View>
-
-          {/* CTA */}
-          <View style={styles.ctaArea}>
-            <PillButton
-              label="Get Started"
-              onPress={() => router.push('/onboarding/support-needs')}
-            />
-          </View>
-
-          {/* Progress dots */}
-          <View style={styles.dotsArea}>
-            <ProgressDots total={TOTAL_STEPS} current={0} />
-          </View>
-
+        {/* Wordmark */}
+        <View style={styles.logoArea}>
+          <Text style={styles.wordmark}>SL Pregnancy</Text>
+          <Text style={styles.byLine}>by SophroLounge</Text>
         </View>
-      </SafeAreaView>
-    </LinearGradient>
+
+        {/* Illustration */}
+        <View style={styles.illustrationArea}>
+          <WelcomeIllustration />
+        </View>
+
+        {/* Text */}
+        <View style={styles.textArea}>
+          <Text style={styles.title}>Welcome to{'\n'}SL Pregnancy</Text>
+          <Text style={styles.subtitle}>
+            A safe space for every step{'\n'}of your journey.
+          </Text>
+        </View>
+
+        {/* CTA */}
+        <View style={styles.ctaArea}>
+          <PillButton
+            label="Get Started"
+            onPress={() => router.push('/onboarding/support-needs')}
+          />
+        </View>
+
+        {/* Dots */}
+        <View style={styles.dotsArea}>
+          <ProgressDots total={TOTAL_STEPS} current={0} />
+        </View>
+
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
   safe: {
     flex: 1,
+    backgroundColor: colors.white,
   },
   container: {
     flex: 1,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
+    paddingTop: spacing.lg,
     paddingBottom: spacing.lg,
   },
-
   logoArea: {
     alignItems: 'center',
-    marginBottom: spacing.md,
+    marginBottom: spacing.lg,
   },
   wordmark: {
     fontFamily: 'Raleway_700Bold',
-    fontSize: 20,
+    fontSize: 18,
     color: colors.primary,
-    letterSpacing: 1,
+    letterSpacing: 0.8,
   },
   byLine: {
     fontFamily: 'Montserrat_400Regular',
-    fontSize: 12,
-    color: colors.textSecondary,
-    letterSpacing: 0.5,
+    fontSize: 11,
+    color: colors.textMuted,
+    letterSpacing: 0.3,
     marginTop: 2,
   },
-
   illustrationArea: {
     alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    marginVertical: spacing.md,
+    marginBottom: spacing.xl,
   },
-
   textArea: {
     alignItems: 'center',
     marginBottom: spacing.xl,
@@ -189,22 +180,20 @@ const styles = StyleSheet.create({
     color: colors.coldViolet,
     textAlign: 'center',
     lineHeight: 38,
-    letterSpacing: 0.3,
+    letterSpacing: 0.2,
     marginBottom: spacing.md,
   },
   subtitle: {
-    ...typography.body,
+    fontFamily: 'Montserrat_400Regular',
+    fontSize: 16,
     color: colors.textSecondary,
     textAlign: 'center',
     lineHeight: 24,
   },
-
   ctaArea: {
     marginBottom: spacing.lg,
   },
-
   dotsArea: {
     alignItems: 'center',
-    paddingBottom: spacing.sm,
   },
 });
