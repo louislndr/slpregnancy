@@ -7,7 +7,7 @@ import { router } from 'expo-router';
 import AppHeader from '@/components/AppHeader';
 
 export default function ProfileScreen() {
-  const { profile, resetOnboarding } = useOnboardingStore();
+  const { profile, resetProfile } = useOnboardingStore();
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -17,7 +17,7 @@ export default function ProfileScreen() {
         <Text style={styles.sub}>Journey: {profile.journey ?? 'Not set'}</Text>
         <TouchableOpacity
           style={styles.resetBtn}
-          onPress={() => { resetOnboarding(); router.replace('/onboarding/welcome'); }}
+          onPress={() => { resetProfile(); router.replace('/onboarding/welcome'); }}
         >
           <Text style={styles.resetText}>Reset Onboarding</Text>
         </TouchableOpacity>

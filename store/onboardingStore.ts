@@ -37,6 +37,7 @@ interface OnboardingState {
   setGuidanceMode: (mode: GuidanceMode) => void;
   completeOnboarding: () => void;
   resetOnboarding: () => void;
+  resetProfile: () => void;
 }
 
 const defaultProfile: OnboardingProfile = {
@@ -81,6 +82,7 @@ export const useOnboardingStore = create<OnboardingState>()(
       completeOnboarding: () => set({ hasCompletedOnboarding: true }),
       resetOnboarding: () =>
         set({ hasCompletedOnboarding: false, profile: defaultProfile }),
+      resetProfile: () => set({ profile: defaultProfile }),
     }),
     {
       name: 'onboarding-storage',
