@@ -13,6 +13,7 @@ import ProgressDots from '@/components/ProgressDots';
 import AppHeader from '@/components/AppHeader';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
+import { useOnboardingStore } from '@/store/onboardingStore';
 
 const { width } = Dimensions.get('window');
 const TOTAL_STEPS = 9;
@@ -98,9 +99,13 @@ function WelcomeIllustration() {
 }
 
 export default function WelcomeScreen() {
+  const hasCompleted = useOnboardingStore((s) => s.hasCompletedOnboarding);
   return (
     <SafeAreaView style={styles.safe}>
-      <AppHeader />
+      <AppHeader
+        rightIcon={hasCompleted ? 'close-outline' : undefined}
+        onRightPress={() => router.replace('/(tabs)')}
+      />
       <View style={styles.container}>
 
         {/* Illustration */}

@@ -8,6 +8,7 @@ import ProgressDots from '@/components/ProgressDots';
 import AppHeader from '@/components/AppHeader';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
+import { useOnboardingStore } from '@/store/onboardingStore';
 
 function DandelionIcon({ size = 80 }: { size?: number }) {
   const cx = size / 2;
@@ -33,10 +34,14 @@ function DandelionIcon({ size = 80 }: { size?: number }) {
 }
 
 export default function PermissionScreen() {
+  const hasCompleted = useOnboardingStore((s) => s.hasCompletedOnboarding);
   return (
     <LinearGradient colors={[colors.azure, '#EEF4F8', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
-        <AppHeader />
+        <AppHeader
+          rightIcon={hasCompleted ? 'close-outline' : undefined}
+          onRightPress={() => router.replace('/(tabs)')}
+        />
         <View style={styles.container}>
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <DandelionIcon size={100} />

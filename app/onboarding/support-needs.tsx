@@ -8,6 +8,7 @@ import ProgressDots from '@/components/ProgressDots';
 import AppHeader from '@/components/AppHeader';
 import { colors } from '@/theme/colors';
 import { spacing, radius } from '@/theme/spacing';
+import { useOnboardingStore } from '@/store/onboardingStore';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -19,6 +20,7 @@ const OPTIONS: { id: string; icon: IoniconsName; label: string }[] = [
 ];
 
 export default function SupportNeedsScreen() {
+  const hasCompletedOnboarding = useOnboardingStore((s) => s.hasCompletedOnboarding);
   const [selected, setSelected] = React.useState<string[]>([]);
 
   const toggle = (id: string) =>
@@ -29,7 +31,10 @@ export default function SupportNeedsScreen() {
   return (
     <LinearGradient colors={['#FFFFFF', '#F5F9FC', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
-        <AppHeader />
+        <AppHeader
+          rightIcon={hasCompletedOnboarding ? 'close-outline' : undefined}
+          onRightPress={() => router.replace('/(tabs)')}
+        />
         <View style={styles.container}>
           <View style={{ flex: 1 }}>
             <Text style={styles.title}>How can we{'\n'}support you?</Text>

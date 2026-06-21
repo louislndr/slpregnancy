@@ -20,12 +20,15 @@ const JOURNEYS: { id: Journey; icon: IoniconsName; label: string; desc: string }
 ];
 
 export default function JourneyScreen() {
-  const { profile, setJourney } = useOnboardingStore();
+  const { profile, setJourney, hasCompletedOnboarding } = useOnboardingStore();
 
   return (
     <LinearGradient colors={['#FFFFFF', '#F5F9FC', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
-        <AppHeader />
+        <AppHeader
+          rightIcon={hasCompletedOnboarding ? 'close-outline' : undefined}
+          onRightPress={() => router.replace('/(tabs)')}
+        />
         <View style={styles.container}>
           <View style={{ flex: 1 }}>
             <Text style={styles.title}>Tell us about{'\n'}your journey</Text>

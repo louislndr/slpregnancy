@@ -11,6 +11,7 @@ import { useOnboardingStore } from '@/store/onboardingStore';
 
 export default function FirstSessionScreen() {
   const completeOnboarding = useOnboardingStore((s) => s.completeOnboarding);
+  const hasCompletedOnboarding = useOnboardingStore((s) => s.hasCompletedOnboarding);
 
   const handleStart = () => {
     completeOnboarding();
@@ -20,7 +21,10 @@ export default function FirstSessionScreen() {
   return (
     <LinearGradient colors={[colors.azure, '#EEF4F8', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
-        <AppHeader />
+        <AppHeader
+          rightIcon={hasCompletedOnboarding ? 'close-outline' : undefined}
+          onRightPress={() => router.replace('/(tabs)')}
+        />
         <View style={styles.container}>
           <View style={{ flex: 1 }}>
             <Text style={styles.eyebrow}>YOUR FIRST RECOMMENDED SESSION</Text>
