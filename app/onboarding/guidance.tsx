@@ -30,6 +30,7 @@ export default function GuidanceScreen() {
     <LinearGradient colors={['#FFFFFF', '#F5F9FC', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
         <AppHeader
+          showBack
           rightIcon={hasCompletedOnboarding ? 'close-outline' : undefined}
           onRightPress={() => router.replace('/(tabs)')}
         />

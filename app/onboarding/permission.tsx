@@ -39,6 +39,7 @@ export default function PermissionScreen() {
     <LinearGradient colors={[colors.azure, '#EEF4F8', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
         <AppHeader
+          showBack
           rightIcon={hasCompleted ? 'close-outline' : undefined}
           onRightPress={() => router.replace('/(tabs)')}
         />
