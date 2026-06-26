@@ -28,8 +28,8 @@ const JOURNEYS = [
 const TYPE_COLORS: Record<string, string> = {
   REFLECT: colors.lavender,
   MOVE: colors.primary,
-  'FULL SESSION': colors.accent,
-  PREPARE: colors.sandLight,
+  'FULL SESSION': colors.sandLight,
+  PREPARE: colors.accent,
 };
 
 function FilterOption({
@@ -167,7 +167,7 @@ export default function LibraryScreen() {
             >
               <View style={styles.sessionCardTop}>
                 <View style={[styles.typeBadge, { backgroundColor: TYPE_COLORS[p.contentType] + '33' }]}>
-                  <Text style={[styles.typeBadgeText, { color: TYPE_COLORS[p.contentType] === colors.sandLight ? colors.coldViolet : TYPE_COLORS[p.contentType] }]}>
+                  <Text style={[styles.typeBadgeText, { color: TYPE_COLORS[p.contentType] === colors.sandLight ? colors.textSecondary : TYPE_COLORS[p.contentType] }]}>
                     {p.contentType}
                   </Text>
                 </View>
