@@ -29,7 +29,7 @@ const TYPE_BADGES: Record<string, { bg: string; text: string }> = {
   REFLECT:        { bg: colors.lavender,  text: colors.coldViolet },  // light purple → dark purple
   MOVE:           { bg: colors.azure,     text: colors.primary },     // light teal → teal
   'FULL SESSION': { bg: colors.sandLight, text: colors.accent },      // warm sand → peach
-  PREPARE:        { bg: colors.accent,    text: colors.coldViolet },  // peach → deep violet
+  PREPARE:        { bg: colors.sandLight,  text: colors.accent },      // warm sand → peach orange
 };
 
 function FilterOption({
