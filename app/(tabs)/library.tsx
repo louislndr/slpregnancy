@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
   sessionCardTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.sm },
   typeBadge: { borderRadius: 9999, paddingVertical: 4, paddingHorizontal: 10 },
   typeBadgeText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13 },
-  sessionTitle: { fontFamily: 'PlayfairDisplay_400Regular', fontSize: 18, color: colors.coldViolet, marginBottom: spacing.xs },
+  sessionTitle: { fontFamily: 'Raleway_700Bold', fontSize: 16, color: colors.coldViolet, marginBottom: spacing.xs },
   sessionDesc: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textSecondary, lineHeight: 20, marginBottom: spacing.sm },
   sessionMeta: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   sessionMetaText: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textMuted },
