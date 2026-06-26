@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet,  TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
 import { useOnboardingStore } from '@/store/onboardingStore';
@@ -10,7 +11,7 @@ export default function ProfileScreen() {
   const { profile, resetProfile } = useOnboardingStore();
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView edges={['top']} style={styles.safe}>
       <AppHeader />
       <View style={styles.container}>
         <Text style={styles.title}>Profile</Text>

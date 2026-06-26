@@ -1,7 +1,8 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView,
+  View, Text, StyleSheet,  TouchableOpacity, ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
@@ -9,6 +10,7 @@ import { spacing, radius, shadow } from '@/theme/spacing';
 import { programs, Program } from '@/data/programs';
 import { useSessionStore } from '@/store/sessionStore';
 import AppHeader from '@/components/AppHeader';
+import Card from '@/components/Card';
 
 function ProgramCard({ program }: { program: Program }) {
   const progress = useSessionStore((s) => s.getProgramProgress(program.id));
@@ -19,7 +21,7 @@ function ProgramCard({ program }: { program: Program }) {
   const nextSession = program.sessions[currentIdx];
 
   return (
-    <View style={[styles.card, { borderTopColor: program.color, borderTopWidth: 4 }]}>
+    <Card style={{ borderTopWidth: 4, borderTopColor: program.color }}>
       <Text style={styles.cardTitle}>{program.title}</Text>
       <Text style={styles.cardDesc}>{program.description}</Text>
 
@@ -89,13 +91,13 @@ function ProgramCard({ program }: { program: Program }) {
           <Text style={styles.completedText}>Program Completed!</Text>
         </View>
       )}
-    </View>
+    </Card>
   );
 }
 
 export default function ProgramsScreen() {
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView edges={['top']} style={styles.safe}>
       <AppHeader />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Guided Programs</Text>
@@ -117,7 +119,6 @@ const styles = StyleSheet.create({
   headerTitle: { fontFamily: 'Raleway_700Bold', fontSize: 26, color: colors.coldViolet, marginBottom: 4 },
   headerSub: { fontFamily: 'Montserrat_400Regular', fontSize: 14, color: colors.textSecondary },
   content: { paddingHorizontal: spacing.lg, gap: spacing.lg },
-  card: { backgroundColor: colors.white, borderRadius: radius.md, padding: spacing.lg, ...shadow.card, overflow: 'hidden' },
   cardTitle: { fontFamily: 'Raleway_700Bold', fontSize: 18, color: colors.coldViolet, marginBottom: 4 },
   cardDesc: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textSecondary, lineHeight: 19, marginBottom: spacing.md },
   progressRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },

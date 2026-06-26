@@ -1,7 +1,8 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView,
+  View, Text, StyleSheet,  TouchableOpacity, ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
@@ -22,7 +23,7 @@ const SUPPORT_ITEMS: { key: string; icon: IoniconsName; label: string; subtitle:
 
 export default function SupportScreen() {
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView edges={['top']} style={styles.safe}>
       <AppHeader />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Support Now</Text>
@@ -56,14 +57,6 @@ export default function SupportScreen() {
           })}
         </View>
 
-        <View style={styles.noteCard}>
-          <Text style={styles.noteTitle}>About Support Now</Text>
-          <Text style={styles.noteText}>
-            These sessions bypass the check-in and go directly to what you need. They're designed for moments when you need support immediately.
-          </Text>
-        </View>
-
-        <View style={{ height: spacing.xl }} />
       </ScrollView>
     </SafeAreaView>
   );
