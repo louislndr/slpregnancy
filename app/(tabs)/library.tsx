@@ -25,11 +25,11 @@ const JOURNEYS = [
   { id: 'pregnancy-recovery', label: 'Pregnancy After Loss' },
   { id: 'postpartum', label: 'Postpartum' },
 ];
-const TYPE_COLORS: Record<string, string> = {
-  REFLECT: colors.lavender,
-  MOVE: colors.primary,
-  'FULL SESSION': colors.sandLight,
-  PREPARE: colors.accent,
+const TYPE_BADGES: Record<string, { bg: string; text: string }> = {
+  REFLECT:       { bg: '#EDE9F7', text: '#7B6DB5' },
+  MOVE:          { bg: '#E3EEF2', text: '#3D7D8E' },
+  'FULL SESSION':{ bg: '#FFF3ED', text: '#C47A4A' },
+  PREPARE:       { bg: '#EAF4EF', text: '#3D8A6A' },
 };
 
 function FilterOption({
@@ -166,8 +166,8 @@ export default function LibraryScreen() {
               activeOpacity={0.85}
             >
               <View style={styles.sessionCardTop}>
-                <View style={[styles.typeBadge, { backgroundColor: TYPE_COLORS[p.contentType] + '33' }]}>
-                  <Text style={[styles.typeBadgeText, { color: TYPE_COLORS[p.contentType] === colors.sandLight ? colors.textSecondary : TYPE_COLORS[p.contentType] }]}>
+                <View style={[styles.typeBadge, { backgroundColor: TYPE_BADGES[p.contentType]?.bg ?? colors.azure }]}>
+                  <Text style={[styles.typeBadgeText, { color: TYPE_BADGES[p.contentType]?.text ?? colors.primary }]}>
                     {p.contentType}
                   </Text>
                 </View>
