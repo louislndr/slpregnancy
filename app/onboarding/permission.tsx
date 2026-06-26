@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import PillButton from '@/components/PillButton';
 import ProgressDots from '@/components/ProgressDots';
 import AppHeader from '@/components/AppHeader';
@@ -13,73 +13,78 @@ export default function PermissionScreen() {
   const hasCompleted = useOnboardingStore((s) => s.hasCompletedOnboarding);
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <AppHeader
-        showBack
-        rightIcon={hasCompleted ? 'close-outline' : undefined}
-        onRightPress={() => router.replace('/(tabs)')}
-      />
-      <ImageBackground
-        source={require('@/assets/permission-bg.png')}
-        style={styles.bg}
-        resizeMode="cover"
-      >
+    <LinearGradient colors={[colors.accent, colors.sandLight, '#FFF5EE']} locations={[0, 0.45, 1]} style={styles.gradient}>
+      <SafeAreaView style={styles.safe}>
+        <AppHeader
+          showBack
+          rightIcon={hasCompleted ? 'close-outline' : undefined}
+          onRightPress={() => router.replace('/(tabs)')}
+        />
         <View style={styles.container}>
+          <Text style={styles.label}>Today's Permission</Text>
 
-          {/* Title */}
-          <Text style={styles.title}>Today's{'\n'}Permission</Text>
-
-          {/* Quote */}
-          <View style={styles.quoteArea}>
-            <Text style={styles.quoteMark}>"</Text>
+          <View style={styles.quoteCard}>
+            <Text style={styles.openMark}>"</Text>
             <Text style={styles.quoteText}>
-              Today, I allow{'\n'}myself to take{'\n'}one day at a time.
+              Today, I allow myself to take one day at a time.
             </Text>
-            <Ionicons name="heart" size={20} color={colors.accent} style={{ marginTop: spacing.xl }} />
+            <Text style={styles.closeMark}>"</Text>
           </View>
 
           <View style={{ flex: 1 }} />
-
           <PillButton label="Continue" onPress={() => router.push('/onboarding/first-session')} />
           <View style={styles.dots}><ProgressDots total={9} current={7} /></View>
         </View>
-      </ImageBackground>
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.sandLight },
-  bg: { flex: 1 },
+  gradient: { flex: 1 },
+  safe: { flex: 1 },
   container: {
     flex: 1,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
+    paddingTop: spacing.xl,
     paddingBottom: spacing.lg,
   },
-  title: {
-    fontFamily: 'Raleway_700Bold',
-    fontSize: 34,
+  label: {
+    fontFamily: 'Montserrat_500Medium',
+    fontSize: 12,
     color: colors.coldViolet,
-    lineHeight: 43,
-    marginBottom: spacing.xl,
-    width: '65%',
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+    opacity: 0.6,
+    marginBottom: spacing.xxl,
   },
-  quoteArea: {
-    width: '70%',
+  quoteCard: {
+    alignItems: 'center',
+    paddingHorizontal: spacing.sm,
   },
-  quoteMark: {
+  openMark: {
     fontFamily: 'PlayfairDisplay_400Regular',
-    fontSize: 56,
-    color: colors.primary,
-    lineHeight: 52,
-    marginBottom: spacing.sm,
+    fontSize: 80,
+    color: colors.coldViolet,
+    lineHeight: 70,
+    alignSelf: 'flex-start',
+    opacity: 0.5,
   },
   quoteText: {
-    fontFamily: 'Raleway_700Bold',
+    fontFamily: 'PlayfairDisplay_400Regular_Italic',
     fontSize: 26,
     color: colors.coldViolet,
-    lineHeight: 38,
+    lineHeight: 40,
+    textAlign: 'center',
+    marginVertical: spacing.md,
+  },
+  closeMark: {
+    fontFamily: 'PlayfairDisplay_400Regular',
+    fontSize: 80,
+    color: colors.coldViolet,
+    lineHeight: 70,
+    alignSelf: 'flex-end',
+    opacity: 0.5,
   },
   dots: { alignItems: 'center', marginTop: spacing.lg },
 });

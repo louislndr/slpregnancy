@@ -13,9 +13,9 @@ import { useOnboardingStore, GuidanceVoice, GuidanceMode } from '@/store/onboard
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
 const VOICES: { id: GuidanceVoice; icon: IoniconsName; label: string }[] = [
-  { id: 'female', icon: 'person-outline', label: 'Female' },
-  { id: 'male', icon: 'person-outline', label: 'Male' },
-  { id: 'charlotte-fr', icon: 'mic-outline', label: "Charlotte's Voice (FR)" },
+  { id: 'female', icon: 'woman-outline', label: 'Female' },
+  { id: 'male', icon: 'man-outline', label: 'Male' },
+  { id: 'charlotte-fr', icon: 'flower-outline', label: 'Charlotte' },
 ];
 
 const MODES: { id: GuidanceMode; icon: IoniconsName; label: string; desc: string }[] = [
@@ -38,24 +38,27 @@ export default function GuidanceScreen() {
           <View style={{ flex: 1 }}>
             <Text style={styles.title}>How would you like{'\n'}to be guided?</Text>
 
-            <Text style={styles.sectionLabel}>VOICE</Text>
-            <View style={styles.chipRow}>
+            <Text style={styles.sectionLabel}>Voice</Text>
+            <View style={styles.voiceRow}>
               {VOICES.map((v) => {
                 const active = profile.guidanceVoice === v.id;
                 return (
                   <TouchableOpacity
                     key={v.id}
-                    style={[styles.chip, active && styles.chipActive]}
+                    style={[styles.voiceCard, active && styles.voiceCardActive]}
                     onPress={() => setGuidanceVoice(v.id)}
+                    activeOpacity={0.8}
                   >
-                    <Ionicons name={v.icon} size={14} color={active ? colors.white : colors.textSecondary} />
-                    <Text style={[styles.chipText, active && styles.chipTextActive]}>{v.label}</Text>
+                    <View style={[styles.voiceIconWrap, active && styles.voiceIconWrapActive]}>
+                      <Ionicons name={v.icon} size={28} color={active ? colors.white : colors.primary} />
+                    </View>
+                    <Text style={[styles.voiceLabel, active && styles.voiceLabelActive]}>{v.label}</Text>
                   </TouchableOpacity>
                 );
               })}
             </View>
 
-            <Text style={[styles.sectionLabel, { marginTop: spacing.xl }]}>EXPERIENCE</Text>
+            <Text style={[styles.sectionLabel, { marginTop: spacing.xl }]}>Experience</Text>
             <View style={styles.options}>
               {MODES.map((m) => {
                 const active = profile.guidanceMode === m.id;
@@ -92,16 +95,21 @@ const styles = StyleSheet.create({
   safe: { flex: 1 },
   container: { flex: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.xl, paddingBottom: spacing.lg },
   title: { fontFamily: 'Raleway_700Bold', fontSize: 28, color: colors.coldViolet, lineHeight: 36, marginBottom: spacing.xl },
-  sectionLabel: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: colors.textMuted, letterSpacing: 1.5, marginBottom: spacing.sm },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: {
-    flexDirection: 'row', alignItems: 'center', gap: 6,
-    paddingVertical: 10, paddingHorizontal: 16, borderRadius: 9999,
-    borderWidth: 1.5, borderColor: colors.border, backgroundColor: colors.white,
+  sectionLabel: { fontFamily: 'Montserrat_400Regular', fontSize: 15, color: colors.textSecondary, marginBottom: spacing.sm },
+  voiceRow: { flexDirection: 'row', gap: 12 },
+  voiceCard: {
+    flex: 1, alignItems: 'center', paddingVertical: spacing.md,
+    backgroundColor: colors.white, borderRadius: radius.md,
+    borderWidth: 1.5, borderColor: colors.border, gap: spacing.sm,
   },
-  chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  chipText: { fontFamily: 'Montserrat_500Medium', fontSize: 13, color: colors.textSecondary },
-  chipTextActive: { color: colors.white },
+  voiceCardActive: { borderColor: colors.primary, backgroundColor: '#F0F7FA' },
+  voiceIconWrap: {
+    width: 56, height: 56, borderRadius: 28,
+    backgroundColor: colors.azure, alignItems: 'center', justifyContent: 'center',
+  },
+  voiceIconWrapActive: { backgroundColor: colors.primary },
+  voiceLabel: { fontFamily: 'Montserrat_500Medium', fontSize: 13, color: colors.textSecondary },
+  voiceLabelActive: { fontFamily: 'Montserrat_600SemiBold', color: colors.coldViolet },
   options: { gap: 12 },
   option: {
     flexDirection: 'row', alignItems: 'center', backgroundColor: colors.white,

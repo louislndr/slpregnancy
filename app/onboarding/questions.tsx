@@ -6,7 +6,7 @@ import PillButton from '@/components/PillButton';
 import ProgressDots from '@/components/ProgressDots';
 import AppHeader from '@/components/AppHeader';
 import { colors } from '@/theme/colors';
-import { spacing } from '@/theme/spacing';
+import { spacing, radius } from '@/theme/spacing';
 import { useOnboardingStore } from '@/store/onboardingStore';
 
 function TogglePair({
@@ -19,8 +19,8 @@ function TogglePair({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <View style={styles.toggleRow}>
-      <Text style={styles.toggleLabel}>{label}</Text>
+    <View style={styles.option}>
+      <Text style={styles.label}>{label}</Text>
       <View style={styles.toggleGroup}>
         <TouchableOpacity
           style={[styles.toggleBtn, value === true && styles.toggleActive]}
@@ -44,7 +44,7 @@ export default function QuestionsScreen() {
   const allAnswered = profile.firstPregnancy !== null && profile.pregnancyLoss !== null && profile.fertilityTreatment !== null;
 
   return (
-    <LinearGradient colors={[colors.azure, '#EEF4F8', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
+    <LinearGradient colors={['#FFFFFF', '#F5F9FC', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
         <AppHeader
           showBack
@@ -55,10 +55,10 @@ export default function QuestionsScreen() {
           <View style={{ flex: 1 }}>
             <Text style={styles.title}>A few questions{'\n'}to personalize</Text>
             <Text style={styles.subtitle}>Your answers help us tailor your experience.</Text>
-            <View style={styles.questions}>
+            <View style={styles.options}>
               <TogglePair label="Is this your first pregnancy?" value={profile.firstPregnancy} onChange={setFirstPregnancy} />
               <TogglePair label="Have you experienced a pregnancy loss?" value={profile.pregnancyLoss} onChange={setPregnancyLoss} />
-              <TogglePair label="Going through fertility treatment (IVF/IUI)?" value={profile.fertilityTreatment} onChange={setFertilityTreatment} />
+              <TogglePair label="Going through fertility treatment?" value={profile.fertilityTreatment} onChange={setFertilityTreatment} />
             </View>
           </View>
           <PillButton label="Continue" onPress={() => router.push('/onboarding/feeling')} disabled={!allAnswered} />
@@ -75,11 +75,15 @@ const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.xl, paddingBottom: spacing.lg },
   title: { fontFamily: 'Raleway_700Bold', fontSize: 28, color: colors.coldViolet, lineHeight: 36, marginBottom: spacing.sm },
   subtitle: { fontFamily: 'Montserrat_400Regular', fontSize: 15, color: colors.textSecondary, marginBottom: spacing.xl },
-  questions: { gap: 20 },
-  toggleRow: { backgroundColor: colors.white, borderRadius: 14, padding: spacing.md, gap: spacing.sm },
-  toggleLabel: { fontFamily: 'Montserrat_500Medium', fontSize: 15, color: colors.textPrimary },
-  toggleGroup: { flexDirection: 'row', gap: 10, marginTop: 4 },
-  toggleBtn: { flex: 1, paddingVertical: 10, borderRadius: 9999, borderWidth: 1.5, borderColor: colors.border, alignItems: 'center' },
+  options: { gap: 12 },
+  option: {
+    flexDirection: 'row', alignItems: 'center', backgroundColor: colors.white,
+    borderRadius: radius.md, padding: spacing.md, gap: spacing.md,
+    borderWidth: 1.5, borderColor: colors.border,
+  },
+  label: { fontFamily: 'Montserrat_500Medium', fontSize: 15, color: colors.textPrimary, flex: 1 },
+  toggleGroup: { flexDirection: 'row', gap: 8 },
+  toggleBtn: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: radius.full, borderWidth: 1.5, borderColor: colors.border, alignItems: 'center' },
   toggleActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   toggleText: { fontFamily: 'Montserrat_500Medium', fontSize: 14, color: colors.textSecondary },
   toggleTextActive: { color: colors.white },
