@@ -113,10 +113,10 @@ const styles = StyleSheet.create({
   priceCard: { flex: 1, borderRadius: radius.md, borderWidth: 1.5, borderColor: colors.border, padding: spacing.md, alignItems: 'center' },
   priceCardHighlight: { borderColor: colors.primary, backgroundColor: '#F0F7FA' },
   popularBadge: { backgroundColor: colors.primary, borderRadius: 9999, paddingVertical: 3, paddingHorizontal: 10, marginBottom: spacing.sm },
-  popularBadgeText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: colors.white },
-  priceSave: { fontFamily: 'Montserrat_600SemiBold', fontSize: 11, color: colors.success, marginBottom: spacing.sm },
+  popularBadgeText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: colors.white },
+  priceSave: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: colors.success, marginBottom: spacing.sm },
   priceAmount: { fontFamily: 'Raleway_700Bold', fontSize: 22, color: colors.coldViolet },
-  pricePeriod: { fontFamily: 'Montserrat_400Regular', fontSize: 12, color: colors.textMuted },
+  pricePeriod: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textMuted },
 
   ctaBtn: { backgroundColor: colors.accent, borderRadius: 9999, paddingVertical: 16, alignItems: 'center', marginBottom: spacing.sm, ...shadow.button },
   ctaBtnText: { fontFamily: 'Raleway_700Bold', fontSize: 16, color: colors.white },

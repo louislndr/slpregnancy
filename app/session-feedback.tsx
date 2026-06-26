@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
   moodCardActive: { borderColor: colors.primary, backgroundColor: '#F0F7FA' },
   moodEmoji: { fontSize: 24, marginBottom: 6 },
-  moodLabel: { fontFamily: 'Montserrat_400Regular', fontSize: 12, color: colors.textSecondary, textAlign: 'center' },
+  moodLabel: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textSecondary, textAlign: 'center' },
   moodLabelActive: { fontFamily: 'Montserrat_600SemiBold', color: colors.coldViolet },
   starsRow: { flexDirection: 'row', gap: spacing.md, marginBottom: spacing.xl },
   supportBanner: {

@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5, paddingHorizontal: 10,
     borderWidth: 1, borderColor: colors.primary + '40',
   },
-  activePillText: { fontFamily: 'Montserrat_500Medium', fontSize: 12, color: colors.primary },
+  activePillText: { fontFamily: 'Montserrat_500Medium', fontSize: 13, color: colors.primary },
   clearAllText: { fontFamily: 'Montserrat_500Medium', fontSize: 13, color: colors.textMuted, paddingHorizontal: 4 },
 
   content: { paddingHorizontal: spacing.lg, paddingTop: spacing.md },
@@ -310,12 +310,12 @@ const styles = StyleSheet.create({
   sessionCard: { backgroundColor: colors.white, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.md, ...shadow.card },
   sessionCardTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.sm },
   typeBadge: { borderRadius: 9999, paddingVertical: 3, paddingHorizontal: 10 },
-  typeBadgeText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 10, letterSpacing: 0.5 },
+  typeBadgeText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13 },
   sessionTitle: { fontFamily: 'PlayfairDisplay_400Regular', fontSize: 17, color: colors.coldViolet, marginBottom: 4 },
   sessionDesc: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textSecondary, lineHeight: 19, marginBottom: spacing.sm },
   sessionFooter: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   sessionMeta: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  sessionMetaText: { fontFamily: 'Montserrat_400Regular', fontSize: 12, color: colors.textMuted },
+  sessionMetaText: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textMuted },
 
   // Bottom sheet
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.35)' },
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
   sheetHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.lg },
   sheetTitle: { fontFamily: 'Raleway_700Bold', fontSize: 20, color: colors.coldViolet },
   sheetClear: { fontFamily: 'Montserrat_500Medium', fontSize: 14, color: colors.textMuted },
-  sheetSection: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: colors.textMuted, letterSpacing: 0.5, marginBottom: spacing.sm, marginTop: spacing.md },
+  sheetSection: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: colors.textMuted, marginBottom: spacing.sm, marginTop: spacing.md },
   filterOption: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingVertical: 13, paddingHorizontal: spacing.md,

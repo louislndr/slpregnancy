@@ -223,10 +223,10 @@ const styles = StyleSheet.create({
   statsRow: { flexDirection: 'row', backgroundColor: colors.white, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.lg, ...shadow.card },
   statCard: { flex: 1, alignItems: 'center' },
   statNumber: { fontFamily: 'Raleway_700Bold', fontSize: 24, color: colors.coldViolet },
-  statLabel: { fontFamily: 'Montserrat_400Regular', fontSize: 12, color: colors.textMuted, marginTop: 2 },
+  statLabel: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textMuted, marginTop: 2 },
   statDivider: { width: 1, backgroundColor: colors.border },
 
-  sectionHeader: { fontFamily: 'Montserrat_600SemiBold', fontSize: 12, color: colors.textMuted, letterSpacing: 0.5, marginBottom: spacing.sm, marginTop: spacing.md },
+  sectionHeader: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: colors.textMuted, marginBottom: spacing.sm, marginTop: spacing.md },
   card: { backgroundColor: colors.white, borderRadius: radius.md, marginBottom: spacing.md, ...shadow.card, overflow: 'hidden' },
 
   settingRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md },
