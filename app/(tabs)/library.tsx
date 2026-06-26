@@ -28,7 +28,7 @@ const JOURNEYS = [
 const TYPE_BADGES: Record<string, { bg: string; text: string }> = {
   REFLECT:        { bg: colors.lavender,  text: colors.coldViolet },  // light purple → dark purple
   MOVE:           { bg: colors.azure,     text: colors.primary },     // light teal → teal
-  'FULL SESSION': { bg: colors.sandLight, text: colors.accent },      // warm sand → peach
+  'FULL SESSION': { bg: colors.sandLight, text: '#C4783A' },          // sable clair → dark amber
   PREPARE:        { bg: colors.sandLight,  text: colors.accent },      // warm sand → peach orange
 };
 
