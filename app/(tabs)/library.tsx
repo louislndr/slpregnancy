@@ -151,7 +151,9 @@ export default function LibraryScreen() {
         <Text style={styles.count}>{filtered.length} session{filtered.length !== 1 ? 's' : ''}</Text>
         {filtered.length === 0 ? (
           <View style={styles.empty}>
-            <Text style={styles.emptyIcon}>🔍</Text>
+            <View style={styles.emptyIconWrap}>
+              <Ionicons name="search-outline" size={28} color={colors.textMuted} />
+            </View>
             <Text style={styles.emptyText}>No sessions match your filters.</Text>
             <TouchableOpacity onPress={() => { setSearch(''); clearAll(); }}>
               <Text style={styles.clearLink}>Clear filters</Text>
@@ -305,7 +307,7 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: spacing.lg, paddingTop: spacing.md },
   count: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textMuted, marginBottom: spacing.md },
   empty: { alignItems: 'center', paddingVertical: spacing.xxl },
-  emptyIcon: { fontSize: 40, marginBottom: spacing.md },
+  emptyIconWrap: { width: 56, height: 56, borderRadius: 28, backgroundColor: colors.azure, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.md },
   emptyText: { fontFamily: 'Montserrat_400Regular', fontSize: 15, color: colors.textSecondary, marginBottom: spacing.sm },
   clearLink: { fontFamily: 'Montserrat_600SemiBold', fontSize: 14, color: colors.primary },
 
