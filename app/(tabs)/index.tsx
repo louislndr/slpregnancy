@@ -44,7 +44,6 @@ const SUPPORT_NOW: { key: string; icon: IoniconsName; label: string; protocolId:
 
 export default function HomeScreen() {
   const profile = useOnboardingStore((s) => s.profile);
-  const setJourney = useOnboardingStore((s) => s.setJourney);
   const currentProgramId = useSessionStore((s) => s.currentProgramId);
   const getProgramProgress = useSessionStore((s) => s.getProgramProgress);
 
@@ -134,7 +133,7 @@ export default function HomeScreen() {
             <TouchableOpacity
               style={styles.babyBanner}
               activeOpacity={0.8}
-              onPress={() => { setJourney('postpartum'); router.push('/(tabs)/programs'); }}
+              onPress={() => router.push('/celebrate-birth')}
             >
               <Text style={styles.babyBannerIcon}>👶</Text>
               <View style={{ flex: 1 }}>
