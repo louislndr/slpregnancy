@@ -165,6 +165,7 @@ export default function LibraryScreen() {
               onPress={() => router.push(`/session/${p.id}`)}
               activeOpacity={0.85}
             >
+              {/* Badge row */}
               <View style={styles.sessionCardTop}>
                 <View style={[styles.typeBadge, { backgroundColor: TYPE_BADGES[p.contentType]?.bg ?? colors.azure }]}>
                   <Text style={[styles.typeBadgeText, { color: TYPE_BADGES[p.contentType]?.text ?? colors.primary }]}>
@@ -182,20 +183,21 @@ export default function LibraryScreen() {
                   />
                 </TouchableOpacity>
               </View>
+
+              {/* Title */}
               <Text style={styles.sessionTitle}>{p.title}</Text>
+
+              {/* Description */}
               <Text style={styles.sessionDesc} numberOfLines={2}>{p.description}</Text>
-              <View style={styles.sessionFooter}>
-                <View style={styles.sessionMeta}>
-                  <Ionicons name="time-outline" size={13} color={colors.textMuted} />
-                  <Text style={styles.sessionMetaText}>{p.duration} min</Text>
+
+              {/* Time + audio/visual */}
+              <View style={styles.sessionMeta}>
+                <Ionicons name="time-outline" size={14} color={colors.textMuted} />
+                <Text style={styles.sessionMetaText}>{p.duration} min</Text>
+                <View style={styles.sessionMediaBadge}>
+                  <Ionicons name="ear-outline" size={14} color={colors.primary} />
+                  {p.hasVisual && <Ionicons name="eye-outline" size={14} color={colors.primary} />}
                 </View>
-                {p.hasVisual && (
-                  <View style={styles.sessionMeta}>
-                    <Ionicons name="eye-outline" size={13} color={colors.textMuted} />
-                    <Text style={styles.sessionMetaText}>Visual</Text>
-                  </View>
-                )}
-                <Ionicons name="chevron-forward" size={16} color={colors.textMuted} />
               </View>
             </TouchableOpacity>
           ))
@@ -309,13 +311,13 @@ const styles = StyleSheet.create({
 
   sessionCard: { backgroundColor: colors.white, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.md, ...shadow.card },
   sessionCardTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.sm },
-  typeBadge: { borderRadius: 9999, paddingVertical: 3, paddingHorizontal: 10 },
+  typeBadge: { borderRadius: 9999, paddingVertical: 4, paddingHorizontal: 10 },
   typeBadgeText: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13 },
-  sessionTitle: { fontFamily: 'PlayfairDisplay_400Regular', fontSize: 17, color: colors.coldViolet, marginBottom: 4 },
-  sessionDesc: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textSecondary, lineHeight: 19, marginBottom: spacing.sm },
-  sessionFooter: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  sessionMeta: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  sessionTitle: { fontFamily: 'PlayfairDisplay_400Regular', fontSize: 18, color: colors.coldViolet, marginBottom: spacing.xs },
+  sessionDesc: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textSecondary, lineHeight: 20, marginBottom: spacing.sm },
+  sessionMeta: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   sessionMetaText: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textMuted },
+  sessionMediaBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: colors.azure, borderRadius: 9999, paddingVertical: 4, paddingHorizontal: 10 },
 
   // Bottom sheet
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.35)' },
