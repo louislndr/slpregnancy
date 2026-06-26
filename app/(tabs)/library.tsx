@@ -26,10 +26,10 @@ const JOURNEYS = [
   { id: 'postpartum', label: 'Postpartum' },
 ];
 const TYPE_BADGES: Record<string, { bg: string; text: string }> = {
-  REFLECT:       { bg: '#EDE9F7', text: '#7B6DB5' },
-  MOVE:          { bg: '#E3EEF2', text: '#3D7D8E' },
-  'FULL SESSION':{ bg: '#FFF3ED', text: '#C47A4A' },
-  PREPARE:       { bg: '#EAF4EF', text: '#3D8A6A' },
+  REFLECT:        { bg: colors.lavender,  text: colors.coldViolet },
+  MOVE:           { bg: colors.azure,     text: colors.primary },
+  'FULL SESSION': { bg: colors.sandLight, text: colors.coldViolet },
+  PREPARE:        { bg: colors.accent,    text: colors.coldViolet },
 };
 
 function FilterOption({
