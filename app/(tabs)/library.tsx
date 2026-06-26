@@ -20,6 +20,13 @@ const DURATIONS = [
   { label: '15+ min', max: 999, min: 15 },
 ];
 
+const JOURNEYS = [
+  { id: 'trying-to-conceive', label: 'TTC' },
+  { id: 'pregnancy', label: 'Pregnancy' },
+  { id: 'pregnancy-recovery', label: 'After Loss' },
+  { id: 'postpartum', label: 'Postpartum' },
+];
+
 const TYPE_COLORS: Record<string, string> = {
   REFLECT: colors.lavender,
   MOVE: colors.primary,
@@ -31,6 +38,7 @@ export default function LibraryScreen() {
   const [search, setSearch] = useState('');
   const [activeType, setActiveType] = useState<ContentType | null>(null);
   const [activeDuration, setActiveDuration] = useState(0);
+  const [activeJourney, setActiveJourney] = useState<string | null>(null);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const { toggleFavorite, isFavorite } = useSessionStore();
 
@@ -41,10 +49,11 @@ export default function LibraryScreen() {
       if (activeType && p.contentType !== activeType) return false;
       if (dur.max !== 999 && p.duration > dur.max) return false;
       if ((dur as any).min && p.duration < (dur as any).min) return false;
+      if (activeJourney && !p.journeys.includes(activeJourney)) return false;
       if (showFavoritesOnly && !isFavorite(p.id)) return false;
       return true;
     });
-  }, [search, activeType, activeDuration, showFavoritesOnly, isFavorite]);
+  }, [search, activeType, activeDuration, activeJourney, showFavoritesOnly, isFavorite]);
 
   return (
     <SafeAreaView edges={['top']} style={styles.safe}>
@@ -69,7 +78,20 @@ export default function LibraryScreen() {
           )}
         </View>
 
-        {/* Content type filters */}
+        {/* Journey filters */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filtersScroll} contentContainerStyle={{ gap: 8, paddingHorizontal: spacing.lg }}>
+          {JOURNEYS.map((j) => (
+            <TouchableOpacity
+              key={j.id}
+              style={[styles.filterChip, activeJourney === j.id && styles.filterChipActive]}
+              onPress={() => setActiveJourney(activeJourney === j.id ? null : j.id)}
+            >
+              <Text style={[styles.filterChipText, activeJourney === j.id && styles.filterChipTextActive]}>{j.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        {/* Content type + other filters */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filtersScroll} contentContainerStyle={{ gap: 8, paddingHorizontal: spacing.lg }}>
           <TouchableOpacity
             style={[styles.filterChip, showFavoritesOnly && styles.filterChipActive]}
@@ -105,7 +127,7 @@ export default function LibraryScreen() {
           <View style={styles.empty}>
             <Text style={styles.emptyIcon}>🔍</Text>
             <Text style={styles.emptyText}>No sessions match your filters.</Text>
-            <TouchableOpacity onPress={() => { setSearch(''); setActiveType(null); setActiveDuration(0); setShowFavoritesOnly(false); }}>
+            <TouchableOpacity onPress={() => { setSearch(''); setActiveType(null); setActiveDuration(0); setActiveJourney(null); setShowFavoritesOnly(false); }}>
               <Text style={styles.clearLink}>Clear filters</Text>
             </TouchableOpacity>
           </View>
