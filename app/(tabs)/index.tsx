@@ -135,7 +135,9 @@ export default function HomeScreen() {
               activeOpacity={0.8}
               onPress={() => router.push('/celebrate-birth')}
             >
-              <Text style={styles.babyBannerIcon}>👶</Text>
+              <View style={styles.babyBannerIconWrap}>
+                <Ionicons name="heart" size={20} color={colors.accent} />
+              </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.babyBannerTitle}>My Baby Has Arrived</Text>
                 <Text style={styles.babyBannerSub}>Update your journey →</Text>
@@ -213,7 +215,7 @@ const styles = StyleSheet.create({
     padding: spacing.md, gap: spacing.md,
     borderWidth: 1, borderColor: colors.accent,
   },
-  babyBannerIcon: { fontSize: 28 },
+  babyBannerIconWrap: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
   babyBannerTitle: { fontFamily: 'Raleway_700Bold', fontSize: 15, color: colors.coldViolet },
   babyBannerSub: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textSecondary },
   recommendedTitle: { fontFamily: 'Raleway_700Bold', fontSize: 16, color: colors.coldViolet, marginBottom: spacing.xs },
