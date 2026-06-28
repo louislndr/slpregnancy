@@ -3,7 +3,7 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Svg, Path } from 'react-native-svg';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
@@ -44,7 +44,6 @@ const SUPPORT_NOW: { key: string; icon: IoniconsName; label: string; protocolId:
 
 export default function HomeScreen() {
   const profile = useOnboardingStore((s) => s.profile);
-  const setJourney = useOnboardingStore((s) => s.setJourney);
   const currentProgramId = useSessionStore((s) => s.currentProgramId);
   const getProgramProgress = useSessionStore((s) => s.getProgramProgress);
 
@@ -134,9 +133,11 @@ export default function HomeScreen() {
             <TouchableOpacity
               style={styles.babyBanner}
               activeOpacity={0.8}
-              onPress={() => { setJourney('postpartum'); router.push('/(tabs)/programs'); }}
+              onPress={() => router.push('/celebrate-birth')}
             >
-              <Text style={styles.babyBannerIcon}>👶</Text>
+              <View style={styles.babyBannerIconWrap}>
+                <MaterialCommunityIcons name="baby-face" size={22} color={colors.accent} />
+              </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.babyBannerTitle}>My Baby Has Arrived</Text>
                 <Text style={styles.babyBannerSub}>Update your journey →</Text>
@@ -214,7 +215,7 @@ const styles = StyleSheet.create({
     padding: spacing.md, gap: spacing.md,
     borderWidth: 1, borderColor: colors.accent,
   },
-  babyBannerIcon: { fontSize: 28 },
+  babyBannerIconWrap: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
   babyBannerTitle: { fontFamily: 'Raleway_700Bold', fontSize: 15, color: colors.coldViolet },
   babyBannerSub: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textSecondary },
   recommendedTitle: { fontFamily: 'Raleway_700Bold', fontSize: 16, color: colors.coldViolet, marginBottom: spacing.xs },

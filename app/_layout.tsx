@@ -49,6 +49,10 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="session/[id]" />
         <Stack.Screen name="check-in" />
+        <Stack.Screen name="session-feedback" />
+        <Stack.Screen name="celebrate-birth" />
+        <Stack.Screen name="sophrology" />
+        <Stack.Screen name="subscription" />
       </Stack>
     </>
   );
