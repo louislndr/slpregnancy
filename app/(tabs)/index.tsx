@@ -3,7 +3,7 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Svg, Path } from 'react-native-svg';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
@@ -136,7 +136,7 @@ export default function HomeScreen() {
               onPress={() => router.push('/celebrate-birth')}
             >
               <View style={styles.babyBannerIconWrap}>
-                <Ionicons name="heart" size={20} color={colors.accent} />
+                <MaterialCommunityIcons name="baby-face" size={22} color={colors.accent} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.babyBannerTitle}>My Baby Has Arrived</Text>
