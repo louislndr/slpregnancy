@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   header: { paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: spacing.md },
   headerTitle: { fontFamily: 'Raleway_700Bold', fontSize: 26, color: colors.coldViolet, marginBottom: 4 },
   headerSub: { fontFamily: 'Montserrat_400Regular', fontSize: 14, color: colors.textSecondary },
-  content: { paddingHorizontal: spacing.lg },
+  content: { paddingHorizontal: spacing.lg, paddingBottom: 100 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
   card: {
     width: '47%', borderRadius: radius.md, padding: spacing.md,

@@ -211,7 +211,7 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#F9F7FF' },
-  content: { paddingHorizontal: spacing.lg, paddingTop: spacing.md },
+  content: { paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: 100 },
 
   hero: { alignItems: 'center', paddingVertical: spacing.lg },
   avatar: { width: 72, height: 72, borderRadius: 36, backgroundColor: colors.lavender, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.sm },

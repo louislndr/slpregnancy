@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   header: { paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: spacing.md },
   headerTitle: { fontFamily: 'Raleway_700Bold', fontSize: 26, color: colors.coldViolet, marginBottom: 4 },
   headerSub: { fontFamily: 'Montserrat_400Regular', fontSize: 14, color: colors.textSecondary },
-  content: { paddingHorizontal: spacing.lg, gap: spacing.lg },
+  content: { paddingHorizontal: spacing.lg, gap: spacing.lg, paddingBottom: 100 },
   cardTitle: { fontFamily: 'Raleway_700Bold', fontSize: 18, color: colors.coldViolet, marginBottom: 4 },
   cardDesc: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textSecondary, lineHeight: 19, marginBottom: spacing.md },
   progressRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },

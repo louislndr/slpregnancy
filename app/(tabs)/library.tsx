@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
   activePillText: { fontFamily: 'Montserrat_500Medium', fontSize: 13, color: colors.primary },
   clearAllText: { fontFamily: 'Montserrat_500Medium', fontSize: 13, color: colors.textMuted, paddingHorizontal: 4 },
 
-  content: { paddingHorizontal: spacing.lg, paddingTop: spacing.md },
+  content: { paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: 100 },
   count: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textMuted, marginBottom: spacing.md },
   empty: { alignItems: 'center', paddingVertical: spacing.xxl },
   emptyIconWrap: { width: 56, height: 56, borderRadius: 28, backgroundColor: colors.azure, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.md },
