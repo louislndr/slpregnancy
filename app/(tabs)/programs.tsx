@@ -9,6 +9,7 @@ import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import { programs, Program } from '@/data/programs';
 import { useSessionStore } from '@/store/sessionStore';
+import { useOnboardingStore } from '@/store/onboardingStore';
 import AppHeader from '@/components/AppHeader';
 import Card from '@/components/Card';
 
@@ -96,6 +97,9 @@ function ProgramCard({ program }: { program: Program }) {
 }
 
 export default function ProgramsScreen() {
+  const lounge = useOnboardingStore((s) => s.profile.lounge) ?? 'womens';
+  const visiblePrograms = programs.filter((p) => !p.forLounge || p.forLounge === lounge);
+
   return (
     <SafeAreaView edges={['top']} style={styles.safe}>
       <AppHeader />
@@ -104,7 +108,7 @@ export default function ProgramsScreen() {
         <Text style={styles.headerSub}>Structured journeys for each stage</Text>
       </View>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {programs.map((p) => (
+        {visiblePrograms.map((p) => (
           <ProgramCard key={p.id} program={p} />
         ))}
         <View style={{ height: spacing.xl }} />

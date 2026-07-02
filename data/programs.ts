@@ -14,6 +14,7 @@ export interface Program {
   totalSessions: number;
   sessions: ProgramSession[];
   color: string;
+  forLounge?: 'womens' | 'partner';
 }
 
 export const programs: Program[] = [
@@ -71,6 +72,21 @@ export const programs: Program[] = [
       { id: 'rtm-2', sessionNumber: 2, title: 'Gentle Awakening', duration: 10, protocolId: 'morning-gentle-start' },
       { id: 'rtm-3', sessionNumber: 3, title: 'Rebuilding Strength', duration: 15, protocolId: 'gentle-movement' },
       { id: 'rtm-4', sessionNumber: 4, title: 'Finding Your New Self', duration: 15, protocolId: 'moment-for-myself' },
+    ],
+  },
+  {
+    id: 'the-partners-path',
+    title: "The Partner's Path",
+    description: 'Four sessions to help you find your place, stay present, and support without losing yourself.',
+    journey: 'pregnancy',
+    totalSessions: 4,
+    color: '#B8D0DC',
+    forLounge: 'partner',
+    sessions: [
+      { id: 'pp-1', sessionNumber: 1, title: 'Finding My Place',              duration: 10, protocolId: 'finding-my-place'              },
+      { id: 'pp-2', sessionNumber: 2, title: 'Supporting Without Losing Self', duration: 12, protocolId: 'supporting-without-losing-self' },
+      { id: 'pp-3', sessionNumber: 3, title: 'Waiting Together',               duration: 8,  protocolId: 'partner-in-waiting'             },
+      { id: 'pp-4', sessionNumber: 4, title: 'Ready For This',                 duration: 8,  protocolId: 'ready-for-birth'                },
     ],
   },
 ];
