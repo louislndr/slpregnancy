@@ -7,6 +7,7 @@ import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import { useOnboardingStore, Journey, Lounge } from '@/store/onboardingStore';
 import { useSessionStore, SessionHistory } from '@/store/sessionStore';
+import { useAuthStore } from '@/store/authStore';
 import { protocols } from '@/data/protocols';
 import AppHeader from '@/components/AppHeader';
 
@@ -84,6 +85,7 @@ export default function ProfileScreen() {
   const setGuidanceVoice = useOnboardingStore((s) => s.setGuidanceVoice);
   const setGuidanceMode = useOnboardingStore((s) => s.setGuidanceMode);
   const resetOnboarding = useOnboardingStore((s) => s.resetOnboarding);
+  const signOut = useAuthStore((s) => s.signOut);
 
   const history = useSessionStore((s) => s.history);
   const favorites = useSessionStore((s) => s.favorites);
@@ -281,6 +283,13 @@ export default function ProfileScreen() {
             icon="refresh-outline"
             label="Restart Onboarding"
             onPress={() => { resetOnboarding(); router.replace('/onboarding/welcome'); }}
+            danger
+          />
+          <View style={styles.rowDivider} />
+          <SettingRow
+            icon="log-out-outline"
+            label="Sign Out"
+            onPress={() => { resetOnboarding(); signOut(); }}
             danger
           />
         </View>

@@ -16,6 +16,8 @@ import {
   PlayfairDisplay_400Regular,
   PlayfairDisplay_400Regular_Italic,
 } from '@expo-google-fonts/playfair-display';
+import { supabase } from '@/lib/supabase';
+import { useAuthStore } from '@/store/authStore';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,6 +31,17 @@ export default function RootLayout() {
     PlayfairDisplay_400Regular,
     PlayfairDisplay_400Regular_Italic,
   });
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      useAuthStore.getState().setSession(session);
+      useAuthStore.getState().setInitialized();
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      useAuthStore.getState().setSession(session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
@@ -45,6 +58,7 @@ export default function RootLayout() {
       <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="auth" />
         <Stack.Screen name="onboarding" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="session/[id]" />

@@ -31,7 +31,7 @@ export type Need =
 export type GuidanceVoice = 'female' | 'male' | 'charlotte-fr';
 export type GuidanceMode = 'audio-only' | 'audio-visual';
 
-interface OnboardingProfile {
+export interface OnboardingProfile {
   lounge: Lounge | null;
   firstName: string;
   ageRange: string;
@@ -63,6 +63,7 @@ interface OnboardingState {
   completeOnboarding: () => void;
   resetOnboarding: () => void;
   resetProfile: () => void;
+  restoreProfile: (profile: Partial<OnboardingProfile>, completed: boolean) => void;
 }
 
 const defaultProfile: OnboardingProfile = {
@@ -111,6 +112,11 @@ export const useOnboardingStore = create<OnboardingState>()(
       resetOnboarding: () =>
         set({ hasCompletedOnboarding: false, profile: defaultProfile }),
       resetProfile: () => set({ profile: defaultProfile }),
+      restoreProfile: (profile, completed) =>
+        set((s) => ({
+          hasCompletedOnboarding: completed,
+          profile: { ...s.profile, ...profile },
+        })),
     }),
     {
       name: 'onboarding-storage',

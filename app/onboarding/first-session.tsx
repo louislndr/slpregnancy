@@ -8,13 +8,24 @@ import AppHeader from '@/components/AppHeader';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import { useOnboardingStore } from '@/store/onboardingStore';
+import { useAuthStore } from '@/store/authStore';
+import { syncProfileToSupabase } from '@/services/supabaseProfile';
 
 export default function FirstSessionScreen() {
   const completeOnboarding = useOnboardingStore((s) => s.completeOnboarding);
   const hasCompletedOnboarding = useOnboardingStore((s) => s.hasCompletedOnboarding);
+  const profile = useOnboardingStore((s) => s.profile);
+  const session = useAuthStore((s) => s.session);
+
+  const finishOnboarding = () => {
+    completeOnboarding();
+    if (session?.user.id) {
+      syncProfileToSupabase(session.user.id, profile).catch(() => {});
+    }
+  };
 
   const handleStart = () => {
-    completeOnboarding();
+    finishOnboarding();
     router.replace('/session/safe-in-this-moment');
   };
 
@@ -49,7 +60,7 @@ export default function FirstSessionScreen() {
 
           <PillButton label="Start Session" onPress={handleStart} />
           <View style={styles.skipArea}>
-            <Text style={styles.skip} onPress={() => { completeOnboarding(); router.replace('/(tabs)'); }}>
+            <Text style={styles.skip} onPress={() => { finishOnboarding(); router.replace('/(tabs)'); }}>
               Go to Home instead
             </Text>
           </View>
