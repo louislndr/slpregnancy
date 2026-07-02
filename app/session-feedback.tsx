@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,10 +10,16 @@ import { protocols } from '@/data/protocols';
 
 const MOODS = [
   { id: 'much-calmer', emoji: '🌸', label: 'Much calmer' },
-  { id: 'lighter', emoji: '☁️', label: 'Lighter' },
-  { id: 'same', emoji: '🌿', label: 'About the same' },
-  { id: 'reflective', emoji: '🌙', label: 'Reflective' },
-  { id: 'need-more', emoji: '💙', label: 'Need more support' },
+  { id: 'lighter',     emoji: '☁️', label: 'Lighter'      },
+  { id: 'same',        emoji: '🌿', label: 'About the same'},
+  { id: 'reflective',  emoji: '🌙', label: 'Reflective'   },
+  { id: 'need-more',   emoji: '💙', label: 'Need more'    },
+];
+
+const EMOTIONS = [
+  'Calmer', 'Hopeful', 'Grounded', 'Relieved',
+  'Moved', 'Lighter', 'Stronger', 'Emotional',
+  'Grateful', 'At peace',
 ];
 
 export default function SessionFeedbackScreen() {
@@ -23,6 +29,8 @@ export default function SessionFeedbackScreen() {
     programId?: string;
   }>();
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
+  const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
+  const [note, setNote] = useState('');
   const [rating, setRating] = useState<number>(0);
   const { addHistory } = useSessionStore();
 
@@ -34,6 +42,8 @@ export default function SessionFeedbackScreen() {
       completedAt: new Date().toISOString(),
       rating: rating || undefined,
       feelingAfter: selectedMood || undefined,
+      emotion: selectedEmotion || undefined,
+      note: note.trim() || undefined,
     });
     router.replace('/(tabs)');
   };
@@ -65,6 +75,33 @@ export default function SessionFeedbackScreen() {
             </TouchableOpacity>
           ))}
         </View>
+
+        <Text style={styles.sectionLabel}>What did you feel?</Text>
+        <View style={styles.emotionWrap}>
+          {EMOTIONS.map((e) => (
+            <TouchableOpacity
+              key={e}
+              style={[styles.emotionChip, selectedEmotion === e && styles.emotionChipActive]}
+              onPress={() => setSelectedEmotion(selectedEmotion === e ? null : e)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.emotionText, selectedEmotion === e && styles.emotionTextActive]}>{e}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <Text style={styles.sectionLabel}>A note for yourself <Text style={styles.optional}>(optional)</Text></Text>
+        <TextInput
+          style={styles.noteInput}
+          placeholder="What came up for you during this session?"
+          placeholderTextColor={colors.textMuted}
+          value={note}
+          onChangeText={(t) => setNote(t.slice(0, 200))}
+          multiline
+          numberOfLines={3}
+          textAlignVertical="top"
+        />
+        <Text style={styles.noteCount}>{note.length}/200</Text>
 
         <Text style={styles.sectionLabel}>Rate this session</Text>
         <View style={styles.starsRow}>
@@ -126,6 +163,23 @@ const styles = StyleSheet.create({
   moodEmoji: { fontSize: 24, marginBottom: 6 },
   moodLabel: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textSecondary, textAlign: 'center' },
   moodLabelActive: { fontFamily: 'Montserrat_600SemiBold', color: colors.coldViolet },
+  emotionWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: spacing.lg, width: '100%' },
+  emotionChip: {
+    paddingVertical: 7, paddingHorizontal: 14,
+    borderRadius: 9999, borderWidth: 1.5, borderColor: colors.border,
+    backgroundColor: colors.white,
+  },
+  emotionChipActive: { borderColor: colors.primary, backgroundColor: '#F0F7FA' },
+  emotionText: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textSecondary },
+  emotionTextActive: { fontFamily: 'Montserrat_600SemiBold', color: colors.coldViolet },
+  noteInput: {
+    width: '100%', borderWidth: 1.5, borderColor: colors.border,
+    borderRadius: radius.md, padding: spacing.md,
+    fontFamily: 'Montserrat_400Regular', fontSize: 14, color: colors.textPrimary,
+    minHeight: 80, backgroundColor: colors.white, marginBottom: 4,
+  },
+  noteCount: { fontFamily: 'Montserrat_400Regular', fontSize: 11, color: colors.textMuted, alignSelf: 'flex-end', marginBottom: spacing.lg },
+  optional: { fontFamily: 'Montserrat_400Regular', fontSize: 12, color: colors.textMuted },
   starsRow: { flexDirection: 'row', gap: spacing.md, marginBottom: spacing.xl },
   supportBanner: {
     flexDirection: 'row', alignItems: 'center', gap: spacing.sm,

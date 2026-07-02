@@ -6,7 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import { useOnboardingStore, Journey, Lounge } from '@/store/onboardingStore';
-import { useSessionStore } from '@/store/sessionStore';
+import { useSessionStore, SessionHistory } from '@/store/sessionStore';
+import { protocols } from '@/data/protocols';
 import AppHeader from '@/components/AppHeader';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
@@ -134,7 +135,7 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        {/* Stats */}
+        {/* Stats row + My Journey history */}
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
             <Text style={styles.statNumber}>{sessionCount}</Text>
@@ -152,7 +153,47 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        {/* My Journey */}
+        {/* Recent Sessions */}
+        {history.length > 0 && (
+          <>
+            <SectionHeader title="Recent Sessions" />
+            <View style={styles.card}>
+              {history.slice(0, 5).map((h: SessionHistory, i: number) => {
+                const p = protocols.find((pr) => pr.id === h.protocolId);
+                const date = new Date(h.completedAt);
+                const dateStr = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+                const moodEmoji = h.feelingAfter === 'much-calmer' ? '🌸'
+                  : h.feelingAfter === 'lighter' ? '☁️'
+                  : h.feelingAfter === 'reflective' ? '🌙'
+                  : h.feelingAfter === 'same' ? '🌿'
+                  : h.feelingAfter === 'need-more' ? '💙' : '✦';
+                return (
+                  <TouchableOpacity
+                    key={i}
+                    style={[styles.sessionRow, i < Math.min(history.length, 5) - 1 && styles.sessionRowBorder]}
+                    onPress={() => router.push(`/session/${h.protocolId}`)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.sessionEmojiWrap}>
+                      <Text style={styles.sessionEmoji}>{moodEmoji}</Text>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.sessionTitle} numberOfLines={1}>
+                        {p?.title ?? h.protocolId}
+                      </Text>
+                      {h.emotion && (
+                        <Text style={styles.sessionEmotion}>{h.emotion}</Text>
+                      )}
+                    </View>
+                    <Text style={styles.sessionDate}>{dateStr}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </>
+        )}
+
+        {/* Change Journey */}
         <SectionHeader title="My Journey" />
         <View style={styles.card}>
           {journeyOptions.map((opt, i) => (
@@ -280,6 +321,13 @@ const styles = StyleSheet.create({
   settingValue: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textMuted, marginRight: 4 },
   rowDivider: { height: 1, backgroundColor: colors.border, marginLeft: spacing.md + 34 + spacing.md },
 
+  sessionRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md },
+  sessionRowBorder: { borderBottomWidth: 1, borderBottomColor: colors.border },
+  sessionEmojiWrap: { width: 36, height: 36, borderRadius: 18, backgroundColor: colors.sandLight, alignItems: 'center', justifyContent: 'center' },
+  sessionEmoji: { fontSize: 16 },
+  sessionTitle: { fontFamily: 'Montserrat_500Medium', fontSize: 14, color: colors.coldViolet },
+  sessionEmotion: { fontFamily: 'Montserrat_400Regular', fontSize: 12, color: colors.textMuted, marginTop: 1 },
+  sessionDate: { fontFamily: 'Montserrat_400Regular', fontSize: 12, color: colors.textMuted },
   journeyOption: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md },
   journeyOptionActive: { backgroundColor: '#F0F7FA' },
   journeyOptionBorder: { borderBottomWidth: 1, borderBottomColor: colors.border },

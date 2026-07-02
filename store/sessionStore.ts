@@ -8,11 +8,13 @@ interface ProgramProgress {
   currentSessionIndex: number;
 }
 
-interface SessionHistory {
+export interface SessionHistory {
   protocolId: string;
   completedAt: string;
   rating?: number;
   feelingAfter?: string;
+  note?: string;
+  emotion?: string;
 }
 
 interface SessionState {
