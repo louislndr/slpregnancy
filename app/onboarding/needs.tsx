@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,11 +13,16 @@ import { useOnboardingStore, Need } from '@/store/onboardingStore';
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
 const NEEDS: { id: Need; icon: IoniconsName; label: string }[] = [
-  { id: 'calm', icon: 'water-outline', label: 'Calm' },
-  { id: 'confidence', icon: 'shield-outline', label: 'Confidence' },
-  { id: 'reassurance', icon: 'hand-left-outline', label: 'Reassurance' },
-  { id: 'rest', icon: 'bed-outline', label: 'Rest' },
-  { id: 'connection', icon: 'people-outline', label: 'Connection' },
+  { id: 'calm',             icon: 'water-outline',     label: 'Calm'                  },
+  { id: 'reassurance',      icon: 'hand-left-outline', label: 'Reassurance'           },
+  { id: 'confidence',       icon: 'shield-outline',    label: 'Confidence'            },
+  { id: 'rest',             icon: 'bed-outline',       label: 'Rest'                  },
+  { id: 'connection',       icon: 'people-outline',    label: 'Connection'            },
+  { id: 'welcome-emotions', icon: 'heart-outline',     label: 'Welcome My Emotions'   },
+  { id: 'prepare',          icon: 'star-outline',      label: 'Prepare for Something' },
+  { id: 'face-challenge',   icon: 'flame-outline',     label: 'Face a Challenge'      },
+  { id: 'reconnect-self',   icon: 'person-outline',    label: 'Reconnect With Myself' },
+  { id: 'develop-resources',icon: 'leaf-outline',      label: 'Develop My Resources'  },
 ];
 
 export default function NeedsScreen() {
@@ -32,9 +37,9 @@ export default function NeedsScreen() {
           onRightPress={() => router.replace('/(tabs)')}
         />
         <View style={styles.container}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.title}>What do you{'\n'}need most today?</Text>
-            <Text style={styles.subtitle}>We'll find the right support for you.</Text>
+          <Text style={styles.title}>What do you{'\n'}need most today?</Text>
+          <Text style={styles.subtitle}>We'll find the right support for you.</Text>
+          <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
             <View style={styles.options}>
               {NEEDS.map((n) => {
                 const active = profile.need === n.id;
@@ -54,9 +59,9 @@ export default function NeedsScreen() {
                 );
               })}
             </View>
-          </View>
+          </ScrollView>
           <PillButton label="Continue" onPress={() => router.push('/onboarding/guidance')} disabled={!profile.need} />
-          <View style={styles.dots}><ProgressDots total={9} current={5} /></View>
+          <View style={styles.dots}><ProgressDots total={10} current={6} /></View>
         </View>
       </SafeAreaView>
     </LinearGradient>
@@ -69,7 +74,8 @@ const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.xl, paddingBottom: spacing.lg },
   title: { fontFamily: 'Raleway_700Bold', fontSize: 28, color: colors.coldViolet, lineHeight: 36, marginBottom: spacing.sm },
   subtitle: { fontFamily: 'Montserrat_400Regular', fontSize: 15, color: colors.textSecondary, marginBottom: spacing.lg },
-  options: { gap: 8 },
+  scroll: { flex: 1, marginBottom: spacing.lg },
+  options: { gap: 8, paddingBottom: spacing.sm },
   option: {
     flexDirection: 'row', alignItems: 'center', backgroundColor: colors.white,
     borderRadius: radius.md, paddingHorizontal: spacing.md, paddingVertical: 12, gap: spacing.md,

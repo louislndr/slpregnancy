@@ -26,11 +26,16 @@ const FEELINGS: { id: string; icon: IoniconsName; label: string }[] = [
 ];
 
 const NEEDS: { id: string; icon: IoniconsName; label: string }[] = [
-  { id: 'calm', icon: 'water-outline', label: 'Calm' },
-  { id: 'confidence', icon: 'shield-outline', label: 'Confidence' },
-  { id: 'reassurance', icon: 'hand-left-outline', label: 'Reassurance' },
-  { id: 'rest', icon: 'bed-outline', label: 'Rest' },
-  { id: 'connection', icon: 'people-outline', label: 'Connection' },
+  { id: 'calm',             icon: 'water-outline',       label: 'Calm'                  },
+  { id: 'reassurance',      icon: 'hand-left-outline',   label: 'Reassurance'           },
+  { id: 'confidence',       icon: 'shield-outline',      label: 'Confidence'            },
+  { id: 'rest',             icon: 'bed-outline',         label: 'Rest'                  },
+  { id: 'connection',       icon: 'people-outline',      label: 'Connection'            },
+  { id: 'welcome-emotions', icon: 'heart-outline',       label: 'Welcome My Emotions'   },
+  { id: 'prepare',          icon: 'star-outline',        label: 'Prepare for Something' },
+  { id: 'face-challenge',   icon: 'flame-outline',       label: 'Face a Challenge'      },
+  { id: 'reconnect-self',   icon: 'person-outline',      label: 'Reconnect With Myself' },
+  { id: 'develop-resources',icon: 'leaf-outline',        label: 'Develop My Resources'  },
 ];
 
 const TIMES: { id: number; icon: IoniconsName; label: string; desc: string }[] = [
@@ -134,6 +139,7 @@ export default function CheckInScreen() {
         availableTime: time ?? 10,
         position: position ?? 'sitting',
         guidanceMode: guidance ?? 'audio-visual',
+        lounge: profile.lounge ?? 'womens',
       });
       setResult(rec);
       setStep(5);

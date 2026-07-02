@@ -8,6 +8,7 @@ export interface RecommendationInput {
   availableTime: number;
   position: string;
   guidanceMode: string;
+  lounge?: string;
 }
 
 export interface RecommendationOutput {
@@ -32,8 +33,13 @@ function scoreProtocol(protocol: Protocol, input: RecommendationInput): number {
 
 export class RecommendationEngine {
   static recommend(input: RecommendationInput): RecommendationOutput {
+    const activeLounge = input.lounge ?? 'womens';
     const scored = protocols
-      .filter((p) => !p.isSupportNow)
+      .filter((p) => {
+        if (p.isSupportNow) return false;
+        if (activeLounge === 'partner') return p.forLounge === 'partner';
+        return !p.forLounge || p.forLounge === 'womens';
+      })
       .map((p) => ({ protocol: p, score: scoreProtocol(p, input) }))
       .sort((a, b) => b.score - a.score);
 
