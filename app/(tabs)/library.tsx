@@ -20,10 +20,17 @@ const DURATIONS = [
   { label: '15+ min', max: 999, min: 15 },
 ];
 const JOURNEYS = [
-  { id: 'trying-to-conceive', label: 'Trying to Conceive' },
-  { id: 'pregnancy', label: 'Pregnancy' },
-  { id: 'pregnancy-recovery', label: 'Pregnancy After Loss' },
-  { id: 'postpartum', label: 'Postpartum' },
+  { id: 'trying-to-conceive',  label: 'Trying to Conceive'    },
+  { id: 'fertility-treatment', label: 'Fertility Treatment'    },
+  { id: 'pregnancy',           label: 'Pregnancy'              },
+  { id: 'difficult-pregnancy', label: 'Difficult Pregnancy'    },
+  { id: 'waiting',             label: 'Waiting'                },
+  { id: 'birth-preparation',   label: 'Preparing for Birth'    },
+  { id: 'birth',               label: 'During Birth'           },
+  { id: 'pregnancy-recovery',  label: 'Pregnancy After Loss'   },
+  { id: 'perinatal-grief',     label: 'Perinatal Grief'        },
+  { id: 'postpartum',          label: 'Postpartum'             },
+  { id: 'feeling-well',        label: 'Feeling Well'           },
 ];
 const TYPE_BADGES: Record<string, { bg: string; text: string }> = {
   REFLECT:        { bg: colors.lavender,  text: colors.coldViolet },  // light purple → dark purple

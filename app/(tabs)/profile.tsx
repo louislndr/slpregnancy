@@ -5,24 +5,55 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
-import { useOnboardingStore, Journey } from '@/store/onboardingStore';
+import { useOnboardingStore, Journey, Lounge } from '@/store/onboardingStore';
 import { useSessionStore } from '@/store/sessionStore';
 import AppHeader from '@/components/AppHeader';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
 const JOURNEY_LABELS: Record<Journey, string> = {
-  'trying-to-conceive': 'Trying to Conceive',
-  'pregnancy': 'Pregnancy',
-  'pregnancy-recovery': 'Pregnancy After Loss',
-  'postpartum': 'Postpartum',
+  'trying-to-conceive':  'Trying to Conceive',
+  'fertility-treatment': 'Fertility Treatment',
+  'pregnancy':           'Pregnancy',
+  'difficult-pregnancy': 'Difficult Pregnancy',
+  'waiting':             'Waiting',
+  'birth-preparation':   'Preparing for Birth',
+  'birth':               'During Birth',
+  'pregnancy-recovery':  'Pregnancy After Loss',
+  'perinatal-grief':     'Perinatal Grief',
+  'postpartum':          'Postpartum',
+  'feeling-well':        'Feeling Well',
+  'partner-support':     'Partner Support',
 };
 
-const JOURNEY_OPTIONS: { id: Journey; label: string; icon: IoniconsName }[] = [
-  { id: 'trying-to-conceive', label: 'Trying to Conceive', icon: 'leaf-outline' },
-  { id: 'pregnancy', label: 'Pregnancy', icon: 'flower-outline' },
-  { id: 'pregnancy-recovery', label: 'Pregnancy After Loss', icon: 'heart-outline' },
-  { id: 'postpartum', label: 'Postpartum', icon: 'sunny-outline' },
+const LOUNGE_LABELS: Record<Lounge, string> = {
+  womens:  "Women's Lounge",
+  partner: 'Partner Lounge',
+  couple:  'Couple Lounge',
+  kids:    'Kids Lounge',
+  family:  'Family Lounge',
+};
+
+const WOMENS_JOURNEY_OPTIONS: { id: Journey; label: string; icon: IoniconsName }[] = [
+  { id: 'trying-to-conceive',  label: 'Trying to Conceive',    icon: 'leaf-outline'         },
+  { id: 'fertility-treatment', label: 'Fertility Treatment',    icon: 'medical-outline'      },
+  { id: 'pregnancy',           label: 'Pregnancy',              icon: 'flower-outline'       },
+  { id: 'difficult-pregnancy', label: 'Difficult Pregnancy',    icon: 'alert-circle-outline' },
+  { id: 'waiting',             label: 'Waiting',                icon: 'time-outline'         },
+  { id: 'birth-preparation',   label: 'Preparing for Birth',    icon: 'star-outline'         },
+  { id: 'birth',               label: 'During Birth',           icon: 'flash-outline'        },
+  { id: 'pregnancy-recovery',  label: 'Pregnancy After Loss',   icon: 'heart-outline'        },
+  { id: 'perinatal-grief',     label: 'Perinatal Grief',        icon: 'heart-dislike-outline'},
+  { id: 'postpartum',          label: 'Postpartum',             icon: 'sunny-outline'        },
+  { id: 'feeling-well',        label: 'Feeling Well',           icon: 'happy-outline'        },
+];
+
+const PARTNER_JOURNEY_OPTIONS: { id: Journey; label: string; icon: IoniconsName }[] = [
+  { id: 'pregnancy',           label: 'Supporting Pregnancy',   icon: 'body-outline'         },
+  { id: 'trying-to-conceive',  label: 'Trying for a Baby',      icon: 'leaf-outline'         },
+  { id: 'postpartum',          label: 'Our Baby Has Arrived',   icon: 'happy-outline'        },
+  { id: 'perinatal-grief',     label: 'We Experienced a Loss',  icon: 'heart-outline'        },
+  { id: 'fertility-treatment', label: 'Fertility Treatment',     icon: 'medical-outline'      },
 ];
 
 function SettingRow({
@@ -76,6 +107,9 @@ export default function ProfileScreen() {
   }, [history]);
 
   const journeyLabel = profile.journey ? JOURNEY_LABELS[profile.journey] : 'Not set';
+  const loungeLabel = profile.lounge ? LOUNGE_LABELS[profile.lounge] : null;
+  const isPartner = profile.lounge === 'partner';
+  const journeyOptions = isPartner ? PARTNER_JOURNEY_OPTIONS : WOMENS_JOURNEY_OPTIONS;
 
   return (
     <SafeAreaView edges={['top']} style={styles.safe}>
@@ -88,8 +122,15 @@ export default function ProfileScreen() {
             <Text style={styles.avatarText}>{(profile.firstName || 'U').charAt(0).toUpperCase()}</Text>
           </View>
           <Text style={styles.heroName}>{profile.firstName || 'Welcome'}</Text>
-          <View style={styles.journeyBadge}>
-            <Text style={styles.journeyBadgeText}>{journeyLabel}</Text>
+          <View style={styles.badgeRow}>
+            {loungeLabel && (
+              <View style={styles.loungeBadge}>
+                <Text style={styles.loungeBadgeText}>{loungeLabel}</Text>
+              </View>
+            )}
+            <View style={styles.journeyBadge}>
+              <Text style={styles.journeyBadgeText}>{journeyLabel}</Text>
+            </View>
           </View>
         </View>
 
@@ -114,13 +155,13 @@ export default function ProfileScreen() {
         {/* My Journey */}
         <SectionHeader title="My Journey" />
         <View style={styles.card}>
-          {JOURNEY_OPTIONS.map((opt, i) => (
+          {journeyOptions.map((opt, i) => (
             <TouchableOpacity
               key={opt.id}
               style={[
                 styles.journeyOption,
                 profile.journey === opt.id && styles.journeyOptionActive,
-                i < JOURNEY_OPTIONS.length - 1 && styles.journeyOptionBorder,
+                i < journeyOptions.length - 1 && styles.journeyOptionBorder,
               ]}
               onPress={() => setJourney(opt.id)}
               activeOpacity={0.7}
@@ -217,6 +258,9 @@ const styles = StyleSheet.create({
   avatar: { width: 72, height: 72, borderRadius: 36, backgroundColor: colors.lavender, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.sm },
   avatarText: { fontFamily: 'Raleway_700Bold', fontSize: 30, color: colors.coldViolet },
   heroName: { fontFamily: 'Raleway_700Bold', fontSize: 22, color: colors.coldViolet, marginBottom: spacing.sm },
+  badgeRow: { flexDirection: 'row', gap: 8, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' },
+  loungeBadge: { backgroundColor: colors.lavender, borderRadius: 9999, paddingVertical: 6, paddingHorizontal: 16 },
+  loungeBadgeText: { fontFamily: 'Montserrat_500Medium', fontSize: 13, color: colors.coldViolet },
   journeyBadge: { backgroundColor: colors.azure, borderRadius: 9999, paddingVertical: 6, paddingHorizontal: 16 },
   journeyBadgeText: { fontFamily: 'Montserrat_500Medium', fontSize: 13, color: colors.primary },
 
