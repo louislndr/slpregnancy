@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import { useOnboardingStore } from '@/store/onboardingStore';
+import AppHeader from '@/components/AppHeader';
 
 export default function CelebrateBirthScreen() {
   const setJourney = useOnboardingStore((s) => s.setJourney);
@@ -18,7 +19,8 @@ export default function CelebrateBirthScreen() {
 
   return (
     <LinearGradient colors={['#FFF8F4', '#FFE6D5', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
-      <SafeAreaView edges={['top', 'bottom']} style={styles.safe}>
+      <SafeAreaView edges={['top']} style={styles.safe}>
+        <AppHeader showBack />
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
 
           <View style={styles.emojiWrap}>

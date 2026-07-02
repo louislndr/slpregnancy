@@ -32,7 +32,7 @@ export default function LoungeScreen() {
   return (
     <LinearGradient colors={['#FFFFFF', '#F5F9FC', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
-        <AppHeader />
+        <AppHeader showBack />
         <View style={styles.container}>
           <Text style={styles.title}>Welcome to{'\n'}SL Pregnancy</Text>
           <Text style={styles.subtitle}>Choose your Lounge to begin.</Text>
