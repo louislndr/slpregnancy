@@ -2,13 +2,37 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export type Journey = 'trying-to-conceive' | 'pregnancy' | 'pregnancy-recovery' | 'postpartum';
+export type Lounge = 'womens' | 'partner' | 'couple' | 'kids' | 'family';
+export type Journey =
+  | 'trying-to-conceive'
+  | 'fertility-treatment'
+  | 'pregnancy'
+  | 'difficult-pregnancy'
+  | 'waiting'
+  | 'birth-preparation'
+  | 'birth'
+  | 'pregnancy-recovery'
+  | 'postpartum'
+  | 'perinatal-grief'
+  | 'feeling-well'
+  | 'partner-support';
 export type EmotionalState = 'struggling' | 'doing-okay' | 'feeling-good' | 'preparing-tomorrow' | 'moment-for-myself';
-export type Need = 'calm' | 'confidence' | 'reassurance' | 'rest' | 'connection';
+export type Need =
+  | 'calm'
+  | 'confidence'
+  | 'reassurance'
+  | 'rest'
+  | 'connection'
+  | 'welcome-emotions'
+  | 'prepare'
+  | 'face-challenge'
+  | 'reconnect-self'
+  | 'develop-resources';
 export type GuidanceVoice = 'female' | 'male' | 'charlotte-fr';
 export type GuidanceMode = 'audio-only' | 'audio-visual';
 
 interface OnboardingProfile {
+  lounge: Lounge | null;
   firstName: string;
   ageRange: string;
   journey: Journey | null;
@@ -25,6 +49,7 @@ interface OnboardingState {
   hasCompletedOnboarding: boolean;
   profile: OnboardingProfile;
 
+  setLounge: (lounge: Lounge) => void;
   setFirstName: (name: string) => void;
   setAgeRange: (range: string) => void;
   setJourney: (journey: Journey) => void;
@@ -41,6 +66,7 @@ interface OnboardingState {
 }
 
 const defaultProfile: OnboardingProfile = {
+  lounge: null,
   firstName: '',
   ageRange: '',
   journey: null,
@@ -59,6 +85,8 @@ export const useOnboardingStore = create<OnboardingState>()(
       hasCompletedOnboarding: false,
       profile: defaultProfile,
 
+      setLounge: (lounge) =>
+        set((s) => ({ profile: { ...s.profile, lounge } })),
       setFirstName: (name) =>
         set((s) => ({ profile: { ...s.profile, firstName: name } })),
       setAgeRange: (range) =>

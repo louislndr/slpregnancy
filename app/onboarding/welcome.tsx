@@ -125,7 +125,7 @@ export default function WelcomeScreen() {
         <View style={styles.ctaArea}>
           <PillButton
             label="Get Started"
-            onPress={() => router.push('/onboarding/support-needs')}
+            onPress={() => router.push('/onboarding/lounge')}
           />
         </View>
 
