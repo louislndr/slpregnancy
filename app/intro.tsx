@@ -3,16 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
-  Dimensions,
+  Animated,
   TouchableOpacity,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  ListRenderItem,
 } from 'react-native';
+import { Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Svg, Circle, Path, Ellipse, Line, G, Rect, Text as SvgText } from 'react-native-svg';
 import PillButton from '@/components/PillButton';
@@ -21,7 +17,6 @@ import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
 
 const { width } = Dimensions.get('window');
-export const INTRO_SEEN_KEY = 'slpregnancy:hasSeenIntro';
 
 // ─── Illustrations ────────────────────────────────────────────────────────────
 
@@ -205,74 +200,51 @@ const SLIDES: Slide[] = [
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
-async function finishIntro() {
-  await AsyncStorage.setItem(INTRO_SEEN_KEY, 'true');
+function finishIntro() {
   router.replace('/auth');
 }
 
 export default function IntroScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const listRef = useRef<FlatList>(null);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
-  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const index = Math.round(e.nativeEvent.contentOffset.x / width);
-    setActiveIndex(index);
-  };
-
-  const goNext = () => {
-    if (activeIndex < SLIDES.length - 1) {
-      listRef.current?.scrollToIndex({ index: activeIndex + 1, animated: true });
-    } else {
-      finishIntro();
-    }
-  };
-
+  const slide = SLIDES[activeIndex];
   const isLast = activeIndex === SLIDES.length - 1;
 
-  const renderSlide: ListRenderItem<Slide> = ({ item }) => (
-    <LinearGradient colors={item.gradient} locations={[0, 0.5, 1]} style={styles.slide}>
-      <View style={styles.illustrationWrap}>
-        <item.Illustration />
-      </View>
-      <View style={styles.textWrap}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.body}>{item.body}</Text>
-      </View>
-    </LinearGradient>
-  );
+  const goNext = () => {
+    if (isLast) { finishIntro(); return; }
+    Animated.timing(fadeAnim, { toValue: 0, duration: 180, useNativeDriver: true }).start(() => {
+      setActiveIndex((i) => i + 1);
+      Animated.timing(fadeAnim, { toValue: 1, duration: 220, useNativeDriver: true }).start();
+    });
+  };
+
+  const skip = () => finishIntro();
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safe}>
-      {/* Skip button */}
       {!isLast && (
-        <TouchableOpacity style={styles.skipBtn} onPress={finishIntro} activeOpacity={0.7}>
+        <TouchableOpacity style={styles.skipBtn} onPress={skip} activeOpacity={0.7}>
           <Text style={styles.skipText}>Skip</Text>
         </TouchableOpacity>
       )}
 
-      {/* Slides */}
-      <FlatList
-        ref={listRef}
-        data={SLIDES}
-        keyExtractor={(item) => item.id}
-        renderItem={renderSlide}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={onScroll}
-        scrollEventThrottle={16}
-        bounces={false}
-        style={styles.list}
-      />
+      <Animated.View style={[styles.slideWrapper, { opacity: fadeAnim }]}>
+        <LinearGradient colors={slide.gradient} locations={[0, 0.5, 1]} style={styles.slide}>
+          <View style={styles.illustrationWrap}>
+            <slide.Illustration />
+          </View>
+          <View style={styles.textWrap}>
+            <Text style={styles.title}>{slide.title}</Text>
+            <Text style={styles.body}>{slide.body}</Text>
+          </View>
+        </LinearGradient>
+      </Animated.View>
 
-      {/* Footer */}
       <View style={styles.footer}>
         <ProgressDots total={SLIDES.length} current={activeIndex} />
         <View style={styles.btnWrap}>
-          <PillButton
-            label={isLast ? 'Get Started' : 'Next'}
-            onPress={goNext}
-          />
+          <PillButton label={isLast ? 'Get Started' : 'Next'} onPress={goNext} />
         </View>
       </View>
     </SafeAreaView>
@@ -294,9 +266,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.textSecondary,
   },
-  list: { flex: 1 },
+  slideWrapper: { flex: 1 },
   slide: {
-    width,
     flex: 1,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.xl,

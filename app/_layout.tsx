@@ -46,7 +46,7 @@ export default function RootLayout() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       useAuthStore.getState().setSession(session);
       if (event === 'SIGNED_OUT') {
-        router.replace('/auth');
+        router.replace('/intro');
       }
       if (event === 'SIGNED_IN') {
         fetchData(true);
