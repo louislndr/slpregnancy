@@ -64,7 +64,7 @@ export async function GET() {
   // Upsert protocols
   for (const p of protocols) {
     const { parts, ...proto } = p;
-    const { error: pe } = await supabase.from('protocols').upsert(proto, { onConflict: 'id' });
+    const { error: pe } = await supabase.from('protocols').upsert(proto as any, { onConflict: 'id' });
     if (pe) { results.push(`ERROR protocol ${p.id}: ${pe.message}`); continue; }
 
     // Delete old parts and re-insert
@@ -84,7 +84,7 @@ export async function GET() {
   // Upsert programs + flow nodes
   for (const prog of programs) {
     const { sessions, ...program } = prog;
-    const { error: proge } = await supabase.from('programs').upsert(program, { onConflict: 'id' });
+    const { error: proge } = await supabase.from('programs').upsert(program as any, { onConflict: 'id' });
     if (proge) { results.push(`ERROR program ${prog.id}: ${proge.message}`); continue; }
 
     // Delete old flow nodes and re-insert
