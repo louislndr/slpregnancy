@@ -6,7 +6,7 @@ export default function NewProgramPage() {
     <div className="min-h-screen flex flex-col">
       <Nav />
       <main className="max-w-3xl mx-auto w-full px-6 py-8">
-        <h1 className="text-2xl font-bold text-[#4F4580] mb-6">New Program</h1>
+        <h1 style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, fontSize: 26, color: '#4F4580', marginBottom: 24 }}>New Program</h1>
         <ProgramForm />
       </main>
     </div>

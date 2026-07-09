@@ -9,6 +9,8 @@ interface Props {
   onUploaded: (url: string) => void;
 }
 
+const M = 'Montserrat, sans-serif';
+
 export default function FileUpload({ bucket, accept, label, currentUrl, onUploaded }: Props) {
   const [uploading, setUploading] = useState(false);
   const [url, setUrl] = useState(currentUrl ?? '');
@@ -22,26 +24,21 @@ export default function FileUpload({ bucket, accept, label, currentUrl, onUpload
     form.append('bucket', bucket);
     const res = await fetch('/api/upload', { method: 'POST', body: form });
     const data = await res.json();
-    if (data.url) {
-      setUrl(data.url);
-      onUploaded(data.url);
-    }
+    if (data.url) { setUrl(data.url); onUploaded(data.url); }
     setUploading(false);
   }
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium text-gray-700">{label}</label>
-      <input
-        type="file"
-        accept={accept}
-        onChange={handleChange}
-        disabled={uploading}
-        className="text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#EEF6F9] file:text-[#699BA9] hover:file:bg-[#DBE8F0] cursor-pointer"
-      />
-      {uploading && <p className="text-xs text-gray-400">Uploading…</p>}
+      <label style={{ fontFamily: M, fontWeight: 600, fontSize: 13, color: '#4F4580' }}>{label}</label>
+      <label className="flex items-center gap-3 px-4 py-3 rounded-2xl cursor-pointer transition-colors" style={{ border: '1.5px dashed #BEB5DA', background: '#F9F7FF' }}>
+        <span style={{ fontFamily: M, fontSize: 13, color: '#699BA9', fontWeight: 600 }}>
+          {uploading ? 'Uploading…' : 'Choose file'}
+        </span>
+        <input type="file" accept={accept} onChange={handleChange} disabled={uploading} className="hidden" />
+      </label>
       {url && !uploading && (
-        <p className="text-xs text-green-600 truncate">✓ {url}</p>
+        <p style={{ fontFamily: M, fontSize: 12, color: '#699BA9' }} className="truncate">✓ {url}</p>
       )}
     </div>
   );

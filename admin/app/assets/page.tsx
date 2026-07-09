@@ -23,7 +23,7 @@ export default async function AssetsPage() {
     <div className="min-h-screen flex flex-col">
       <Nav />
       <main className="max-w-5xl mx-auto w-full px-6 py-8 flex flex-col gap-8">
-        <h1 className="text-2xl font-bold text-[#4F4580]">Assets</h1>
+        <h1 style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, fontSize: 26, color: '#4F4580' }}>Assets</h1>
         <AssetUploader audioFiles={audioUrls} visualFiles={visualUrls} />
       </main>
     </div>

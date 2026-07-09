@@ -124,26 +124,37 @@ export default function CurriculumEditor({ nodes, edges, protocols, onNodesChang
     onNodesChange(updated);
   }
 
+  const M = 'Montserrat, sans-serif';
+
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="text-sm font-semibold text-gray-700">Curriculum Map</span>
-        <button onClick={() => addNode('start')} className="text-xs bg-[#699BA9] text-white px-3 py-1 rounded-lg hover:opacity-90 transition">+ Start</button>
-        <button onClick={() => addNode('session')} className="text-xs bg-[#F5F0FF] text-[#4F4580] px-3 py-1 rounded-lg hover:bg-[#EEF6F9] transition">+ Session</button>
-        <button onClick={() => addNode('end')} className="text-xs bg-[#FFC299] text-white px-3 py-1 rounded-lg hover:opacity-90 transition">+ End</button>
-        <div className="flex items-center gap-1 ml-auto">
-          <span className="text-xs text-gray-400">Edge label:</span>
+        <button onClick={() => addNode('start')} type="button"
+          className="px-4 py-1.5 rounded-full text-xs transition-opacity hover:opacity-80"
+          style={{ background: '#699BA9', color: 'white', fontFamily: M, fontWeight: 600 }}>+ Start</button>
+        <button onClick={() => addNode('session')} type="button"
+          className="px-4 py-1.5 rounded-full text-xs transition-opacity hover:opacity-80"
+          style={{ background: '#F0EBF8', color: '#4F4580', fontFamily: M, fontWeight: 600 }}>+ Session</button>
+        <button onClick={() => addNode('end')} type="button"
+          className="px-4 py-1.5 rounded-full text-xs transition-opacity hover:opacity-80"
+          style={{ background: '#FFC299', color: 'white', fontFamily: M, fontWeight: 600 }}>+ End</button>
+        <div className="flex items-center gap-2 ml-auto">
+          <span style={{ fontFamily: M, fontSize: 12, color: '#A0A0B8' }}>Edge label:</span>
           <input
             value={edgeLabel}
             onChange={(e) => setEdgeLabel(e.target.value)}
             placeholder="e.g. if calm"
-            className="border border-gray-200 rounded-lg px-2 py-1 text-xs w-28 focus:outline-none focus:ring-1 focus:ring-[#699BA9]"
+            style={{
+              border: '1.5px solid #E8E0F0', borderRadius: 12, padding: '5px 12px',
+              fontFamily: M, fontSize: 12, color: '#4F4580', background: '#FAFAFA',
+              outline: 'none', width: 110,
+            }}
           />
         </div>
       </div>
-      <p className="text-xs text-gray-400">Drag nodes to rearrange. Connect by dragging from a node handle to another.</p>
+      <p style={{ fontFamily: M, fontSize: 12, color: '#A0A0B8' }}>Drag nodes to rearrange. Connect by dragging from a node handle to another.</p>
 
-      <div style={{ height: 480 }} className="border border-gray-200 rounded-xl overflow-hidden bg-white">
+      <div style={{ height: 480, borderRadius: 20, overflow: 'hidden', border: '1px solid #E8E0F0' }}>
         <ReactFlow
           nodes={rfNodes}
           edges={rfEdges}
@@ -155,7 +166,7 @@ export default function CurriculumEditor({ nodes, edges, protocols, onNodesChang
           onNodeDragStop={(_, __, nds) => syncPositions(nds)}
           fitView
         >
-          <Background color="#e5e7eb" gap={20} />
+          <Background color="#E8E0F0" gap={20} />
           <Controls />
           <MiniMap />
         </ReactFlow>

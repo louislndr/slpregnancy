@@ -79,42 +79,49 @@ export default function PartsFlowEditor({ parts, onChange }: Props) {
     onChange(parts.slice(0, -1));
   }
 
+  const M = 'Montserrat, sans-serif';
+  const inputStyle = {
+    border: '1.5px solid #E8E0F0', borderRadius: 12, padding: '8px 14px',
+    fontFamily: M, fontSize: 13, color: '#4F4580', background: '#FAFAFA',
+    outline: 'none', width: '100%',
+  };
+
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-semibold text-gray-700">Session Flow</span>
-        <button onClick={addPart} className="text-xs bg-[#EEF6F9] text-[#699BA9] px-3 py-1 rounded-lg hover:bg-[#DBE8F0] transition">+ Add Step</button>
-        <button onClick={removeLast} className="text-xs bg-gray-100 text-gray-500 px-3 py-1 rounded-lg hover:bg-gray-200 transition">Remove Last</button>
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-2 flex-wrap">
+        <button
+          onClick={addPart} type="button"
+          className="px-4 py-1.5 rounded-full text-xs transition-opacity hover:opacity-80"
+          style={{ background: '#DBE8F0', color: '#699BA9', fontFamily: M, fontWeight: 600 }}
+        >+ Add Step</button>
+        <button
+          onClick={removeLast} type="button"
+          className="px-4 py-1.5 rounded-full text-xs transition-opacity hover:opacity-80"
+          style={{ background: '#F0EBF8', color: '#A0A0B8', fontFamily: M, fontWeight: 600 }}
+        >Remove Last</button>
       </div>
 
-      {/* Editable parts table */}
-      <div className="flex flex-col gap-2 mb-2">
+      <div className="flex flex-col gap-2">
         {parts.map((p, i) => (
           <div key={p.id} className="flex gap-2 items-center">
-            <span className="text-xs text-gray-400 w-4">{i + 1}</span>
+            <span className="shrink-0 w-5 h-5 flex items-center justify-center rounded-full text-xs"
+              style={{ background: '#F0EBF8', color: '#A0A0B8', fontFamily: M, fontWeight: 600 }}>{i + 1}</span>
             <input
-              className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm flex-1 focus:outline-none focus:ring-2 focus:ring-[#699BA9]"
+              style={inputStyle}
               value={p.label}
-              onChange={(e) => {
-                const updated = parts.map((pt) => pt.id === p.id ? { ...pt, label: e.target.value } : pt);
-                onChange(updated);
-              }}
+              onChange={(e) => onChange(parts.map((pt) => pt.id === p.id ? { ...pt, label: e.target.value } : pt))}
             />
             <input
-              className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm w-24 focus:outline-none focus:ring-2 focus:ring-[#699BA9]"
+              style={{ ...inputStyle, width: 96 }}
               value={p.duration}
-              onChange={(e) => {
-                const updated = parts.map((pt) => pt.id === p.id ? { ...pt, duration: e.target.value } : pt);
-                onChange(updated);
-              }}
+              onChange={(e) => onChange(parts.map((pt) => pt.id === p.id ? { ...pt, duration: e.target.value } : pt))}
               placeholder="2 min"
             />
           </div>
         ))}
       </div>
 
-      {/* Visual flow */}
-      <div style={{ height: 220 }} className="border border-gray-200 rounded-xl overflow-hidden bg-white">
+      <div style={{ height: 200, borderRadius: 16, overflow: 'hidden', border: '1px solid #E8E0F0' }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -128,7 +135,7 @@ export default function PartsFlowEditor({ parts, onChange }: Props) {
           zoomOnScroll={false}
           panOnDrag={false}
         >
-          <Background color="#e5e7eb" gap={20} />
+          <Background color="#E8E0F0" gap={20} />
         </ReactFlow>
       </div>
     </div>

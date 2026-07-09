@@ -18,24 +18,31 @@ export default function Nav() {
   }
 
   return (
-    <nav className="bg-white border-b border-gray-100 px-6 py-4 flex items-center gap-8">
-      <span className="font-bold text-[#4F4580] text-lg mr-4">SL Admin</span>
-      {links.map((l) => (
-        <Link
-          key={l.href}
-          href={l.href}
-          className={`text-sm font-medium transition ${
-            path.startsWith(l.href)
-              ? 'text-[#699BA9] border-b-2 border-[#699BA9] pb-0.5'
-              : 'text-gray-500 hover:text-gray-900'
-          }`}
-        >
-          {l.label}
-        </Link>
-      ))}
+    <nav className="bg-white border-b border-[#E8E0F0] px-8 flex items-center gap-6 h-16" style={{ boxShadow: '0 1px 8px rgba(79,69,128,0.06)' }}>
+      <span style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, color: '#4F4580', fontSize: 18, letterSpacing: '-0.3px', marginRight: 8 }}>SL Pregnancy</span>
+      <div className="flex items-center gap-1 h-full">
+        {links.map((l) => (
+          <Link
+            key={l.href}
+            href={l.href}
+            className="h-full flex items-center px-4 text-sm transition-colors"
+            style={{
+              fontFamily: 'Montserrat, sans-serif',
+              fontWeight: 600,
+              color: path.startsWith(l.href) ? '#699BA9' : '#A0A0B8',
+              borderBottom: path.startsWith(l.href) ? '2px solid #699BA9' : '2px solid transparent',
+            }}
+          >
+            {l.label}
+          </Link>
+        ))}
+      </div>
       <button
         onClick={handleLogout}
-        className="ml-auto text-sm text-gray-400 hover:text-gray-600 transition"
+        className="ml-auto text-sm transition-colors"
+        style={{ fontFamily: 'Montserrat, sans-serif', color: '#A0A0B8' }}
+        onMouseEnter={(e) => (e.currentTarget.style.color = '#699BA9')}
+        onMouseLeave={(e) => (e.currentTarget.style.color = '#A0A0B8')}
       >
         Sign out
       </button>

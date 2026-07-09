@@ -10,6 +10,28 @@ const NEEDS = ['calm','confidence','reassurance','rest','connection','welcome-em
 const CONTENT_TYPES = ['FULL SESSION','REFLECT','MOVE','PREPARE'];
 const POSITIONS = ['sitting','standing','lying'];
 
+const F = 'Raleway, sans-serif';
+const M = 'Montserrat, sans-serif';
+
+const inputStyle = {
+  border: '1.5px solid #E8E0F0', borderRadius: 16, padding: '10px 16px',
+  fontFamily: M, fontSize: 14, color: '#4F4580', background: '#FAFAFA',
+  outline: 'none', width: '100%',
+};
+
+const cardStyle = {
+  background: 'white', borderRadius: 24, padding: 24,
+  border: '1px solid #E8E0F0', boxShadow: '0 2px 16px rgba(79,69,128,0.05)',
+};
+
+const sectionTitle = {
+  fontFamily: F, fontWeight: 700, fontSize: 16, color: '#4F4580', marginBottom: 16,
+};
+
+const labelStyle = {
+  fontFamily: M, fontWeight: 600, fontSize: 13, color: '#4F4580', display: 'block', marginBottom: 6,
+};
+
 interface ProtocolRow {
   id: string; title: string; description: string; duration: number;
   content_type: string; journeys: string[]; emotional_states: string[];
@@ -20,10 +42,7 @@ interface ProtocolRow {
 
 interface PartRow { id: string; label: string; duration: string; position: number }
 
-interface Props {
-  protocol?: ProtocolRow;
-  parts?: PartRow[];
-}
+interface Props { protocol?: ProtocolRow; parts?: PartRow[] }
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -31,39 +50,45 @@ function slugify(s: string) {
 
 function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) {
   return (
-    <label className="flex items-center gap-2 cursor-pointer select-none">
-      <div
-        onClick={() => onChange(!checked)}
-        className={`w-10 h-5 rounded-full transition-colors ${checked ? 'bg-[#699BA9]' : 'bg-gray-200'} relative`}
-      >
-        <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${checked ? 'translate-x-5' : 'translate-x-0.5'}`} />
+    <label className="flex items-center gap-3 cursor-pointer select-none">
+      <div onClick={() => onChange(!checked)} className="relative w-10 h-5 rounded-full transition-colors cursor-pointer" style={{ background: checked ? '#699BA9' : '#E8E0F0' }}>
+        <div className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform" style={{ transform: checked ? 'translateX(20px)' : 'translateX(2px)' }} />
       </div>
-      <span className="text-sm text-gray-700">{label}</span>
+      <span style={{ fontFamily: M, fontSize: 14, color: '#4F4580' }}>{label}</span>
     </label>
   );
 }
 
-function MultiSelect({ label, options, selected, onChange }: {
-  label: string; options: string[]; selected: string[]; onChange: (v: string[]) => void;
-}) {
+function MultiSelect({ label, options, selected, onChange }: { label: string; options: string[]; selected: string[]; onChange: (v: string[]) => void }) {
   return (
     <div>
-      <label className="text-sm font-medium text-gray-700 block mb-2">{label}</label>
+      <label style={labelStyle}>{label}</label>
       <div className="flex flex-wrap gap-2">
         {options.map((o) => (
           <button
-            key={o}
-            type="button"
-            onClick={() => {
-              const next = selected.includes(o) ? selected.filter((x) => x !== o) : [...selected, o];
-              onChange(next);
+            key={o} type="button"
+            onClick={() => onChange(selected.includes(o) ? selected.filter((x) => x !== o) : [...selected, o])}
+            className="px-3 py-1.5 rounded-full text-xs transition-all"
+            style={{
+              fontFamily: M, fontWeight: 500,
+              background: selected.includes(o) ? '#699BA9' : '#F9F7FF',
+              color: selected.includes(o) ? 'white' : '#7B7B9B',
+              border: `1.5px solid ${selected.includes(o) ? '#699BA9' : '#E8E0F0'}`,
             }}
-            className={`text-xs px-3 py-1.5 rounded-full border transition ${selected.includes(o) ? 'bg-[#699BA9] text-white border-[#699BA9]' : 'bg-white text-gray-500 border-gray-200 hover:border-[#699BA9]'}`}
           >
             {o}
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <label style={labelStyle}>{label}</label>
+      {children}
     </div>
   );
 }
@@ -96,7 +121,6 @@ export default function ProtocolForm({ protocol, parts: initialParts = [] }: Pro
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
-
     const id = isEditing ? protocol!.id : slugify(title);
     const payload = {
       id, title, description, duration, content_type: contentType,
@@ -106,20 +130,13 @@ export default function ProtocolForm({ protocol, parts: initialParts = [] }: Pro
       audio_url: audioUrl || null, visual_url: visualUrl || null,
       updated_at: new Date().toISOString(),
     };
-
     const res = await fetch('/api/protocols', {
       method: isEditing ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ protocol: payload, parts }),
     });
-
-    if (res.ok) {
-      router.push('/protocols');
-      router.refresh();
-    } else {
-      const err = await res.json();
-      alert('Error: ' + (err.error ?? 'Unknown'));
-    }
+    if (res.ok) { router.push('/protocols'); router.refresh(); }
+    else { const err = await res.json(); alert('Error: ' + (err.error ?? 'Unknown')); }
     setSaving(false);
   }
 
@@ -132,88 +149,92 @@ export default function ProtocolForm({ protocol, parts: initialParts = [] }: Pro
   }
 
   return (
-    <form onSubmit={handleSave} className="flex flex-col gap-8">
+    <form onSubmit={handleSave} className="flex flex-col gap-6">
+
       {/* Basic info */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col gap-5">
-        <h2 className="font-semibold text-gray-800">Basic Info</h2>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">Title</label>
-          <input required value={title} onChange={(e) => setTitle(e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#699BA9]" />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">Description</label>
-          <textarea rows={3} value={description} onChange={(e) => setDescription(e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#699BA9] resize-none" />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">Duration (min)</label>
-            <input type="number" min={1} value={duration} onChange={(e) => setDuration(Number(e.target.value))} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#699BA9]" />
+      <div style={cardStyle}>
+        <p style={sectionTitle}>Basic Info</p>
+        <div className="flex flex-col gap-5">
+          <Field label="Title">
+            <input required value={title} onChange={(e) => setTitle(e.target.value)} style={inputStyle} />
+          </Field>
+          <Field label="Description">
+            <textarea rows={3} value={description} onChange={(e) => setDescription(e.target.value)} style={{ ...inputStyle, resize: 'none' }} />
+          </Field>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Duration (min)">
+              <input type="number" min={1} value={duration} onChange={(e) => setDuration(Number(e.target.value))} style={inputStyle} />
+            </Field>
+            <Field label="Content Type">
+              <select value={contentType} onChange={(e) => setContentType(e.target.value)} style={{ ...inputStyle, appearance: 'auto' }}>
+                {CONTENT_TYPES.map((t) => <option key={t}>{t}</option>)}
+              </select>
+            </Field>
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">Content Type</label>
-            <select value={contentType} onChange={(e) => setContentType(e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#699BA9] bg-white">
-              {CONTENT_TYPES.map((t) => <option key={t}>{t}</option>)}
+          <Field label="Intention">
+            <input value={intention} onChange={(e) => setIntention(e.target.value)} style={inputStyle} />
+          </Field>
+          <Field label="Self-Care Tip">
+            <textarea rows={2} value={selfCareTip} onChange={(e) => setSelfCareTip(e.target.value)} style={{ ...inputStyle, resize: 'none' }} />
+          </Field>
+          <div className="flex gap-6 flex-wrap">
+            <Toggle label="Has Visual" checked={hasVisual} onChange={setHasVisual} />
+            <Toggle label="Support Now session" checked={isSupportNow} onChange={setIsSupportNow} />
+          </div>
+          <Field label="For Lounge (optional)">
+            <select value={forLounge} onChange={(e) => setForLounge(e.target.value)} style={{ ...inputStyle, appearance: 'auto' }}>
+              <option value="">All lounges</option>
+              <option value="womens">Women's</option>
+              <option value="partner">Partner</option>
             </select>
-          </div>
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">Intention</label>
-          <input value={intention} onChange={(e) => setIntention(e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#699BA9]" />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">Self-Care Tip</label>
-          <textarea rows={2} value={selfCareTip} onChange={(e) => setSelfCareTip(e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#699BA9] resize-none" />
-        </div>
-        <div className="flex gap-6 flex-wrap">
-          <Toggle label="Has Visual" checked={hasVisual} onChange={setHasVisual} />
-          <Toggle label="Support Now session" checked={isSupportNow} onChange={setIsSupportNow} />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">For Lounge (optional)</label>
-          <select value={forLounge} onChange={(e) => setForLounge(e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#699BA9] bg-white">
-            <option value="">All lounges</option>
-            <option value="womens">Women's</option>
-            <option value="partner">Partner</option>
-          </select>
+          </Field>
         </div>
       </div>
 
       {/* Targeting */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col gap-5">
-        <h2 className="font-semibold text-gray-800">Targeting</h2>
-        <MultiSelect label="Journeys" options={JOURNEYS} selected={journeys} onChange={setJourneys} />
-        <MultiSelect label="Emotional States" options={EMOTIONAL_STATES} selected={emotionalStates} onChange={setEmotionalStates} />
-        <MultiSelect label="Needs" options={NEEDS} selected={needs} onChange={setNeeds} />
-        <MultiSelect label="Positions" options={POSITIONS} selected={positions} onChange={setPositions} />
+      <div style={cardStyle}>
+        <p style={sectionTitle}>Targeting</p>
+        <div className="flex flex-col gap-5">
+          <MultiSelect label="Journeys" options={JOURNEYS} selected={journeys} onChange={setJourneys} />
+          <MultiSelect label="Emotional States" options={EMOTIONAL_STATES} selected={emotionalStates} onChange={setEmotionalStates} />
+          <MultiSelect label="Needs" options={NEEDS} selected={needs} onChange={setNeeds} />
+          <MultiSelect label="Positions" options={POSITIONS} selected={positions} onChange={setPositions} />
+        </div>
       </div>
 
       {/* Media */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col gap-5">
-        <h2 className="font-semibold text-gray-800">Media</h2>
-        <FileUpload bucket="audio" accept="audio/*" label="Audio file (MP3)" currentUrl={audioUrl} onUploaded={setAudioUrl} />
-        <FileUpload bucket="visuals" accept="image/*,video/*" label="Visual (image or video)" currentUrl={visualUrl} onUploaded={setVisualUrl} />
-        {audioUrl && (
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">Audio URL (manual override)</label>
-            <input value={audioUrl} onChange={(e) => setAudioUrl(e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#699BA9]" />
-          </div>
-        )}
+      <div style={cardStyle}>
+        <p style={sectionTitle}>Media</p>
+        <div className="flex flex-col gap-5">
+          <FileUpload bucket="audio" accept="audio/*" label="Audio file (MP3)" currentUrl={audioUrl} onUploaded={setAudioUrl} />
+          <FileUpload bucket="visuals" accept="image/*,video/*" label="Visual (image or video)" currentUrl={visualUrl} onUploaded={setVisualUrl} />
+          {audioUrl && (
+            <Field label="Audio URL (manual override)">
+              <input value={audioUrl} onChange={(e) => setAudioUrl(e.target.value)} style={inputStyle} />
+            </Field>
+          )}
+        </div>
       </div>
 
-      {/* Session Flow */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col gap-5">
-        <h2 className="font-semibold text-gray-800">Session Steps</h2>
+      {/* Session Steps */}
+      <div style={cardStyle}>
+        <p style={sectionTitle}>Session Steps</p>
         <PartsFlowEditor parts={parts} onChange={setParts} />
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-3">
-        <button type="submit" disabled={saving} className="bg-[#699BA9] text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-[#5a8a97] transition disabled:opacity-50">
+      <div className="flex items-center gap-3 pb-8">
+        <button type="submit" disabled={saving} className="px-8 py-3 rounded-full text-white text-sm transition-opacity disabled:opacity-50"
+          style={{ background: '#FFC299', fontFamily: F, fontWeight: 700, boxShadow: '0 4px 16px rgba(255,194,153,0.35)' }}>
           {saving ? 'Saving…' : isEditing ? 'Save Changes' : 'Create Session'}
         </button>
-        <button type="button" onClick={() => router.push('/protocols')} className="text-sm text-gray-500 px-4 py-3 hover:text-gray-700 transition">Cancel</button>
+        <button type="button" onClick={() => router.push('/protocols')} className="px-4 py-3 text-sm transition-colors"
+          style={{ fontFamily: M, color: '#A0A0B8' }}>
+          Cancel
+        </button>
         {isEditing && (
-          <button type="button" onClick={handleDelete} disabled={deleting} className="ml-auto text-sm text-red-400 hover:text-red-600 transition disabled:opacity-50">
+          <button type="button" onClick={handleDelete} disabled={deleting} className="ml-auto text-sm transition-colors disabled:opacity-50"
+            style={{ fontFamily: M, color: '#E07070' }}>
             {deleting ? 'Deleting…' : 'Delete session'}
           </button>
         )}
