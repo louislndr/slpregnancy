@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   Animated,
   TouchableOpacity,
@@ -172,7 +173,7 @@ const SLIDES: Slide[] = [
     id: 'welcome',
     gradient: ['#FFF8F4', '#F5F0FF', '#FFE6D5'],
     Illustration: IllustrationWelcome,
-    title: 'Welcome to\nSL Pregnancy',
+    title: '',
     body: 'A safe space to breathe, prepare, and feel supported through every stage of your perinatal journey.',
   },
   {
@@ -235,7 +236,15 @@ export default function IntroScreen() {
             <slide.Illustration />
           </View>
           <View style={styles.textWrap}>
-            <Text style={styles.title}>{slide.title}</Text>
+            {activeIndex === 0 ? (
+              <Image
+                source={require('@/assets/logo-baseline.png')}
+                style={styles.introLogo}
+                resizeMode="contain"
+              />
+            ) : (
+              <Text style={styles.title}>{slide.title}</Text>
+            )}
             <Text style={styles.body}>{slide.body}</Text>
           </View>
         </LinearGradient>
@@ -279,6 +288,12 @@ const styles = StyleSheet.create({
   },
   textWrap: {
     alignItems: 'center',
+  },
+  introLogo: {
+    width: 200,
+    height: 150,
+    marginBottom: spacing.md,
+    alignSelf: 'center',
   },
   title: {
     fontFamily: 'Raleway_700Bold',
