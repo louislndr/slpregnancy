@@ -22,7 +22,7 @@ export default function Nav() {
 
   return (
     <nav className="bg-white border-b border-[#E8E0F0] px-8 flex items-center gap-6 h-16" style={{ boxShadow: '0 1px 8px rgba(79,69,128,0.06)' }}>
-      <img src="/Logo.png" alt="SophroLounge" style={{ height: 32, width: 'auto', marginRight: 8, objectFit: 'contain' }} />
+      <span style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, color: '#4F4580', fontSize: 18, letterSpacing: '-0.3px', marginRight: 8 }}>SL Pregnancy</span>
       <div className="flex items-center gap-1 h-full">
         {links.map((l) => (
           <Link
