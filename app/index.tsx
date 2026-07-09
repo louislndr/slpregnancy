@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { Redirect } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { useAuthStore } from '@/store/authStore';
 import { loadProfileFromSupabase } from '@/services/supabaseProfile';
+import { INTRO_SEEN_KEY } from './intro';
 import { colors } from '@/theme/colors';
 
 export default function Index() {
@@ -15,6 +17,15 @@ export default function Index() {
     () => useOnboardingStore.persist.hasHydrated()
   );
   const [profileChecked, setProfileChecked] = useState(false);
+  const [introChecked, setIntroChecked] = useState(false);
+  const [introSeen, setIntroSeen] = useState(false);
+
+  useEffect(() => {
+    AsyncStorage.getItem(INTRO_SEEN_KEY).then((val) => {
+      setIntroSeen(val === 'true');
+      setIntroChecked(true);
+    });
+  }, []);
 
   useEffect(() => {
     if (hydrated) return;
@@ -36,7 +47,7 @@ export default function Index() {
       .finally(() => setProfileChecked(true));
   }, [initialized, hydrated, session?.user.id]);
 
-  const ready = initialized && hydrated && profileChecked;
+  const ready = initialized && hydrated && profileChecked && introChecked;
 
   if (!ready) {
     return (
@@ -46,7 +57,7 @@ export default function Index() {
     );
   }
 
-  if (!session) return <Redirect href="/auth" />;
+  if (!session) return <Redirect href={introSeen ? '/auth' : '/intro'} />;
   if (!hasCompletedOnboarding) return <Redirect href="/onboarding/welcome" />;
   return <Redirect href="/(tabs)" />;
 }
