@@ -1,19 +1,32 @@
 const fs = require('fs');
 const path = require('path');
 
+// Patch the JS bundle: replace import.meta (invalid outside ES modules)
+const distJs = path.join(__dirname, '../dist/_expo/static/js/web');
+const jsFiles = fs.readdirSync(distJs).filter(f => f.endsWith('.js'));
+for (const file of jsFiles) {
+  const jsPath = path.join(distJs, file);
+  let js = fs.readFileSync(jsPath, 'utf8');
+  const before = js.length;
+  js = js.replace(/import\.meta/g, '({})');
+  fs.writeFileSync(jsPath, js);
+  console.log(`patch-web: fixed import.meta in ${file} (${before} -> ${js.length} bytes)`);
+}
+
+// Patch index.html: inject error handler + iPhone frame CSS
 const htmlPath = path.join(__dirname, '../dist/index.html');
 let html = fs.readFileSync(htmlPath, 'utf8');
 
 const errorHandler = `<script>
-window.onerror = function(msg, src, line, col, err) {
-  document.body.style.cssText = 'background:white;margin:0;padding:20px';
-  document.body.innerHTML = '<div style="color:red;font-family:monospace;white-space:pre-wrap"><b>App crashed:</b><br>' + msg + '<br><br>' + (err && err.stack ? err.stack : 'no stack') + '</div>';
+window.onerror=function(msg,src,line,col,err){
+  document.body.style.cssText='background:white;margin:0;padding:20px';
+  document.body.innerHTML='<div style="color:red;font-family:monospace;white-space:pre-wrap"><b>App crashed:</b><br>'+msg+'<br><br>'+(err&&err.stack?err.stack:'no stack')+'</div>';
   return true;
 };
-window.addEventListener('unhandledrejection', function(e) {
-  var msg = e.reason && e.reason.stack ? e.reason.stack : String(e.reason);
-  document.body.style.cssText = 'background:white;margin:0;padding:20px';
-  document.body.innerHTML += '<div style="color:orange;font-family:monospace;white-space:pre-wrap"><b>Promise rejected:</b><br>' + msg + '</div>';
+window.addEventListener('unhandledrejection',function(e){
+  var msg=e.reason&&e.reason.stack?e.reason.stack:String(e.reason);
+  document.body.style.cssText='background:white;margin:0;padding:20px';
+  document.body.innerHTML+='<div style="color:orange;font-family:monospace;white-space:pre-wrap"><b>Promise rejected:</b><br>'+msg+'</div>';
 });
 </script>`;
 
@@ -27,4 +40,4 @@ const iPhoneFrame = `<style>
 
 html = html.replace('</head>', errorHandler + '\n' + iPhoneFrame + '\n</head>');
 fs.writeFileSync(htmlPath, html);
-console.log('patch-web: injected error handler + iPhone frame into dist/index.html');
+console.log('patch-web: patched dist/index.html');
