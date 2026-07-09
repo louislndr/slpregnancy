@@ -9,8 +9,8 @@ import { Ionicons } from '@expo/vector-icons';
 import Svg, { Circle, Path, Ellipse, Line, G, Rect } from 'react-native-svg';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
-import { protocols } from '@/data/protocols';
 import { useSessionStore } from '@/store/sessionStore';
+import { useDataStore } from '@/store/dataStore';
 
 const { width } = Dimensions.get('window');
 
@@ -109,6 +109,7 @@ export default function SessionPlayerScreen() {
   const [mode, setMode] = useState<'audio' | 'visual'>('audio');
   const [breathPhase, setBreathPhase] = useState<'inhale' | 'exhale'>('inhale');
   const { toggleFavorite, isFavorite, completeSession } = useSessionStore();
+  const protocols = useDataStore((s) => s.protocols);
 
   const protocol = protocols.find((p) => p.id === id);
   const isVisual = mode === 'visual';

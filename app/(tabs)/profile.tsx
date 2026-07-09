@@ -8,7 +8,7 @@ import { spacing, radius, shadow } from '@/theme/spacing';
 import { useOnboardingStore, Journey, Lounge } from '@/store/onboardingStore';
 import { useSessionStore, SessionHistory } from '@/store/sessionStore';
 import { useAuthStore } from '@/store/authStore';
-import { protocols } from '@/data/protocols';
+import { useDataStore } from '@/store/dataStore';
 import AppHeader from '@/components/AppHeader';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
@@ -85,6 +85,7 @@ export default function ProfileScreen() {
   const setGuidanceVoice = useOnboardingStore((s) => s.setGuidanceVoice);
   const setGuidanceMode = useOnboardingStore((s) => s.setGuidanceMode);
   const resetOnboarding = useOnboardingStore((s) => s.resetOnboarding);
+  const protocols = useDataStore((s) => s.protocols);
   const signOut = useAuthStore((s) => s.signOut);
 
   const history = useSessionStore((s) => s.history);

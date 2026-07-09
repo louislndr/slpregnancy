@@ -18,11 +18,13 @@ import {
 } from '@expo-google-fonts/playfair-display';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/store/authStore';
+import { useDataStore } from '@/store/dataStore';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const router = useRouter();
+  const fetchData = useDataStore((s) => s.fetchData);
   const [fontsLoaded, fontError] = useFonts({
     Raleway_500Medium,
     Raleway_700Bold,
@@ -37,11 +39,15 @@ export default function RootLayout() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       useAuthStore.getState().setSession(session);
       useAuthStore.getState().setInitialized();
+      if (session) fetchData();
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       useAuthStore.getState().setSession(session);
       if (event === 'SIGNED_OUT') {
         router.replace('/auth');
+      }
+      if (event === 'SIGNED_IN') {
+        fetchData();
       }
     });
     return () => subscription.unsubscribe();

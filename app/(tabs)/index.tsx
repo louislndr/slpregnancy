@@ -9,8 +9,7 @@ import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { useSessionStore } from '@/store/sessionStore';
-import { programs } from '@/data/programs';
-import { protocols } from '@/data/protocols';
+import { useDataStore } from '@/store/dataStore';
 import Card from '@/components/Card';
 import AppHeader from '@/components/AppHeader';
 
@@ -46,6 +45,8 @@ export default function HomeScreen() {
   const profile = useOnboardingStore((s) => s.profile);
   const currentProgramId = useSessionStore((s) => s.currentProgramId);
   const getProgramProgress = useSessionStore((s) => s.getProgramProgress);
+  const protocols = useDataStore((s) => s.protocols);
+  const programs = useDataStore((s) => s.programs);
 
   const firstName = profile.firstName || 'Charlotte';
   const currentProgram = programs.find((p) => p.id === currentProgramId) ?? programs[2];

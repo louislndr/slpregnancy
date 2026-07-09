@@ -13,6 +13,7 @@ import AppHeader from '@/components/AppHeader';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { RecommendationEngine } from '@/services/RecommendationEngine';
 import { Protocol } from '@/data/protocols';
+import { useDataStore } from '@/store/dataStore';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 type Step = 0 | 1 | 2 | 3 | 4 | 5;
@@ -117,6 +118,8 @@ function ResultCard({ protocol, isPrimary }: { protocol: Protocol; isPrimary: bo
 
 export default function CheckInScreen() {
   const profile = useOnboardingStore((s) => s.profile);
+  const protocols = useDataStore((s) => s.protocols);
+  const programs = useDataStore((s) => s.programs);
   const [step, setStep] = useState<Step>(0);
   const [feeling, setFeeling] = useState<string | null>(null);
   const [need, setNeed] = useState<string | null>(null);
@@ -140,7 +143,7 @@ export default function CheckInScreen() {
         position: position ?? 'sitting',
         guidanceMode: guidance ?? 'audio-visual',
         lounge: profile.lounge ?? 'womens',
-      });
+      }, protocols, programs);
       setResult(rec);
       setStep(5);
     } else {

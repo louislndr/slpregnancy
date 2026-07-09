@@ -7,7 +7,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
-import { protocols } from '@/data/protocols';
+import { useDataStore } from '@/store/dataStore';
 import AppHeader from '@/components/AppHeader';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
@@ -22,6 +22,7 @@ const SUPPORT_ITEMS: { key: string; icon: IoniconsName; label: string; subtitle:
 ];
 
 export default function SupportScreen() {
+  const protocols = useDataStore((s) => s.protocols);
   return (
     <SafeAreaView edges={['top']} style={styles.safe}>
       <AppHeader />

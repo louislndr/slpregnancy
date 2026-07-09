@@ -1,5 +1,5 @@
-import { protocols, Protocol, supportNowMap, getProtocol } from '@/data/protocols';
-import { programs, Program } from '@/data/programs';
+import { Protocol, supportNowMap } from '@/data/protocols';
+import { Program } from '@/data/programs';
 
 export interface RecommendationInput {
   journey: string;
@@ -32,7 +32,7 @@ function scoreProtocol(protocol: Protocol, input: RecommendationInput): number {
 }
 
 export class RecommendationEngine {
-  static recommend(input: RecommendationInput): RecommendationOutput {
+  static recommend(input: RecommendationInput, protocols: Protocol[], programs: Program[]): RecommendationOutput {
     const activeLounge = input.lounge ?? 'womens';
     const scored = protocols
       .filter((p) => {
@@ -45,15 +45,14 @@ export class RecommendationEngine {
 
     const primary = scored[0]?.protocol ?? protocols[0];
     const alternatives = scored.slice(1, 3).map((s) => s.protocol);
-
     const suggestedProgram = programs.find((p) => p.journey === input.journey);
 
     return { primary, alternatives, suggestedProgram };
   }
 
-  static supportNow(key: string): { primary: Protocol; alternatives: Protocol[] } {
+  static supportNow(key: string, protocols: Protocol[]): { primary: Protocol; alternatives: Protocol[] } {
     const primaryId = supportNowMap[key];
-    const primary = getProtocol(primaryId) ?? protocols[0];
+    const primary = protocols.find((p) => p.id === primaryId) ?? protocols[0];
     const alternatives = protocols
       .filter((p) => p.isSupportNow && p.id !== primaryId)
       .slice(0, 2);

@@ -8,8 +8,9 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
-import { protocols, ContentType } from '@/data/protocols';
+import { type ContentType } from '@/data/protocols';
 import { useSessionStore } from '@/store/sessionStore';
+import { useDataStore } from '@/store/dataStore';
 import AppHeader from '@/components/AppHeader';
 
 const CONTENT_TYPES: ContentType[] = ['REFLECT', 'MOVE', 'FULL SESSION', 'PREPARE'];
@@ -58,6 +59,7 @@ export default function LibraryScreen() {
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const { toggleFavorite, isFavorite } = useSessionStore();
+  const protocols = useDataStore((s) => s.protocols);
 
   const activeFilterCount = [
     activeType !== null,

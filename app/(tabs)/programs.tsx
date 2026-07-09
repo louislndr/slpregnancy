@@ -7,8 +7,9 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
-import { programs, Program } from '@/data/programs';
+import { type Program } from '@/data/programs';
 import { useSessionStore } from '@/store/sessionStore';
+import { useDataStore } from '@/store/dataStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import AppHeader from '@/components/AppHeader';
 import Card from '@/components/Card';
@@ -98,6 +99,7 @@ function ProgramCard({ program }: { program: Program }) {
 
 export default function ProgramsScreen() {
   const lounge = useOnboardingStore((s) => s.profile.lounge) ?? 'womens';
+  const programs = useDataStore((s) => s.programs);
   const visiblePrograms = programs.filter((p) => !p.forLounge || p.forLounge === lounge);
 
   return (

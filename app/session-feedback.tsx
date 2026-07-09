@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import { useSessionStore } from '@/store/sessionStore';
-import { protocols } from '@/data/protocols';
+import { useDataStore } from '@/store/dataStore';
 
 const MOODS = [
   { id: 'much-calmer', emoji: '🌸', label: 'Much calmer' },
@@ -33,6 +33,7 @@ export default function SessionFeedbackScreen() {
   const [note, setNote] = useState('');
   const [rating, setRating] = useState<number>(0);
   const { addHistory } = useSessionStore();
+  const protocols = useDataStore((s) => s.protocols);
 
   const protocol = protocols.find((p) => p.id === protocolId);
 
