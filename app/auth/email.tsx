@@ -9,6 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/store/authStore';
+import { useOnboardingStore } from '@/store/onboardingStore';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 
@@ -40,15 +41,20 @@ export default function EmailAuthScreen() {
     setLoading(true);
 
     if (mode === 'signup') {
-      const { data, error: err } = await supabase.auth.signUp({ email: email.trim(), password });
+      const { data, error: err } = await supabase.auth.signUp({
+        email: email.trim(),
+        password,
+        options: { data: { first_name: name.trim() || undefined } },
+      });
       setLoading(false);
       if (err) { setError(err.message); return; }
       if (data.session) {
+        if (name.trim()) useOnboardingStore.getState().setFirstName(name.trim());
         setSession(data.session);
         setInitialized();
         router.replace('/');
       } else {
-        // Email confirmation required
+        if (name.trim()) useOnboardingStore.getState().setFirstName(name.trim());
         setConfirmation(true);
       }
     } else {

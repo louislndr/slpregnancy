@@ -29,6 +29,7 @@ interface SessionState {
   completeSession: (programId: string, sessionId: string) => void;
   setCurrentProgram: (id: string) => void;
   getProgramProgress: (programId: string) => ProgramProgress | undefined;
+  resetAll: () => void;
 }
 
 export const useSessionStore = create<SessionState>()(
@@ -76,6 +77,8 @@ export const useSessionStore = create<SessionState>()(
       setCurrentProgram: (id) => set({ currentProgramId: id }),
 
       getProgramProgress: (programId) => get().programProgress[programId],
+
+      resetAll: () => set({ favorites: [], history: [], programProgress: {}, currentProgramId: 'preparing-for-birth' }),
     }),
     {
       name: 'session-storage',

@@ -21,19 +21,26 @@ export async function syncProfileToSupabase(userId: string, profile: OnboardingP
 }
 
 export async function loadProfileFromSupabase(userId: string): Promise<RemoteProfileData | null> {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
-    .single();
+  const [profileResult, userResult] = await Promise.all([
+    supabase.from('profiles').select('*').eq('id', userId).single(),
+    supabase.auth.getUser(),
+  ]);
 
-  if (error || !data) return null;
+  const { data, error } = profileResult;
+  const metaFirstName: string = userResult.data?.user?.user_metadata?.first_name ?? '';
+
+  if (error || !data) {
+    if (metaFirstName) {
+      return { profile: { firstName: metaFirstName }, hasCompletedOnboarding: false };
+    }
+    return null;
+  }
 
   return {
     profile: {
       lounge: data.lounge ?? null,
       journey: data.journey ?? null,
-      firstName: data.first_name ?? '',
+      firstName: data.first_name || metaFirstName || '',
       ageRange: data.age_range ?? '',
       guidanceVoice: data.guidance_voice ?? 'female',
       guidanceMode: data.guidance_mode ?? 'audio-visual',

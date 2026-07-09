@@ -48,7 +48,7 @@ export default function HomeScreen() {
   const protocols = useDataStore((s) => s.protocols);
   const programs = useDataStore((s) => s.programs);
 
-  const firstName = profile.firstName || 'Charlotte';
+  const firstName = profile.firstName || '';
   const currentProgram = programs.find((p) => p.id === currentProgramId) ?? programs[2];
   const progress = getProgramProgress(currentProgram.id);
   const completedCount = progress?.completedSessions.length ?? 0;
@@ -72,7 +72,7 @@ export default function HomeScreen() {
 
           {/* Greeting */}
           <View style={styles.greetingBlock}>
-            <Text style={styles.greeting}>{greeting}, {firstName}</Text>
+            <Text style={styles.greeting}>{greeting}{firstName ? `, ${firstName}` : ''}</Text>
           </View>
 
           {/* Today's Permission */}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import { useOnboardingStore, Journey, Lounge } from '@/store/onboardingStore';
 import { useSessionStore, SessionHistory } from '@/store/sessionStore';
 import { useAuthStore } from '@/store/authStore';
 import { useDataStore } from '@/store/dataStore';
+import { syncProfileToSupabase } from '@/services/supabaseProfile';
 import AppHeader from '@/components/AppHeader';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
@@ -82,14 +83,76 @@ function SectionHeader({ title }: { title: string }) {
 export default function ProfileScreen() {
   const profile = useOnboardingStore((s) => s.profile);
   const setJourney = useOnboardingStore((s) => s.setJourney);
+  const setFirstName = useOnboardingStore((s) => s.setFirstName);
   const setGuidanceVoice = useOnboardingStore((s) => s.setGuidanceVoice);
   const setGuidanceMode = useOnboardingStore((s) => s.setGuidanceMode);
   const resetOnboarding = useOnboardingStore((s) => s.resetOnboarding);
   const protocols = useDataStore((s) => s.protocols);
+  const session = useAuthStore((s) => s.session);
   const signOut = useAuthStore((s) => s.signOut);
+  const resetSessions = useSessionStore((s) => s.resetAll);
 
   const history = useSessionStore((s) => s.history);
   const favorites = useSessionStore((s) => s.favorites);
+
+  const syncProfile = (overrides: Partial<typeof profile> = {}) => {
+    if (!session?.user.id) return;
+    const updated = { ...useOnboardingStore.getState().profile, ...overrides };
+    syncProfileToSupabase(session.user.id, updated).catch(() => {});
+  };
+
+  const handleJourneyChange = (journey: Journey) => {
+    setJourney(journey);
+    syncProfile({ journey });
+  };
+
+  const handleVoiceChange = (voice: 'female' | 'male' | 'charlotte-fr') => {
+    setGuidanceVoice(voice);
+    syncProfile({ guidanceVoice: voice });
+  };
+
+  const handleModeChange = (mode: 'audio-only' | 'audio-visual') => {
+    setGuidanceMode(mode);
+    syncProfile({ guidanceMode: mode });
+  };
+
+  const handleEditName = () => {
+    if (Platform.OS === 'web') {
+      const newName = window.prompt('Enter your first name:', profile.firstName || '');
+      if (newName !== null && newName.trim()) {
+        setFirstName(newName.trim());
+        syncProfile({ firstName: newName.trim() });
+      }
+      return;
+    }
+    Alert.prompt(
+      'Your Name',
+      'Enter your first name:',
+      (newName) => {
+        if (newName?.trim()) {
+          setFirstName(newName.trim());
+          syncProfile({ firstName: newName.trim() });
+        }
+      },
+      'plain-text',
+      profile.firstName || '',
+    );
+  };
+
+  const handleSignOut = () => {
+    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Sign Out',
+        style: 'destructive',
+        onPress: () => {
+          resetOnboarding();
+          resetSessions();
+          signOut();
+        },
+      },
+    ]);
+  };
 
   const sessionCount = history.length;
   const favoritesCount = favorites.length;
@@ -122,10 +185,15 @@ export default function ProfileScreen() {
 
         {/* Header */}
         <View style={styles.hero}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{(profile.firstName || 'U').charAt(0).toUpperCase()}</Text>
-          </View>
-          <Text style={styles.heroName}>{profile.firstName || 'Welcome'}</Text>
+          <TouchableOpacity style={styles.avatar} onPress={handleEditName} activeOpacity={0.8}>
+            <Text style={styles.avatarText}>{(profile.firstName || '?').charAt(0).toUpperCase()}</Text>
+            <View style={styles.avatarEditBadge}>
+              <Ionicons name="pencil" size={10} color={colors.white} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleEditName} activeOpacity={0.7}>
+            <Text style={styles.heroName}>{profile.firstName || 'Add your name'}</Text>
+          </TouchableOpacity>
           <View style={styles.badgeRow}>
             {loungeLabel && (
               <View style={styles.loungeBadge}>
@@ -207,7 +275,7 @@ export default function ProfileScreen() {
                 profile.journey === opt.id && styles.journeyOptionActive,
                 i < journeyOptions.length - 1 && styles.journeyOptionBorder,
               ]}
-              onPress={() => setJourney(opt.id)}
+              onPress={() => handleJourneyChange(opt.id)}
               activeOpacity={0.7}
             >
               <View style={[styles.journeyIconWrap, profile.journey === opt.id && styles.journeyIconWrapActive]}>
@@ -234,13 +302,13 @@ export default function ProfileScreen() {
             <View style={styles.voiceToggle}>
               <TouchableOpacity
                 style={[styles.voiceBtn, profile.guidanceVoice === 'female' && styles.voiceBtnActive]}
-                onPress={() => setGuidanceVoice('female')}
+                onPress={() => handleVoiceChange('female')}
               >
                 <Text style={[styles.voiceBtnText, profile.guidanceVoice === 'female' && styles.voiceBtnTextActive]}>Female</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.voiceBtn, profile.guidanceVoice === 'male' && styles.voiceBtnActive]}
-                onPress={() => setGuidanceVoice('male')}
+                onPress={() => handleVoiceChange('male')}
               >
                 <Text style={[styles.voiceBtnText, profile.guidanceVoice === 'male' && styles.voiceBtnTextActive]}>Male</Text>
               </TouchableOpacity>
@@ -255,13 +323,13 @@ export default function ProfileScreen() {
             <View style={styles.voiceToggle}>
               <TouchableOpacity
                 style={[styles.voiceBtn, profile.guidanceMode === 'audio-only' && styles.voiceBtnActive]}
-                onPress={() => setGuidanceMode('audio-only')}
+                onPress={() => handleModeChange('audio-only')}
               >
                 <Text style={[styles.voiceBtnText, profile.guidanceMode === 'audio-only' && styles.voiceBtnTextActive]}>Audio</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.voiceBtn, profile.guidanceMode === 'audio-visual' && styles.voiceBtnActive]}
-                onPress={() => setGuidanceMode('audio-visual')}
+                onPress={() => handleModeChange('audio-visual')}
               >
                 <Text style={[styles.voiceBtnText, profile.guidanceMode === 'audio-visual' && styles.voiceBtnTextActive]}>Visual</Text>
               </TouchableOpacity>
@@ -283,14 +351,14 @@ export default function ProfileScreen() {
           <SettingRow
             icon="refresh-outline"
             label="Restart Onboarding"
-            onPress={() => { resetOnboarding(); router.replace('/onboarding/welcome'); }}
+            onPress={() => { resetOnboarding(); resetSessions(); router.replace('/onboarding/welcome'); }}
             danger
           />
           <View style={styles.rowDivider} />
           <SettingRow
             icon="log-out-outline"
             label="Sign Out"
-            onPress={() => { resetOnboarding(); signOut(); }}
+            onPress={handleSignOut}
             danger
           />
         </View>
@@ -308,6 +376,7 @@ const styles = StyleSheet.create({
   hero: { alignItems: 'center', paddingVertical: spacing.lg },
   avatar: { width: 72, height: 72, borderRadius: 36, backgroundColor: colors.lavender, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.sm },
   avatarText: { fontFamily: 'Raleway_700Bold', fontSize: 30, color: colors.coldViolet },
+  avatarEditBadge: { position: 'absolute', bottom: 0, right: 0, width: 22, height: 22, borderRadius: 11, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: '#F9F7FF' },
   heroName: { fontFamily: 'Raleway_700Bold', fontSize: 22, color: colors.coldViolet, marginBottom: spacing.sm },
   badgeRow: { flexDirection: 'row', gap: 8, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' },
   loungeBadge: { backgroundColor: colors.lavender, borderRadius: 9999, paddingVertical: 6, paddingHorizontal: 16 },
