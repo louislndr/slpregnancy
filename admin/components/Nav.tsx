@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 const links = [
   { href: '/protocols', label: 'Sessions' },
   { href: '/programs', label: 'Programs' },
-  { href: '/assets', label: 'Assets' },
+  { href: '/checkin-flow', label: 'Check-in Flow' },
 ];
 
 export default function Nav() {

@@ -95,3 +95,16 @@ create policy "Authenticated users can read flow_nodes"
 
 create policy "Authenticated users can read flow_edges"
   on public.flow_edges for select to authenticated using (true);
+
+-- Check-in flow suggestions table
+create table if not exists public.checkin_suggestions (
+  emotional_state text not null,
+  protocol_id     text not null references public.protocols(id) on delete cascade,
+  sort_order      integer not null default 0,
+  primary key (emotional_state, protocol_id)
+);
+
+alter table public.checkin_suggestions enable row level security;
+
+create policy "Authenticated users can read checkin_suggestions"
+  on public.checkin_suggestions for select to authenticated using (true);

@@ -1,17 +1,4 @@
 'use client';
-import { useCallback, useEffect } from 'react';
-import ReactFlow, {
-  addEdge,
-  Background,
-  Controls,
-  MiniMap,
-  useEdgesState,
-  useNodesState,
-  type Connection,
-  type Edge,
-  type Node,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
 
 export interface Part {
   id: string;
@@ -25,119 +12,77 @@ interface Props {
   onChange: (parts: Part[]) => void;
 }
 
-function partsToNodes(parts: Part[]): Node[] {
-  return parts.map((p, i) => ({
-    id: p.id,
-    type: 'default',
-    position: { x: 250 * i, y: 100 },
-    data: { label: `${p.label}\n${p.duration}` },
-    style: {
-      background: '#EEF6F9',
-      border: '1.5px solid #699BA9',
-      borderRadius: 12,
-      padding: '10px 16px',
-      fontSize: 13,
-      fontFamily: 'sans-serif',
-      whiteSpace: 'pre-line',
-      textAlign: 'center',
-    },
-  }));
-}
+const M = 'Montserrat, sans-serif';
 
-function partsToEdges(parts: Part[]): Edge[] {
-  return parts.slice(0, -1).map((p, i) => ({
-    id: `e-${p.id}-${parts[i + 1].id}`,
-    source: p.id,
-    target: parts[i + 1].id,
-    type: 'smoothstep',
-    style: { stroke: '#699BA9' },
-  }));
-}
+const inputStyle = {
+  border: '1.5px solid #E8E0F0', borderRadius: 12, padding: '8px 14px',
+  fontFamily: M, fontSize: 13, color: '#4F4580', background: '#FAFAFA',
+  outline: 'none', width: '100%',
+};
 
 export default function PartsFlowEditor({ parts, onChange }: Props) {
-  const [nodes, setNodes, onNodesChange] = useNodesState(partsToNodes(parts));
-  const [edges, setEdges, onEdgesChange] = useEdgesState(partsToEdges(parts));
-
-  useEffect(() => {
-    setNodes(partsToNodes(parts));
-    setEdges(partsToEdges(parts));
-  }, [parts]);
-
-  const onConnect = useCallback(
-    (conn: Connection) => setEdges((eds) => addEdge({ ...conn, type: 'smoothstep', style: { stroke: '#699BA9' } }, eds)),
-    [setEdges],
-  );
-
   function addPart() {
     const id = `part-${Date.now()}`;
-    const newPart: Part = { id, label: 'New Step', duration: '2 min', position: parts.length };
-    onChange([...parts, newPart]);
+    onChange([...parts, { id, label: 'New Step', duration: '2 min', position: parts.length }]);
   }
 
-  function removeLast() {
-    if (parts.length === 0) return;
-    onChange(parts.slice(0, -1));
+  function removePart(id: string) {
+    onChange(parts.filter((p) => p.id !== id));
   }
 
-  const M = 'Montserrat, sans-serif';
-  const inputStyle = {
-    border: '1.5px solid #E8E0F0', borderRadius: 12, padding: '8px 14px',
-    fontFamily: M, fontSize: 13, color: '#4F4580', background: '#FAFAFA',
-    outline: 'none', width: '100%',
-  };
+  function update(id: string, field: 'label' | 'duration', value: string) {
+    onChange(parts.map((p) => p.id === id ? { ...p, [field]: value } : p));
+  }
+
+  function move(index: number, dir: -1 | 1) {
+    const next = [...parts];
+    const target = index + dir;
+    if (target < 0 || target >= next.length) return;
+    [next[index], next[target]] = [next[target], next[index]];
+    onChange(next);
+  }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-2 flex-wrap">
-        <button
-          onClick={addPart} type="button"
-          className="px-4 py-1.5 rounded-full text-xs transition-opacity hover:opacity-80"
-          style={{ background: '#DBE8F0', color: '#699BA9', fontFamily: M, fontWeight: 600 }}
-        >+ Add Step</button>
-        <button
-          onClick={removeLast} type="button"
-          className="px-4 py-1.5 rounded-full text-xs transition-opacity hover:opacity-80"
-          style={{ background: '#F0EBF8', color: '#A0A0B8', fontFamily: M, fontWeight: 600 }}
-        >Remove Last</button>
-      </div>
-
+    <div className="flex flex-col gap-3">
       <div className="flex flex-col gap-2">
+        {parts.length === 0 && (
+          <p style={{ fontFamily: M, fontSize: 13, color: '#C0B8D8' }}>No steps yet. Add one below.</p>
+        )}
         {parts.map((p, i) => (
           <div key={p.id} className="flex gap-2 items-center">
-            <span className="shrink-0 w-5 h-5 flex items-center justify-center rounded-full text-xs"
+            <span className="shrink-0 w-6 h-6 flex items-center justify-center rounded-full text-xs"
               style={{ background: '#F0EBF8', color: '#A0A0B8', fontFamily: M, fontWeight: 600 }}>{i + 1}</span>
             <input
               style={inputStyle}
               value={p.label}
-              onChange={(e) => onChange(parts.map((pt) => pt.id === p.id ? { ...pt, label: e.target.value } : pt))}
+              placeholder="Step name"
+              onChange={(e) => update(p.id, 'label', e.target.value)}
             />
             <input
-              style={{ ...inputStyle, width: 96 }}
+              style={{ ...inputStyle, width: 96, flexShrink: 0 }}
               value={p.duration}
-              onChange={(e) => onChange(parts.map((pt) => pt.id === p.id ? { ...pt, duration: e.target.value } : pt))}
               placeholder="2 min"
+              onChange={(e) => update(p.id, 'duration', e.target.value)}
             />
+            <div className="flex gap-1 shrink-0">
+              <button type="button" onClick={() => move(i, -1)} disabled={i === 0}
+                className="w-7 h-7 flex items-center justify-center rounded-lg transition-opacity disabled:opacity-30"
+                style={{ background: '#F0EBF8', color: '#A0A0B8' }}>↑</button>
+              <button type="button" onClick={() => move(i, 1)} disabled={i === parts.length - 1}
+                className="w-7 h-7 flex items-center justify-center rounded-lg transition-opacity disabled:opacity-30"
+                style={{ background: '#F0EBF8', color: '#A0A0B8' }}>↓</button>
+              <button type="button" onClick={() => removePart(p.id)}
+                className="w-7 h-7 flex items-center justify-center rounded-lg transition-opacity hover:opacity-70"
+                style={{ background: '#FDE8E8', color: '#E07070' }}>×</button>
+            </div>
           </div>
         ))}
       </div>
-
-      <div style={{ height: 200, borderRadius: 16, overflow: 'hidden', border: '1px solid #E8E0F0' }}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          fitView
-          nodesDraggable={false}
-          nodesConnectable={false}
-          elementsSelectable={false}
-          zoomOnScroll={false}
-          panOnDrag={false}
-        >
-          <Background color="#E8E0F0" gap={20} />
-        </ReactFlow>
-      </div>
+      <button
+        onClick={addPart} type="button"
+        className="self-start px-4 py-1.5 rounded-full text-xs transition-opacity hover:opacity-80"
+        style={{ background: '#DBE8F0', color: '#699BA9', fontFamily: M, fontWeight: 600 }}
+      >+ Add Step</button>
     </div>
   );
 }
