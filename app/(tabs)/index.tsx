@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -66,7 +66,7 @@ export default function HomeScreen() {
   return (
     <LinearGradient colors={['#FFFFFF', '#FFF8F4', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView edges={['top']} style={styles.safe}>
-        <AppHeader rightIcon="notifications-outline" />
+        <AppHeader rightIcon="notifications-outline" onRightPress={() => Alert.alert('Notifications', 'You have no new notifications.')} />
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 

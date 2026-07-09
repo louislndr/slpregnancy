@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -27,6 +27,16 @@ const PREMIUM_FEATURES: { label: string; icon: IoniconsName }[] = [
 ];
 
 export default function SubscriptionScreen() {
+  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual'>('monthly');
+
+  const handleSubscribe = () => {
+    Alert.alert(
+      'Premium Coming Soon',
+      `The ${selectedPlan === 'monthly' ? '€9.99/month' : '€71.99/year'} plan will be available very soon. Thank you for your interest!`,
+      [{ text: 'OK' }],
+    );
+  };
+
   return (
     <SafeAreaView edges={['top']} style={styles.safe}>
       <AppHeader showBack />
@@ -55,21 +65,29 @@ export default function SubscriptionScreen() {
 
         {/* Pricing */}
         <View style={styles.pricingRow}>
-          <TouchableOpacity style={[styles.priceCard, styles.priceCardHighlight]} activeOpacity={0.85}>
+          <TouchableOpacity
+            style={[styles.priceCard, selectedPlan === 'monthly' && styles.priceCardHighlight]}
+            activeOpacity={0.85}
+            onPress={() => setSelectedPlan('monthly')}
+          >
             <View style={styles.popularBadge}>
               <Text style={styles.popularBadgeText}>Most popular</Text>
             </View>
             <Text style={styles.priceAmount}>€9.99</Text>
             <Text style={styles.pricePeriod}>per month</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.priceCard} activeOpacity={0.85}>
+          <TouchableOpacity
+            style={[styles.priceCard, selectedPlan === 'annual' && styles.priceCardHighlight]}
+            activeOpacity={0.85}
+            onPress={() => setSelectedPlan('annual')}
+          >
             <Text style={styles.priceSave}>Save 40%</Text>
             <Text style={styles.priceAmount}>€71.99</Text>
             <Text style={styles.pricePeriod}>per year</Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.ctaBtn} activeOpacity={0.85}>
+        <TouchableOpacity style={styles.ctaBtn} activeOpacity={0.85} onPress={handleSubscribe}>
           <Text style={styles.ctaBtnText}>Start 7-Day Free Trial</Text>
         </TouchableOpacity>
         <Text style={styles.ctaNote}>Cancel anytime. No commitment.</Text>
