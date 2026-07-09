@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -21,7 +21,7 @@ import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/store/authStore';
 import { useDataStore } from '@/store/dataStore';
 
-SplashScreen.preventAutoHideAsync();
+if (Platform.OS !== 'web') SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const router = useRouter();
@@ -70,7 +70,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
-      SplashScreen.hideAsync();
+      if (Platform.OS !== 'web') SplashScreen.hideAsync();
     }
   }, [fontsLoaded, fontError]);
 
