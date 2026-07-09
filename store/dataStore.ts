@@ -7,15 +7,15 @@ interface DataState {
   protocols: Protocol[];
   programs: Program[];
   loaded: boolean;
-  fetchData: () => Promise<void>;
+  fetchData: (force?: boolean) => Promise<void>;
 }
 
 export const useDataStore = create<DataState>((set, get) => ({
   protocols: staticProtocols,
   programs: staticPrograms,
   loaded: false,
-  fetchData: async () => {
-    if (get().loaded) return;
+  fetchData: async (force = false) => {
+    if (get().loaded && !force) return;
     try {
       const protocols = await fetchProtocolsFromSupabase();
       if (protocols.length > 0) {
@@ -23,11 +23,13 @@ export const useDataStore = create<DataState>((set, get) => ({
         set({
           protocols,
           programs: programs.length > 0 ? programs : staticPrograms,
+          loaded: true,
         });
+      } else {
+        set({ loaded: true });
       }
-    } catch {
-      // keep static fallback silently
-    } finally {
+    } catch (e) {
+      if (__DEV__) console.warn('[dataStore] fetch failed:', e);
       set({ loaded: true });
     }
   },

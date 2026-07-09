@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { AppState } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -25,6 +26,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const router = useRouter();
   const fetchData = useDataStore((s) => s.fetchData);
+  const appState = useRef(AppState.currentState);
   const [fontsLoaded, fontError] = useFonts({
     Raleway_500Medium,
     Raleway_700Bold,
@@ -47,10 +49,23 @@ export default function RootLayout() {
         router.replace('/auth');
       }
       if (event === 'SIGNED_IN') {
-        fetchData();
+        fetchData(true);
       }
     });
-    return () => subscription.unsubscribe();
+
+    const appStateSub = AppState.addEventListener('change', (nextState) => {
+      if (appState.current.match(/inactive|background/) && nextState === 'active') {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session) fetchData(true);
+        });
+      }
+      appState.current = nextState;
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      appStateSub.remove();
+    };
   }, []);
 
   useEffect(() => {
