@@ -135,7 +135,7 @@ export default function ProtocolForm({ protocol, parts: initialParts = [] }: Pro
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ protocol: payload, parts }),
     });
-    if (res.ok) { router.push('/protocols'); router.refresh(); }
+    if (res.ok) { router.refresh(); router.push('/protocols'); }
     else { const err = await res.json(); alert('Error: ' + (err.error ?? 'Unknown')); }
     setSaving(false);
   }
@@ -144,8 +144,8 @@ export default function ProtocolForm({ protocol, parts: initialParts = [] }: Pro
     if (!confirm('Delete this session?')) return;
     setDeleting(true);
     await fetch(`/api/protocols?id=${protocol!.id}`, { method: 'DELETE' });
-    router.push('/protocols');
     router.refresh();
+    router.push('/protocols');
   }
 
   return (

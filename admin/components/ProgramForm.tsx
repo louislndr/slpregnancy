@@ -57,7 +57,7 @@ export default function ProgramForm({ program, protocols = [], nodes: initNodes 
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ program: payload, nodes, edges }),
     });
-    if (res.ok) { router.push('/programs'); router.refresh(); }
+    if (res.ok) { router.refresh(); router.push('/programs'); }
     else { const err = await res.json(); alert('Error: ' + (err.error ?? 'Unknown')); }
     setSaving(false);
   }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { supabase } from '@/lib/supabase';
 
 export async function POST(req: NextRequest) {
@@ -21,6 +22,7 @@ export async function POST(req: NextRequest) {
     await supabase.from('flow_edges').insert(rows);
   }
 
+  revalidatePath('/programs');
   return NextResponse.json({ ok: true });
 }
 
@@ -42,6 +44,7 @@ export async function PUT(req: NextRequest) {
     await supabase.from('flow_edges').insert(edges.map((e: FlowEdge) => ({ ...e, program_id: program.id })));
   }
 
+  revalidatePath('/programs');
   return NextResponse.json({ ok: true });
 }
 

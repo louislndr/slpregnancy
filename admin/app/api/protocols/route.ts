@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { supabase } from '@/lib/supabase';
 
 export async function POST(req: NextRequest) {
@@ -19,6 +20,7 @@ export async function POST(req: NextRequest) {
     if (pe) return NextResponse.json({ error: pe.message }, { status: 500 });
   }
 
+  revalidatePath('/protocols');
   return NextResponse.json({ ok: true });
 }
 
@@ -41,6 +43,7 @@ export async function PUT(req: NextRequest) {
     await supabase.from('protocol_parts').insert(rows);
   }
 
+  revalidatePath('/protocols');
   return NextResponse.json({ ok: true });
 }
 
@@ -49,5 +52,6 @@ export async function DELETE(req: NextRequest) {
   if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
   const { error } = await supabase.from('protocols').delete().eq('id', id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidatePath('/protocols');
   return NextResponse.json({ ok: true });
 }
