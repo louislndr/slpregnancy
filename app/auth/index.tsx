@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -17,11 +17,10 @@ export default function AuthWelcomeScreen() {
       <SafeAreaView edges={['top', 'bottom']} style={styles.safe}>
         <View style={styles.content}>
 
-          <Image
-            source={require('@/assets/logo-baseline.png')}
-            style={styles.logoBaseline}
-            resizeMode="contain"
-          />
+          <View style={styles.logoWrap}>
+            <Text style={styles.logoText}>SL</Text>
+          </View>
+          <Text style={styles.appName}>SL Pregnancy</Text>
           <Text style={styles.tagline}>
             Your perinatal companion{'\n'}for every stage of the journey
           </Text>
@@ -65,10 +64,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingBottom: spacing.xxl,
   },
-  logoBaseline: {
-    width: 220,
-    height: 180,
-    marginBottom: spacing.lg,
+  logoWrap: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: colors.lavender,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.md,
+    ...shadow.card,
+  },
+  logoText: { fontFamily: 'Raleway_700Bold', fontSize: 28, color: colors.coldViolet },
+  appName: {
+    fontFamily: 'Raleway_700Bold',
+    fontSize: 28,
+    color: colors.coldViolet,
+    marginBottom: spacing.sm,
   },
   tagline: {
     fontFamily: 'Montserrat_400Regular',
