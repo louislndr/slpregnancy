@@ -3,9 +3,12 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 const links = [
+  { href: '/', label: 'Dashboard', exact: true },
   { href: '/protocols', label: 'Sessions' },
   { href: '/programs', label: 'Programs' },
-  { href: '/checkin-flow', label: 'Check-in Flow' },
+  { href: '/checkin-flow', label: 'Pathways' },
+  { href: '/community', label: 'Community' },
+  { href: '/feedback', label: 'Feedback' },
 ];
 
 export default function Nav() {
@@ -29,8 +32,8 @@ export default function Nav() {
             style={{
               fontFamily: 'Montserrat, sans-serif',
               fontWeight: 600,
-              color: path.startsWith(l.href) ? '#699BA9' : '#A0A0B8',
-              borderBottom: path.startsWith(l.href) ? '2px solid #699BA9' : '2px solid transparent',
+              color: (l.exact ? path === l.href : path.startsWith(l.href)) ? '#699BA9' : '#A0A0B8',
+              borderBottom: (l.exact ? path === l.href : path.startsWith(l.href)) ? '2px solid #699BA9' : '2px solid transparent',
             }}
           >
             {l.label}

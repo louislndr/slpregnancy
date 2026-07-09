@@ -108,3 +108,50 @@ alter table public.checkin_suggestions enable row level security;
 
 create policy "Authenticated users can read checkin_suggestions"
   on public.checkin_suggestions for select to authenticated using (true);
+
+-- Check-in pathway rules (replaces checkin_suggestions)
+create table if not exists public.checkin_rules (
+  feeling     text not null,
+  need        text not null default 'all',
+  protocol_id text not null references public.protocols(id) on delete cascade,
+  sort_order  integer not null default 0,
+  primary key (feeling, need, protocol_id)
+);
+
+alter table public.checkin_rules enable row level security;
+
+create policy "Authenticated users can read checkin_rules"
+  on public.checkin_rules for select to authenticated using (true);
+
+-- Community posts
+create table if not exists public.community_posts (
+  id           uuid primary key default gen_random_uuid(),
+  title        text not null,
+  content      text not null default '',
+  type         text not null default 'announcement',
+  is_published boolean not null default false,
+  created_at   timestamptz default now(),
+  updated_at   timestamptz default now()
+);
+
+alter table public.community_posts enable row level security;
+
+create policy "Authenticated users can read published community posts"
+  on public.community_posts for select to authenticated using (is_published = true);
+
+-- User feedback
+create table if not exists public.user_feedback (
+  id         uuid primary key default gen_random_uuid(),
+  user_id    uuid references auth.users on delete set null,
+  message    text not null,
+  type       text not null default 'general',
+  rating     integer check (rating between 1 and 5),
+  is_read    boolean not null default false,
+  created_at timestamptz default now()
+);
+
+alter table public.user_feedback enable row level security;
+
+create policy "Users can insert their own feedback"
+  on public.user_feedback for insert to authenticated
+  with check (auth.uid() = user_id);
