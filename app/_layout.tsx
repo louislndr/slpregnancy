@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
@@ -22,6 +22,7 @@ import { useAuthStore } from '@/store/authStore';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const router = useRouter();
   const [fontsLoaded, fontError] = useFonts({
     Raleway_500Medium,
     Raleway_700Bold,
@@ -37,8 +38,11 @@ export default function RootLayout() {
       useAuthStore.getState().setSession(session);
       useAuthStore.getState().setInitialized();
     });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       useAuthStore.getState().setSession(session);
+      if (event === 'SIGNED_OUT') {
+        router.replace('/auth');
+      }
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -58,6 +62,7 @@ export default function RootLayout() {
       <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="intro" />
         <Stack.Screen name="auth" />
         <Stack.Screen name="onboarding" />
         <Stack.Screen name="(tabs)" />
