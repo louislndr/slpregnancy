@@ -12,41 +12,45 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <title>SL Pregnancy</title>
         <ScrollViewStyleReset />
-        <style dangerouslySetInnerHTML={{
+        <style>{`
+          * { box-sizing: border-box; }
+          @media (min-width: 520px) {
+            html, body {
+              background: #1E1B33;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 100vh;
+            }
+            #root {
+              width: 393px;
+              height: 852px;
+              overflow: hidden;
+              border-radius: 50px;
+              position: relative;
+              box-shadow: 0 0 0 2px #3A3A3C, 0 0 0 14px #1C1C1E, 0 40px 100px rgba(0,0,0,0.7);
+            }
+          }
+        `}</style>
+      </head>
+      <body>
+        <div id="root" />
+        <script dangerouslySetInnerHTML={{
           __html: `
-            * { box-sizing: border-box; }
-            html, body { margin: 0; padding: 0; height: 100%; }
-
-            /* On desktop: show as iPhone frame */
-            @media (min-width: 520px) {
-              html, body {
-                background: #1E1B33;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                min-height: 100vh;
-              }
-              #root {
-                width: 393px;
-                height: 852px;
-                overflow: hidden;
-                border-radius: 50px;
-                position: relative;
-                box-shadow:
-                  0 0 0 2px #3A3A3C,
-                  0 0 0 14px #1C1C1E,
-                  0 40px 100px rgba(0,0,0,0.7);
-              }
-            }
-
-            /* On mobile: full screen */
-            @media (max-width: 519px) {
-              html, body, #root { height: 100%; width: 100%; }
-            }
+            window.onerror = function(msg, src, line, col, err) {
+              document.getElementById('root').innerHTML =
+                '<div style="padding:20px;color:red;font-size:14px;font-family:monospace;background:#fff;position:absolute;inset:0;overflow:auto;z-index:9999">' +
+                '<b>App Error:</b><br>' + msg + '<br><br>' + (err ? err.stack : '') + '</div>';
+            };
+            window.addEventListener('unhandledrejection', function(e) {
+              var el = document.getElementById('root');
+              el.innerHTML += '<div style="padding:20px;color:orange;font-size:14px;font-family:monospace;background:#fff">' +
+                '<b>Promise Error:</b><br>' + e.reason + '</div>';
+            });
           `,
         }} />
-      </head>
-      <body>{children}</body>
+        {children}
+      </body>
     </html>
   );
 }

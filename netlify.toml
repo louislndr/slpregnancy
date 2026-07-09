@@ -5,6 +5,8 @@
 [build.environment]
   NODE_VERSION = "20"
   CI = "1"
+  EXPO_PUBLIC_SUPABASE_URL = "https://crvgkdgymacmngquybck.supabase.co"
+  EXPO_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNydmdrZGd5bWFjbW5ncXV5YmNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMwMjE3MTYsImV4cCI6MjA5ODU5NzcxNn0.Q2s0kKRKyDAH16P2wyVP7Nn92StgLaBgKEPZFdSycR0"
 
 [[redirects]]
   from = "/*"
