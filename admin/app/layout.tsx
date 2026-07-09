@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'SL Pregnancy — Admin',
+  title: 'SophroLounge — Admin',
+  icons: { icon: '/Favicon.png' },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

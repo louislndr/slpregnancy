@@ -30,11 +30,8 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: '#BEB5DA' }}>
-            <span style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, fontSize: 22, color: '#4F4580' }}>SL</span>
-          </div>
-          <h1 style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, fontSize: 24, color: '#4F4580' }}>SL Pregnancy</h1>
-          <p style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 14, color: '#7B7B9B', marginTop: 4 }}>Admin dashboard</p>
+          <img src="/LogoBaseline.png" alt="SophroLounge" style={{ height: 160, width: 'auto', objectFit: 'contain', marginBottom: 8 }} />
+          <p style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 13, color: '#7B7B9B', marginTop: 4, letterSpacing: '0.5px' }}>Admin</p>
         </div>
 
         {/* Card */}
