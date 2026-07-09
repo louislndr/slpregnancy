@@ -3,14 +3,29 @@ import type { Protocol } from '@/data/protocols';
 import type { Program, ProgramSession } from '@/data/programs';
 
 export async function fetchProtocolsFromSupabase(): Promise<Protocol[]> {
-  const { data, error } = await supabase
+  const { data: rows, error } = await supabase
     .from('protocols')
-    .select('*, protocol_parts(*)')
-    .order('created_at');
+    .select('id, title, description, duration, content_type, journeys, emotional_states, needs, positions, has_visual, intention, self_care_tip, is_support_now, support_now_key, for_lounge, audio_url, visual_url')
+    .order('title');
 
-  if (error || !data || data.length === 0) return [];
+  if (error) throw new Error(error.message);
+  if (!rows || rows.length === 0) return [];
 
-  return data.map((p) => ({
+  // Separate query for parts — avoids join RLS issues
+  const { data: allParts } = await supabase
+    .from('protocol_parts')
+    .select('protocol_id, label, duration, position')
+    .in('protocol_id', rows.map((r) => r.id))
+    .order('position');
+
+  const partsMap = new Map<string, { label: string; duration: string }[]>();
+  for (const part of (allParts ?? [])) {
+    const arr = partsMap.get(part.protocol_id) ?? [];
+    arr.push({ label: part.label, duration: part.duration });
+    partsMap.set(part.protocol_id, arr);
+  }
+
+  return rows.map((p) => ({
     id: p.id,
     title: p.title,
     description: p.description ?? '',
@@ -22,9 +37,7 @@ export async function fetchProtocolsFromSupabase(): Promise<Protocol[]> {
     positions: p.positions ?? [],
     hasVisual: p.has_visual ?? false,
     intention: p.intention ?? '',
-    parts: (p.protocol_parts ?? [])
-      .sort((a: { position: number }, b: { position: number }) => a.position - b.position)
-      .map((pt: { label: string; duration: string }) => ({ label: pt.label, duration: pt.duration })),
+    parts: partsMap.get(p.id) ?? [],
     selfCareTip: p.self_care_tip ?? '',
     isSupportNow: p.is_support_now ?? false,
     supportNowKey: p.support_now_key ?? undefined,

@@ -29,7 +29,7 @@ export const useDataStore = create<DataState>((set, get) => ({
         set({ loaded: true });
       }
     } catch (e) {
-      if (__DEV__) console.warn('[dataStore] fetch failed:', e);
+      console.warn('[dataStore] Supabase fetch failed, using static data:', e);
       set({ loaded: true });
     }
   },
