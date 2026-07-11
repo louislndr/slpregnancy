@@ -1,10 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  View, Text, StyleSheet, SafeAreaView, TouchableOpacity,
-  ScrollView, Dimensions, Animated, Alert,
+  View, Text, StyleSheet, TouchableOpacity,
+  ScrollView, Dimensions, Animated, Alert, Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
+
 import AppHeader from '@/components/AppHeader';
+
+function showAlert(title: string, msg: string) {
+  if (Platform.OS === 'web') { window.alert(`${title}\n\n${msg}`); return; }
+  Alert.alert(title, msg);
+}
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Circle, Path, Ellipse, Line, G, Rect } from 'react-native-svg';
 import { colors } from '@/theme/colors';
@@ -173,12 +180,12 @@ export default function SessionPlayerScreen() {
           </View>
           <Text style={styles.handInstruction}>Place one hand on your heart{'\n'}and one hand on your belly.</Text>
           <View style={styles.breathRow}>
-            <TouchableOpacity style={styles.handBtn} onPress={() => Alert.alert('Heart', 'Place your left hand gently on your heart. Feel it rise and fall with each breath.')}>
+            <TouchableOpacity style={styles.handBtn} onPress={() => showAlert('Heart', 'Place your left hand gently on your heart. Feel it rise and fall with each breath.')}>
               <Ionicons name="hand-left-outline" size={28} color={colors.primary} />
               <Text style={styles.handBtnText}>Heart</Text>
             </TouchableOpacity>
             <BreathingCircle phase={breathPhase} />
-            <TouchableOpacity style={styles.handBtn} onPress={() => Alert.alert('Belly', 'Place your right hand on your belly. Feel your baby and your breath move together.')}>
+            <TouchableOpacity style={styles.handBtn} onPress={() => showAlert('Belly', 'Place your right hand on your belly. Feel your baby and your breath move together.')}>
               <Ionicons name="hand-right-outline" size={28} color={colors.primary} />
               <Text style={styles.handBtnText}>Belly</Text>
             </TouchableOpacity>
@@ -187,13 +194,13 @@ export default function SessionPlayerScreen() {
             {[0,1,2].map(i => <View key={i} style={[styles.pagerDot, i===1 && styles.pagerDotActive]} />)}
           </View>
           <View style={styles.transportSmall}>
-            <TouchableOpacity style={styles.transportBtn} onPress={() => Alert.alert('Coming soon', 'Audio seek will be available once audio playback is enabled.')}>
+            <TouchableOpacity style={styles.transportBtn} onPress={() => showAlert('Coming soon', 'Audio seek will be available once audio playback is enabled.')}>
               <Text style={styles.skipText}>-15</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.playBtnSmall} onPress={() => setPlaying(p => !p)}>
               <Ionicons name={playing ? 'pause' : 'play'} size={24} color={colors.white} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.transportBtn} onPress={() => Alert.alert('Coming soon', 'Audio seek will be available once audio playback is enabled.')}>
+            <TouchableOpacity style={styles.transportBtn} onPress={() => showAlert('Coming soon', 'Audio seek will be available once audio playback is enabled.')}>
               <Text style={styles.skipText}>+15</Text>
             </TouchableOpacity>
           </View>
@@ -232,19 +239,19 @@ export default function SessionPlayerScreen() {
           </View>
 
           <View style={styles.transport}>
-            <TouchableOpacity style={styles.transportBtn} onPress={() => Alert.alert('Coming soon', 'Session navigation will be available once audio playback is enabled.')}>
+            <TouchableOpacity style={styles.transportBtn} onPress={() => showAlert('Coming soon', 'Session navigation will be available once audio playback is enabled.')}>
               <Ionicons name="play-skip-back" size={20} color={colors.coldViolet} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.transportBtn} onPress={() => Alert.alert('Coming soon', 'Audio seek will be available once audio playback is enabled.')}>
+            <TouchableOpacity style={styles.transportBtn} onPress={() => showAlert('Coming soon', 'Audio seek will be available once audio playback is enabled.')}>
               <Text style={styles.skipText}>-15</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.playBtn} onPress={() => setPlaying(p => !p)} activeOpacity={0.85}>
               <Ionicons name={playing ? 'pause' : 'play'} size={30} color={colors.white} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.transportBtn} onPress={() => Alert.alert('Coming soon', 'Audio seek will be available once audio playback is enabled.')}>
+            <TouchableOpacity style={styles.transportBtn} onPress={() => showAlert('Coming soon', 'Audio seek will be available once audio playback is enabled.')}>
               <Text style={styles.skipText}>+15</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.transportBtn} onPress={() => Alert.alert('Coming soon', 'Session navigation will be available once audio playback is enabled.')}>
+            <TouchableOpacity style={styles.transportBtn} onPress={() => showAlert('Coming soon', 'Session navigation will be available once audio playback is enabled.')}>
               <Ionicons name="play-skip-forward" size={20} color={colors.coldViolet} />
             </TouchableOpacity>
           </View>
@@ -268,7 +275,7 @@ export default function SessionPlayerScreen() {
           </View>
 
           <View style={styles.bottomRow}>
-            <TouchableOpacity style={styles.bottomAction} onPress={() => Alert.alert('Coming soon', 'Audio downloads will be available in the full version.')}>
+            <TouchableOpacity style={styles.bottomAction} onPress={() => showAlert('Coming soon', 'Audio downloads will be available in the full version.')}>
               <Ionicons name="download-outline" size={20} color={colors.textSecondary} />
               <Text style={styles.bottomActionText}>Audio</Text>
             </TouchableOpacity>
