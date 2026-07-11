@@ -44,11 +44,24 @@ window.addEventListener('unhandledrejection',function(e){
 });
 </script>`;
 
+// Fix viewport meta: add viewport-fit=cover (needed for iOS safe area CSS variables)
+// and user-scalable=no (prevents pinch-zoom on web app)
+html = html.replace(
+  /name="viewport" content="[^"]*"/,
+  'name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"'
+);
+
 const iPhoneFrame = `<style>
 *{box-sizing:border-box}
+/* Desktop: show app inside an iPhone frame */
 @media(min-width:520px){
   html,body{background:#1E1B33!important;display:flex!important;justify-content:center!important;align-items:center!important;min-height:100vh!important;overflow:hidden!important}
   #root{width:393px!important;height:852px!important;overflow:hidden!important;border-radius:50px!important;position:relative!important;flex:none!important;box-shadow:0 0 0 2px #3A3A3C,0 0 0 14px #1C1C1E,0 40px 100px rgba(0,0,0,.7)!important}
+}
+/* Mobile: full screen, no overscroll bounce */
+@media(max-width:519px){
+  html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-overflow-scrolling:touch}
+  #root{height:100%;overflow:hidden}
 }
 </style>`;
 
