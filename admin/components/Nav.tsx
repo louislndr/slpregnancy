@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 
 const links = [
@@ -21,31 +22,36 @@ export default function Nav() {
   }
 
   return (
-    <nav className="bg-white border-b border-[#E8E0F0] px-8 flex items-center gap-6 h-16" style={{ boxShadow: '0 1px 8px rgba(79,69,128,0.06)' }}>
-      <span style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, color: '#4F4580', fontSize: 18, letterSpacing: '-0.3px', marginRight: 8 }}>SL Pregnancy</span>
+    <nav
+      className="bg-white border-b border-[#E8E0F0] px-8 flex items-center gap-6 h-16 sticky top-0 z-50"
+      style={{ boxShadow: '0 1px 8px rgba(79,69,128,0.06)' }}
+    >
+      <Image src="/LogoBaseline.png" alt="SL Pregnancy" width={120} height={36} className="object-contain mr-2" />
+
       <div className="flex items-center gap-1 h-full">
-        {links.map((l) => (
-          <Link
-            key={l.href}
-            href={l.href}
-            className="h-full flex items-center px-4 text-sm transition-colors"
-            style={{
-              fontFamily: 'Montserrat, sans-serif',
-              fontWeight: 600,
-              color: (l.exact ? path === l.href : path.startsWith(l.href)) ? '#699BA9' : '#A0A0B8',
-              borderBottom: (l.exact ? path === l.href : path.startsWith(l.href)) ? '2px solid #699BA9' : '2px solid transparent',
-            }}
-          >
-            {l.label}
-          </Link>
-        ))}
+        {links.map((l) => {
+          const active = l.exact ? path === l.href : path.startsWith(l.href);
+          return (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="h-full flex items-center px-4 text-sm font-semibold transition-colors duration-200"
+              style={{
+                fontFamily: 'Montserrat, sans-serif',
+                color: active ? '#699BA9' : '#A0A0B8',
+                borderBottom: `2px solid ${active ? '#699BA9' : 'transparent'}`,
+              }}
+            >
+              {l.label}
+            </Link>
+          );
+        })}
       </div>
+
       <button
         onClick={handleLogout}
-        className="ml-auto text-sm transition-colors"
+        className="ml-auto text-sm font-medium hover:text-primary"
         style={{ fontFamily: 'Montserrat, sans-serif', color: '#A0A0B8' }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = '#699BA9')}
-        onMouseLeave={(e) => (e.currentTarget.style.color = '#A0A0B8')}
       >
         Sign out
       </button>

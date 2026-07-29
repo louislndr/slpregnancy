@@ -39,6 +39,14 @@ This is already set in the local repo config — do not override it.
 
 Supabase client is initialized in `lib/supabase.ts` (Expo) and `admin/lib/supabase.ts` (admin). Any schema changes must be reflected in both.
 
+## Design system rules
+
+- **No uppercase text** — `textTransform: 'uppercase'` is not used anywhere in the main app; do not add it to the admin either
+- **Fonts**: Raleway (headings/buttons), Montserrat (body/labels), Playfair Display (display/serif accents) — same in both apps
+- **Border radii**: `radius.sm=8`, `radius.md=16`, `radius.lg=24`, `radius.full=9999` — do not use intermediate values like 20
+- **Colors**: always use theme tokens (see `theme/colors.ts` on main, `@theme` in `admin/globals.css`)
+- **Transitions**: all interactive elements use `180ms ease` — see `admin/globals.css` global rules
+
 ## No unnecessary abstraction
 
 - Fix the root cause, not the symptom
