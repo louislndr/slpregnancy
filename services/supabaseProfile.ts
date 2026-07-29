@@ -6,7 +6,20 @@ export interface RemoteProfileData {
   hasCompletedOnboarding: boolean;
 }
 
+async function detectCountry(): Promise<{ country: string; country_code: string } | null> {
+  try {
+    const res = await fetch('https://ipapi.co/json/');
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data.country_code || !data.country_name) return null;
+    return { country: data.country_name, country_code: data.country_code };
+  } catch {
+    return null;
+  }
+}
+
 export async function syncProfileToSupabase(userId: string, profile: OnboardingProfile): Promise<void> {
+  const location = await detectCountry();
   await supabase.from('profiles').upsert({
     id: userId,
     lounge: profile.lounge,
@@ -16,6 +29,7 @@ export async function syncProfileToSupabase(userId: string, profile: OnboardingP
     guidance_voice: profile.guidanceVoice,
     guidance_mode: profile.guidanceMode,
     has_completed_onboarding: true,
+    ...(location && { country: location.country, country_code: location.country_code }),
     updated_at: new Date().toISOString(),
   }, { onConflict: 'id' });
 }
