@@ -41,7 +41,7 @@ export default function WorldMap({ counts }: Props) {
         const projection = geoNaturalEarth1().scale(130).translate([W / 2, H / 2]);
         const pathGen = geoPath(projection);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const countries = feature(topo, (topo.objects as any).countries) as GeoJSON.FeatureCollection;
+        const countries = feature(topo, (topo.objects as any).countries) as unknown as GeoJSON.FeatureCollection;
         const built = (countries.features as GeoFeature[]).map((geo) => {
           const id = String(geo.id ?? '');
           const alpha2 = NUMERIC_TO_ALPHA2[id] ?? '';
