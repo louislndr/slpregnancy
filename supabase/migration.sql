@@ -45,3 +45,8 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- 4. Country tracking (added for IP-based geolocation at onboarding)
+alter table public.profiles
+  add column if not exists country text,
+  add column if not exists country_code text;

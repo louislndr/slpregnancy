@@ -6,7 +6,20 @@ export interface RemoteProfileData {
   hasCompletedOnboarding: boolean;
 }
 
+async function detectCountry(): Promise<{ country: string; country_code: string } | null> {
+  try {
+    const res = await fetch('https://ipapi.co/json/');
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data.country_code || !data.country_name) return null;
+    return { country: data.country_name, country_code: data.country_code };
+  } catch {
+    return null;
+  }
+}
+
 export async function syncProfileToSupabase(userId: string, profile: OnboardingProfile): Promise<void> {
+  const location = await detectCountry();
   await supabase.from('profiles').upsert({
     id: userId,
     lounge: profile.lounge,
@@ -16,31 +29,25 @@ export async function syncProfileToSupabase(userId: string, profile: OnboardingP
     guidance_voice: profile.guidanceVoice,
     guidance_mode: profile.guidanceMode,
     has_completed_onboarding: true,
+    ...(location && { country: location.country, country_code: location.country_code }),
     updated_at: new Date().toISOString(),
   }, { onConflict: 'id' });
 }
 
 export async function loadProfileFromSupabase(userId: string): Promise<RemoteProfileData | null> {
-  const [profileResult, userResult] = await Promise.all([
-    supabase.from('profiles').select('*').eq('id', userId).single(),
-    supabase.auth.getUser(),
-  ]);
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single();
 
-  const { data, error } = profileResult;
-  const metaFirstName: string = userResult.data?.user?.user_metadata?.first_name ?? '';
-
-  if (error || !data) {
-    if (metaFirstName) {
-      return { profile: { firstName: metaFirstName }, hasCompletedOnboarding: false };
-    }
-    return null;
-  }
+  if (error || !data) return null;
 
   return {
     profile: {
       lounge: data.lounge ?? null,
       journey: data.journey ?? null,
-      firstName: data.first_name || metaFirstName || '',
+      firstName: data.first_name ?? '',
       ageRange: data.age_range ?? '',
       guidanceVoice: data.guidance_voice ?? 'female',
       guidanceMode: data.guidance_mode ?? 'audio-visual',
