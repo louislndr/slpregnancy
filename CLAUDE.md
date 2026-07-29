@@ -21,11 +21,16 @@ Every change must be applied across **all three surfaces** when relevant:
 
 Never update one surface without checking whether the others need the same change. If a data model, Supabase schema, or shared type changes, all surfaces must reflect it.
 
+## Rule: always push after committing
+
+After every commit (or group of commits), immediately push to GitHub with `git push origin <branch>`. Never leave commits local-only — Netlify deploys from the remote, so unpushed commits mean no deployment.
+
 ## Rule: logical commit groups
 
 - Commit related changes together, unrelated changes separately
 - Each commit message must describe the *why*, not just the *what*
 - When a change spans both branches, commit to each branch separately with parallel messages (e.g. `feat: add trimester field to protocols` on both `main` and `admin`)
+- After committing on all affected branches, push all of them
 
 ## Git identity
 
