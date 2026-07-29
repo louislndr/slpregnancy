@@ -10,6 +10,7 @@ const links = [
   { href: '/checkin-flow', label: 'Pathways' },
   { href: '/community', label: 'Community' },
   { href: '/feedback', label: 'Feedback' },
+  { href: '/studio', label: 'Studio' },
 ];
 
 export default function Nav() {
