@@ -24,11 +24,11 @@ const JOURNEY_LABELS: Record<string, string> = {
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
   return (
     <div style={{
-      background: 'white', borderRadius: 20, padding: 24,
+      background: 'white', borderRadius: 16, padding: 24,
       border: '1px solid #E8E0F0', boxShadow: '0 2px 12px rgba(79,69,128,0.05)',
       flex: 1, minWidth: 140,
     }}>
-      <p style={{ fontFamily: M, fontSize: 12, color: '#A0A0B8', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{label}</p>
+      <p style={{ fontFamily: M, fontSize: 12, color: '#A0A0B8', marginBottom: 6, letterSpacing: '0.3px' }}>{label}</p>
       <p style={{ fontFamily: F, fontWeight: 700, fontSize: 32, color: '#4F4580', marginBottom: 2 }}>{value}</p>
       {sub && <p style={{ fontFamily: M, fontSize: 12, color: '#A0A0B8' }}>{sub}</p>}
     </div>
@@ -72,12 +72,12 @@ export default async function DashboardPage() {
   }
 
   const cardStyle = {
-    background: 'white', borderRadius: 20, padding: 24,
+    background: 'white', borderRadius: 16, padding: 24,
     border: '1px solid #E8E0F0', boxShadow: '0 2px 12px rgba(79,69,128,0.05)',
   };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#FAFAFA' }}>
+    <div className="min-h-screen flex flex-col">
       <Nav />
       <main className="max-w-5xl mx-auto w-full px-6 py-8 flex flex-col gap-8">
 
