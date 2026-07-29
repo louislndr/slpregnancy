@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import Nav from '@/components/Nav';
+import WorldMap from '@/components/WorldMap';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +21,11 @@ const JOURNEY_LABELS: Record<string, string> = {
   'feeling-well':        'Feeling Well',
   'partner-support':     'Partner Support',
 };
+
+// ISO 3166-1 alpha-2 to flag emoji
+function flag(code: string): string {
+  return code.toUpperCase().replace(/./g, (c) => String.fromCodePoint(127397 + c.charCodeAt(0)));
+}
 
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
   return (
@@ -46,6 +52,7 @@ export default async function DashboardPage() {
     { count: pendingFeedback },
     { data: profiles },
     { data: recent },
+    { data: countryRows },
   ] = await Promise.all([
     supabase.from('profiles').select('*', { count: 'exact', head: true }),
     supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('updated_at', sevenDaysAgo),
@@ -54,6 +61,7 @@ export default async function DashboardPage() {
     supabase.from('user_feedback').select('*', { count: 'exact', head: true }).eq('is_read', false),
     supabase.from('profiles').select('journey, lounge'),
     supabase.from('profiles').select('first_name, journey, lounge, created_at').order('created_at', { ascending: false }).limit(8),
+    supabase.from('profiles').select('country, country_code').not('country_code', 'is', null),
   ]);
 
   // Journey breakdown
@@ -70,6 +78,19 @@ export default async function DashboardPage() {
     const l = p.lounge ?? 'womens';
     loungeCounts[l] = (loungeCounts[l] ?? 0) + 1;
   }
+
+  // Country breakdown
+  const countryCounts: Record<string, number> = {};
+  const countryNames: Record<string, string> = {};
+  for (const row of countryRows ?? []) {
+    if (!row.country_code) continue;
+    countryCounts[row.country_code] = (countryCounts[row.country_code] ?? 0) + 1;
+    if (row.country) countryNames[row.country_code] = row.country;
+  }
+  const topCountries = Object.entries(countryCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8);
+  const hasCountryData = topCountries.length > 0;
 
   const cardStyle = {
     background: 'white', borderRadius: 16, padding: 24,
@@ -97,6 +118,30 @@ export default async function DashboardPage() {
           )}
         </div>
 
+        {/* World map */}
+        <div style={cardStyle}>
+          <div className="flex items-center justify-between mb-4">
+            <p style={{ fontFamily: F, fontWeight: 700, fontSize: 15, color: '#4F4580' }}>Users by Region</p>
+            {!hasCountryData && (
+              <span style={{ fontFamily: M, fontSize: 12, color: '#C0B8D8' }}>
+                Location data will appear as new users sign up
+              </span>
+            )}
+          </div>
+          <WorldMap counts={countryCounts} />
+          {hasCountryData && (
+            <div className="flex flex-wrap gap-3 mt-4 pt-4" style={{ borderTop: '1px solid #E8E0F0' }}>
+              {topCountries.map(([code, count]) => (
+                <div key={code} className="flex items-center gap-2">
+                  <span style={{ fontSize: 18 }}>{flag(code)}</span>
+                  <span style={{ fontFamily: M, fontSize: 13, color: '#4F4580', fontWeight: 600 }}>{count}</span>
+                  <span style={{ fontFamily: M, fontSize: 12, color: '#A0A0B8' }}>{countryNames[code] ?? code}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <div className="grid grid-cols-2 gap-6">
           {/* Journey breakdown */}
           <div style={cardStyle}>
@@ -115,7 +160,7 @@ export default async function DashboardPage() {
                       <div style={{
                         background: '#699BA9', borderRadius: 9999, height: 6,
                         width: `${Math.round((count / maxJourney) * 100)}%`,
-                        transition: 'width 0.3s',
+                        transition: 'width 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
                       }} />
                     </div>
                   </div>
