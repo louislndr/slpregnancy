@@ -6,7 +6,7 @@ export const maxDuration = 60;
 
 const ALLOWED_PATHS = ['theme/colors.ts', 'theme/typography.ts', 'theme/spacing.ts'];
 const REPO = 'louislndr/slpregnancy';
-const BRANCH = process.env.GITHUB_CLIENT_BRANCH ?? 'var1';
+const BRANCH = process.env.GITHUB_CLIENT_BRANCH ?? 'clientmod';
 const GH_TOKEN = process.env.GITHUB_TOKEN ?? '';
 
 const SYSTEM_PROMPT = `You are the SL Pregnancy Studio assistant — a design-only AI assistant.
