@@ -29,6 +29,8 @@ export default function Root({ children }: PropsWithChildren) {
               border-radius: 50px;
               position: relative;
               box-shadow: 0 0 0 2px #3A3A3C, 0 0 0 14px #1C1C1E, 0 40px 100px rgba(0,0,0,0.7);
+              transform: scale(min(1, calc((100vh - 40px) / 852px)));
+              transform-origin: center center;
             }
           }
         `}</style>
