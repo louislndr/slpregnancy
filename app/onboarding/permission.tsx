@@ -1,48 +1,64 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import PillButton from '@/components/PillButton';
 import ProgressDots from '@/components/ProgressDots';
-import AppHeader from '@/components/AppHeader';
 import { colors } from '@/theme/colors';
 import { spacing, radius, shadow } from '@/theme/spacing';
 import { useOnboardingStore } from '@/store/onboardingStore';
+
+const TAGS = ['Rest', 'Breathe', 'Let go', 'Be present'];
 
 export default function PermissionScreen() {
   const hasCompleted = useOnboardingStore((s) => s.hasCompletedOnboarding);
 
   return (
-    <LinearGradient colors={['#FFF8F4', colors.sandLight, colors.peachSoft]} locations={[0, 0.5, 1]} style={styles.gradient}>
+    <LinearGradient
+      colors={['#F5F0FF', '#FFF8F4', colors.sandLight]}
+      locations={[0, 0.45, 1]}
+      style={styles.gradient}
+    >
+      {/* Decorative background blobs */}
+      <View style={styles.blobTopLeft} />
+      <View style={styles.blobBottomRight} />
+
       <SafeAreaView style={styles.safe}>
-        <AppHeader
-          showBack
-          rightIcon={hasCompleted ? 'close-outline' : undefined}
-          onRightPress={() => router.replace('/(tabs)')}
-        />
-        <View style={styles.container}>
+        {/* Nav row */}
+        <View style={styles.navRow}>
+          <TouchableOpacity style={styles.navBtn} onPress={() => router.back()} activeOpacity={0.8}>
+            <Ionicons name="arrow-back" size={20} color={colors.coldViolet} />
+          </TouchableOpacity>
+          {hasCompleted && (
+            <TouchableOpacity style={styles.navBtn} onPress={() => router.replace('/(tabs)')} activeOpacity={0.8}>
+              <Ionicons name="close-outline" size={22} color={colors.coldViolet} />
+            </TouchableOpacity>
+          )}
+        </View>
 
-          <View style={styles.topSection}>
-            <Ionicons name="leaf-outline" size={28} color={colors.primary} style={styles.icon} />
-            <Text style={styles.eyebrow}>Today's permission</Text>
-            <Text style={styles.heading}>A gentle reminder{'\n'}for today</Text>
-          </View>
+        {/* Hero */}
+        <View style={styles.hero}>
+          <Text style={styles.eyebrow}>Today's permission</Text>
 
-          <View style={styles.card}>
-            <Text style={styles.quoteOpen}>"</Text>
-            <Text style={styles.quoteText}>
-              Today, I allow myself{'\n'}to take one day at a time.
-            </Text>
-            <Text style={styles.quoteClose}>"</Text>
-          </View>
+          <Text style={styles.quoteMark}>"</Text>
 
-          <Text style={styles.subtext}>
-            Carry this with you as you begin your session.
+          <Text style={styles.quote}>
+            Today, I allow myself{'\n'}to take one day{'\n'}at a time.
           </Text>
 
-          <View style={{ flex: 1 }} />
+          <View style={styles.tagRow}>
+            {TAGS.map((tag) => (
+              <View key={tag} style={styles.tag}>
+                <Text style={styles.tagText}>{tag}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Footer */}
+        <View style={styles.footer}>
           <PillButton label="Continue" onPress={() => router.push('/onboarding/first-session')} />
           <View style={styles.dots}><ProgressDots total={9} current={7} /></View>
         </View>
@@ -53,78 +69,89 @@ export default function PermissionScreen() {
 
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
+  blobTopLeft: {
+    position: 'absolute',
+    top: -80,
+    left: -80,
+    width: 260,
+    height: 260,
+    borderRadius: 130,
+    backgroundColor: colors.lavender,
+    opacity: 0.3,
+  },
+  blobBottomRight: {
+    position: 'absolute',
+    bottom: 60,
+    right: -100,
+    width: 320,
+    height: 320,
+    borderRadius: 160,
+    backgroundColor: colors.peachSoft,
+    opacity: 0.4,
+  },
   safe: { flex: 1, backgroundColor: 'transparent' },
-  container: {
-    flex: 1,
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.lg,
-  },
-  topSection: {
+  navRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: spacing.xl,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
   },
-  icon: {
-    marginBottom: spacing.md,
-    opacity: 0.8,
+  navBtn: {
+    width: 40, height: 40, borderRadius: 20,
+    backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center',
+    ...shadow.card,
+  },
+  hero: {
+    flex: 1,
+    paddingHorizontal: spacing.xl,
+    justifyContent: 'center',
   },
   eyebrow: {
     fontFamily: 'Montserrat_500Medium',
     fontSize: 13,
     color: colors.primary,
     letterSpacing: 0.5,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.lg,
   },
-  heading: {
-    fontFamily: 'Raleway_700Bold',
-    fontSize: 26,
+  quoteMark: {
+    fontFamily: 'PlayfairDisplay_400Regular',
+    fontSize: 110,
+    color: colors.lavender,
+    lineHeight: 90,
+    marginBottom: -spacing.md,
+    opacity: 0.8,
+  },
+  quote: {
+    fontFamily: 'PlayfairDisplay_400Regular_Italic',
+    fontSize: 30,
     color: colors.coldViolet,
-    textAlign: 'center',
-    lineHeight: 34,
+    lineHeight: 44,
+    marginBottom: spacing.xxl,
   },
-  card: {
+  tagRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
+  tag: {
+    paddingVertical: 7,
+    paddingHorizontal: spacing.md,
+    borderRadius: 9999,
     backgroundColor: colors.white,
-    borderRadius: radius.lg,
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.xl,
-    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: colors.border,
     ...shadow.card,
   },
-  quoteOpen: {
-    fontFamily: 'PlayfairDisplay_400Regular',
-    fontSize: 48,
-    color: colors.primary,
-    lineHeight: 52,
-    alignSelf: 'flex-start',
-    opacity: 0.6,
-    marginBottom: -spacing.sm,
-  },
-  quoteText: {
-    fontFamily: 'PlayfairDisplay_400Regular_Italic',
-    fontSize: 22,
-    color: colors.coldViolet,
-    lineHeight: 34,
-    textAlign: 'center',
-    paddingHorizontal: spacing.sm,
-  },
-  quoteClose: {
-    fontFamily: 'PlayfairDisplay_400Regular',
-    fontSize: 48,
-    color: colors.primary,
-    lineHeight: 40,
-    alignSelf: 'flex-end',
-    opacity: 0.6,
-    marginTop: spacing.xs,
-  },
-  subtext: {
+  tagText: {
     fontFamily: 'Montserrat_400Regular',
-    fontSize: 14,
-    color: colors.textSecondary,
-    textAlign: 'center',
-    lineHeight: 22,
-    marginTop: spacing.lg,
-    paddingHorizontal: spacing.md,
+    fontSize: 13,
+    color: colors.coldViolet,
   },
-  dots: { alignItems: 'center', marginTop: spacing.lg },
+  footer: {
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.lg,
+    gap: spacing.md,
+  },
+  dots: { alignItems: 'center' },
 });
