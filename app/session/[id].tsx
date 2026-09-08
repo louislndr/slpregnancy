@@ -147,7 +147,7 @@ export default function SessionPlayerScreen() {
   if (!protocol) {
     return (
       <SafeAreaView style={styles.safe}>
-        <AppHeader showBack />
+        <AppHeader showBack onBackPress={() => router.canGoBack() ? router.back() : router.replace('/(tabs)')} />
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{ fontFamily: 'Montserrat_400Regular', color: colors.textMuted }}>Session not found.</Text>
         </View>
@@ -157,7 +157,7 @@ export default function SessionPlayerScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <AppHeader showBack rightIcon2={isFavorite(protocol.id) ? 'heart' : 'heart-outline'} onRight2Press={() => toggleFavorite(protocol.id)} />
+      <AppHeader showBack onBackPress={() => router.canGoBack() ? router.back() : router.replace('/(tabs)')} />
 
       {protocol.hasVisual && (
         <View style={styles.modeToggle}>

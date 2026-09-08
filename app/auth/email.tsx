@@ -47,7 +47,7 @@ export default function EmailAuthScreen() {
         options: { data: { first_name: name.trim() || undefined } },
       });
       setLoading(false);
-      if (err) { setError(err.message); return; }
+      if (err) { setError(err.message || `Error ${err.status}` || 'Sign up failed. Please try again.'); return; }
       if (data.session) {
         if (name.trim()) useOnboardingStore.getState().setFirstName(name.trim());
         setSession(data.session);
