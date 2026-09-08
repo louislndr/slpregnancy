@@ -38,7 +38,7 @@ function CustomTabBar({ state, navigation }: any) {
   return (
     <View style={styles.zero}>
       <View
-        style={[styles.pill, { bottom: Math.max(0, insets.bottom - 6) }]}
+        style={[styles.pill, { bottom: insets.bottom + 12 }]}
         onLayout={(e) => setBarWidth(e.nativeEvent.layout.width)}
       >
         {/* Sliding bubble indicator */}
