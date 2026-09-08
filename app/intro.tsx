@@ -82,33 +82,27 @@ function IllustrationSophrology() {
 function IllustrationStages() {
   const w = width - spacing.lg * 2;
   const h = 220;
-  const scale = w / 340;
   return (
-    <View style={{ width: w, height: h }}>
-      <Svg width={w} height={h} viewBox="0 0 340 220" style={StyleSheet.absoluteFill}>
-        <Rect x="0" y="0" width="340" height="220" fill={colors.lavender} opacity={0.25} rx="16" />
-        <Rect x="0" y="0" width="340" height="220" fill={colors.sandLight} opacity={0.3} rx="16" />
-        <Path d="M50 160 Q120 80 170 120 Q220 160 290 80" fill="none" stroke={colors.lavender} strokeWidth="3" strokeDasharray="6,4" />
-        <Circle cx="50" cy="160" r="28" fill={colors.sandLight} />
-        <Circle cx="50" cy="160" r="20" fill={colors.peachSoft} />
-        <Path d="M44 158 Q44 154 48 154 Q50 154 50 156 Q50 154 52 154 Q56 154 56 158 Q56 162 50 166 Q44 162 44 158Z" fill={colors.accent} opacity={0.85} />
-        <Circle cx="170" cy="120" r="32" fill={colors.azure} />
-        <Circle cx="170" cy="120" r="23" fill={colors.primary} opacity={0.3} />
-        <Ellipse cx="170" cy="124" rx="11" ry="14" fill={colors.primary} opacity={0.6} />
-        <Circle cx="170" cy="107" r="8" fill="#F4C4A0" />
-        <Circle cx="290" cy="80" r="28" fill={colors.lavender} opacity={0.5} />
-        <Circle cx="290" cy="80" r="20" fill={colors.lavender} />
-        <Circle cx="290" cy="68" r="7" fill="#F4C4A0" />
-        <Path d="M280 78 Q283 68 290 68 Q297 68 300 78 Q297 90 290 92 Q283 90 280 78Z" fill={colors.lavender} opacity={0.5} />
-        <Circle cx="290" cy="90" r="5" fill="#F4C4A0" />
-        {[{x:95,y:122},{x:130,y:104},{x:210,y:135},{x:250,y:107}].map((d, i) => (
-          <Circle key={i} cx={d.x} cy={d.y} r="4" fill={colors.primary} opacity={0.3} />
-        ))}
-      </Svg>
-      <Text style={[stageLabel, { left: 50 * scale - 18, top: 176 * scale }]}>TTC</Text>
-      <Text style={[stageLabel, { left: 170 * scale - 32, top: 158 * scale }]}>Pregnancy</Text>
-      <Text style={[stageLabel, { left: 290 * scale - 36, top: 112 * scale }]}>Postpartum</Text>
-    </View>
+    <Svg width={w} height={h} viewBox="0 0 340 220">
+      <Rect x="0" y="0" width="340" height="220" fill={colors.lavender} opacity={0.25} rx="16" />
+      <Rect x="0" y="0" width="340" height="220" fill={colors.sandLight} opacity={0.3} rx="16" />
+      <Path d="M50 160 Q120 80 170 120 Q220 160 290 80" fill="none" stroke={colors.lavender} strokeWidth="3" strokeDasharray="6,4" />
+      <Circle cx="50" cy="160" r="28" fill={colors.sandLight} />
+      <Circle cx="50" cy="160" r="20" fill={colors.peachSoft} />
+      <Path d="M44 158 Q44 154 48 154 Q50 154 50 156 Q50 154 52 154 Q56 154 56 158 Q56 162 50 166 Q44 162 44 158Z" fill={colors.accent} opacity={0.85} />
+      <Circle cx="170" cy="120" r="32" fill={colors.azure} />
+      <Circle cx="170" cy="120" r="23" fill={colors.primary} opacity={0.3} />
+      <Ellipse cx="170" cy="124" rx="11" ry="14" fill={colors.primary} opacity={0.6} />
+      <Circle cx="170" cy="107" r="8" fill="#F4C4A0" />
+      <Circle cx="290" cy="80" r="28" fill={colors.lavender} opacity={0.5} />
+      <Circle cx="290" cy="80" r="20" fill={colors.lavender} />
+      <Circle cx="290" cy="68" r="7" fill="#F4C4A0" />
+      <Path d="M280 78 Q283 68 290 68 Q297 68 300 78 Q297 90 290 92 Q283 90 280 78Z" fill={colors.lavender} opacity={0.5} />
+      <Circle cx="290" cy="90" r="5" fill="#F4C4A0" />
+      {[{x:95,y:122},{x:130,y:104},{x:210,y:135},{x:250,y:107}].map((d, i) => (
+        <Circle key={i} cx={d.x} cy={d.y} r="4" fill={colors.primary} opacity={0.3} />
+      ))}
+    </Svg>
   );
 }
 
@@ -239,15 +233,6 @@ export default function IntroScreen() {
     </View>
   );
 }
-
-const stageLabel: object = {
-  position: 'absolute' as const,
-  fontFamily: 'Montserrat_400Regular',
-  fontSize: 10,
-  color: colors.coldViolet,
-  textAlign: 'center' as const,
-  width: 64,
-};
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: 'transparent' },
