@@ -32,7 +32,7 @@ export const protocols: Protocol[] = [
     needs: ['calm', 'reassurance'],
     positions: ['sitting', 'lying'],
     hasVisual: true,
-    intention: 'Je choisis de me reconnecter à la sécurité de cet instant.',
+    intention: 'I choose to reconnect with the safety of this moment.',
     parts: [
       { label: 'Welcome', duration: '1 min' },
       { label: 'Breathing', duration: '2 min' },
