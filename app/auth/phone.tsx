@@ -91,7 +91,7 @@ export default function PhoneAuthScreen() {
 
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
-  safe: { flex: 1 },
+  safe: { flex: 1, backgroundColor: 'transparent' },
   content: { flex: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.lg },
   backBtn: {
     width: 40, height: 40, borderRadius: 20,

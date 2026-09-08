@@ -209,7 +209,7 @@ export default function EmailAuthScreen() {
 
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
-  safe: { flex: 1 },
+  safe: { flex: 1, backgroundColor: 'transparent' },
   content: { paddingHorizontal: spacing.lg, paddingTop: spacing.lg, paddingBottom: spacing.xxl },
   backBtn: {
     width: 40, height: 40, borderRadius: 20,

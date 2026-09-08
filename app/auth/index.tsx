@@ -56,7 +56,7 @@ export default function AuthWelcomeScreen() {
 
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
-  safe: { flex: 1 },
+  safe: { flex: 1, backgroundColor: 'transparent' },
   content: {
     flex: 1,
     paddingHorizontal: spacing.lg,
