@@ -35,6 +35,7 @@ export default function FirstSessionScreen() {
       <SafeAreaView style={styles.safe}>
         <AppHeader
           showBack
+          onBackPress={() => router.canGoBack() ? router.back() : router.replace('/onboarding/permission')}
           rightIcon={hasCompletedOnboarding ? 'close-outline' : undefined}
           onRightPress={() => router.replace('/(tabs)')}
         />
