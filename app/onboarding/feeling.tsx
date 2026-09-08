@@ -6,9 +6,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import PillButton from '@/components/PillButton';
 import ProgressDots from '@/components/ProgressDots';
-import AppHeader from '@/components/AppHeader';
 import { colors } from '@/theme/colors';
-import { spacing, radius } from '@/theme/spacing';
+import { spacing, radius, shadow } from '@/theme/spacing';
 import { useOnboardingStore, EmotionalState } from '@/store/onboardingStore';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
@@ -27,12 +26,17 @@ export default function FeelingScreen() {
   return (
     <LinearGradient colors={['#FFFFFF', '#F5F9FC', colors.sandLight]} locations={[0, 0.5, 1]} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
-        <AppHeader
-          showBack
-          rightIcon={hasCompletedOnboarding ? 'close-outline' : undefined}
-          onRightPress={() => router.replace('/(tabs)')}
-        />
         <View style={styles.container}>
+          <View style={styles.navRow}>
+            <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.8}>
+              <Ionicons name="arrow-back" size={20} color={colors.coldViolet} />
+            </TouchableOpacity>
+            {hasCompletedOnboarding && (
+              <TouchableOpacity style={styles.backBtn} onPress={() => router.replace('/(tabs)')} activeOpacity={0.8}>
+                <Ionicons name="close-outline" size={22} color={colors.coldViolet} />
+              </TouchableOpacity>
+            )}
+          </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.title}>How are you{'\n'}feeling today?</Text>
             <Text style={styles.subtitle}>There are no wrong answers here.</Text>
@@ -66,8 +70,14 @@ export default function FeelingScreen() {
 
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
-  safe: { flex: 1 },
-  container: { flex: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.xl, paddingBottom: spacing.lg },
+  safe: { flex: 1, backgroundColor: 'transparent' },
+  container: { flex: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.lg, paddingBottom: spacing.lg },
+  navRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.xl },
+  backBtn: {
+    width: 40, height: 40, borderRadius: 20,
+    backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center',
+    ...shadow.card,
+  },
   title: { fontFamily: 'Raleway_700Bold', fontSize: 28, color: colors.coldViolet, lineHeight: 36, marginBottom: spacing.sm },
   subtitle: { fontFamily: 'Montserrat_400Regular', fontSize: 15, color: colors.textSecondary, marginBottom: spacing.lg },
   options: { gap: 8 },

@@ -8,12 +8,14 @@ import { spacing, radius, shadow } from '@/theme/spacing';
 import { useSessionStore } from '@/store/sessionStore';
 import { useDataStore } from '@/store/dataStore';
 
-const MOODS = [
-  { id: 'much-calmer', emoji: '🌸', label: 'Much calmer' },
-  { id: 'lighter',     emoji: '☁️', label: 'Lighter'      },
-  { id: 'same',        emoji: '🌿', label: 'About the same'},
-  { id: 'reflective',  emoji: '🌙', label: 'Reflective'   },
-  { id: 'need-more',   emoji: '💙', label: 'Need more'    },
+type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
+
+const MOODS: { id: string; icon: IoniconsName; label: string }[] = [
+  { id: 'much-calmer', icon: 'leaf-outline',        label: 'Much calmer'    },
+  { id: 'lighter',     icon: 'sunny-outline',        label: 'Lighter'        },
+  { id: 'same',        icon: 'remove-circle-outline',label: 'About the same' },
+  { id: 'reflective',  icon: 'moon-outline',         label: 'Reflective'     },
+  { id: 'need-more',   icon: 'heart-outline',        label: 'Need more'      },
 ];
 
 const EMOTIONS = [
@@ -54,7 +56,7 @@ export default function SessionFeedbackScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
 
         <View style={styles.topIcon}>
-          <Text style={styles.sparkle}>✦</Text>
+          <Ionicons name="flower-outline" size={26} color={colors.primary} />
         </View>
 
         <Text style={styles.heading}>How was that for you?</Text>
@@ -71,7 +73,9 @@ export default function SessionFeedbackScreen() {
               onPress={() => setSelectedMood(m.id)}
               activeOpacity={0.8}
             >
-              <Text style={styles.moodEmoji}>{m.emoji}</Text>
+              <View style={[styles.moodIconWrap, selectedMood === m.id && styles.moodIconWrapActive]}>
+                <Ionicons name={m.icon} size={20} color={selectedMood === m.id ? colors.white : colors.primary} />
+              </View>
               <Text style={[styles.moodLabel, selectedMood === m.id && styles.moodLabelActive]}>{m.label}</Text>
             </TouchableOpacity>
           ))}
@@ -150,7 +154,6 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.white },
   content: { paddingHorizontal: spacing.lg, paddingTop: spacing.xl, paddingBottom: spacing.xxl, alignItems: 'center' },
   topIcon: { width: 56, height: 56, borderRadius: 28, backgroundColor: colors.sandLight, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.lg },
-  sparkle: { fontSize: 24, color: colors.accent },
   heading: { fontFamily: 'Raleway_700Bold', fontSize: 26, color: colors.coldViolet, textAlign: 'center', marginBottom: spacing.sm },
   sub: { fontFamily: 'Montserrat_400Regular', fontSize: 14, color: colors.textSecondary, textAlign: 'center', marginBottom: spacing.xl },
   sectionLabel: { fontFamily: 'Montserrat_600SemiBold', fontSize: 13, color: colors.textSecondary, alignSelf: 'flex-start', marginBottom: spacing.md },
@@ -161,7 +164,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white, minWidth: 80, flex: 1,
   },
   moodCardActive: { borderColor: colors.primary, backgroundColor: '#F0F7FA' },
-  moodEmoji: { fontSize: 24, marginBottom: 6 },
+  moodIconWrap: {
+    width: 40, height: 40, borderRadius: 20,
+    backgroundColor: colors.azure, alignItems: 'center', justifyContent: 'center', marginBottom: 6,
+  },
+  moodIconWrapActive: { backgroundColor: colors.primary },
   moodLabel: { fontFamily: 'Montserrat_400Regular', fontSize: 13, color: colors.textSecondary, textAlign: 'center' },
   moodLabelActive: { fontFamily: 'Montserrat_600SemiBold', color: colors.coldViolet },
   emotionWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: spacing.lg, width: '100%' },
